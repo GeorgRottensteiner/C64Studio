@@ -164,7 +164,7 @@ namespace RetroDevStudio.Documents
       this.listValues.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.listValues_CloningItem);
       this.listValues.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listValues_ItemAdded);
       this.listValues.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listValues_ItemRemoved);
-      this.listValues.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listValues_ItemMoved);
+      this.listValues.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemMovedEventHandler(this.listValues_ItemMoved);
       this.listValues.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listValues_SelectedIndexChanged);
       // 
       // groupBox4

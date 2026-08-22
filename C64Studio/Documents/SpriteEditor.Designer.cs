@@ -485,8 +485,8 @@ namespace RetroDevStudio.Documents
       this.listLayerSprites.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.listLayerSprites_CloningItem);
       this.listLayerSprites.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemAdded);
       this.listLayerSprites.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemRemoved);
-      this.listLayerSprites.MovingItem += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangingEventHandler(this.listLayerSprites_MovingItem);
-      this.listLayerSprites.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listLayerSprites_ItemMoved);
+      this.listLayerSprites.MovingItem += new RetroDevStudio.Controls.ArrangedItemList.ItemMovingEventHandler(this.listLayerSprites_MovingItem);
+      this.listLayerSprites.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemMovedEventHandler(this.listLayerSprites_ItemMoved);
       this.listLayerSprites.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_SelectedIndexChanged);
       // 
       // listLayers
@@ -513,8 +513,8 @@ namespace RetroDevStudio.Documents
       this.listLayers.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.listLayers_CloningItem);
       this.listLayers.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemAdded);
       this.listLayers.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemRemoved);
-      this.listLayers.MovingItem += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangingEventHandler(this.listLayers_MovingItem);
-      this.listLayers.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listLayers_ItemMoved);
+      this.listLayers.MovingItem += new RetroDevStudio.Controls.ArrangedItemList.ItemMovingEventHandler(this.listLayers_MovingItem);
+      this.listLayers.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemMovedEventHandler(this.listLayers_ItemMoved);
       this.listLayers.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_SelectedIndexChanged);
       // 
       // editLayerY

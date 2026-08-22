@@ -2564,19 +2564,6 @@ namespace RetroDevStudio.Documents
           var toggleRect = treeProject.GetToggleRect( e.Node );
 
           e.Renderer.RenderTreeViewExpansionToggle( e.Node.IsExpanded, toggleRect );
-          /*
-          Point ptExpand = new Point( nodeRect.Location.X - 36, nodeRect.Location.Y + ( nodeRect.Height - 8 ) / 2 );
-          if ( e.Node.IsExpanded )
-          {
-            e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, ptExpand.X, ptExpand.Y, 8, 8 );
-            e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 2, ptExpand.Y + 4, ptExpand.X + 6, ptExpand.Y + 4 );
-          }
-          else
-          {
-            e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, ptExpand.X, ptExpand.Y, 8, 8 );
-            e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 2, ptExpand.Y + 4, ptExpand.X + 6, ptExpand.Y + 4 );
-            e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 4, ptExpand.Y + 2, ptExpand.X + 4, ptExpand.Y + 6 );
-          }*/
         }
 
         // 2. draw node icon
@@ -2598,60 +2585,7 @@ namespace RetroDevStudio.Documents
           nodeFont = ( (DecentForms.TreeView)Sender ).Font;
         }
 
-        // node text
         e.Renderer.RenderTreeViewNodeText( e.Node, nodeRect );
-
-        /*
-        var bounds = NodeBounds( e.Node );
-        var textBounds = Rectangle.Inflate( bounds, 3, 0 );
-        var bgBounds = new Rectangle( bounds.Location, bounds.Size );
-        bgBounds.Offset( -3, 0 );
-
-        // Draw the background and node text for a selected node.
-        if ( ( e.State & TreeNodeStates.Selected ) != 0 )
-        {
-          // Draw the background of the selected node. The NodeBounds
-          // method makes the highlight rectangle large enough to
-          // include the text of a node tag, if one is present.
-          uint color = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
-          uint bgColor = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
-
-          // make transparent
-          if ( ( color & 0xff000000 ) == 0xff000000 )
-          {
-            color = ( color & 0x00ffffff ) | 0x40000000;
-            color = ModulateColor( color, bgColor );
-          }
-          e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), bgBounds );
-
-          // Retrieve the node font. If the node font has not been set, use the TreeView font.
-          uint colorText = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
-          e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( GR.Color.Helper.FromARGB( colorText ) ), textBounds );
-        }
-        else
-        {
-          if ( ( e.State & TreeNodeStates.Focused ) != 0 )
-          {
-            uint color = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
-
-            e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), bgBounds );
-          }
-          uint colorText = Core.Settings.FGColor( ColorableElement.CONTROL_TEXT );
-          e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( GR.Color.Helper.FromARGB( colorText ) ), textBounds );
-        }
-
-        // If the node has focus, draw the focus rectangle large, making
-        // it large enough to include the text of the node tag, if present.
-        if ( ( e.State & TreeNodeStates.Focused ) != 0 )
-        {
-          using ( Pen focusPen = new Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) ) )
-          {
-            focusPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-            bounds.Size = new Size( bgBounds.Width - 1, bgBounds.Height - 1 );
-            bounds.Offset( -3, 0 );
-            e.Graphics.DrawRectangle( focusPen, bounds );
-          }
-        }*/
       }
       catch ( Exception ex )
       {
@@ -2711,33 +2645,6 @@ namespace RetroDevStudio.Documents
         return 1;
       }
       return -1;
-    }
-
-
-
-    private uint ModulateColor( uint Color1, uint Color2 )
-    {
-      uint a1 = ( Color1 >> 24 );
-      uint r1 = ( Color1 >> 16 ) & 0xff;
-      uint g1 = ( Color1 >> 8  ) & 0xff;
-      uint b1 = Color1 & 0xff;
-
-      uint a2 = ( Color2 >> 24 );
-      uint r2 = ( Color2 >> 16 ) & 0xff;
-      uint g2 = ( Color2 >> 8  ) & 0xff;
-      uint b2 = Color2 & 0xff;
-
-      if ( a1 + a2 == 0 )
-      {
-        return 0xff000000;
-      }
-
-      uint color = 0xff000000
-        | ( ( ( r1 * a1 + r2 * a2 ) / ( a1 + a2 ) ) << 16 )
-        | ( ( ( g1 * a1 + g2 * a2 ) / ( a1 + a2 ) ) << 8 )
-        | ( ( ( b1 * a1 + b2 * a2 ) / ( a1 + a2 ) ) << 0 );
-
-      return color;
     }
 
 

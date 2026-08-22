@@ -85,7 +85,7 @@
       this.alistTools.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.alistTools_CloningItem);
       this.alistTools.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemAdded);
       this.alistTools.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemRemoved);
-      this.alistTools.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.alistTools_ItemMoved);
+      this.alistTools.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemMovedEventHandler(this.alistTools_ItemMoved);
       this.alistTools.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_SelectedIndexChanged);
       // 
       // checkPassLabelsToEmulator

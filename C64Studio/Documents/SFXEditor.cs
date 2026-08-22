@@ -549,41 +549,18 @@ FX_WAVE_NOISE         = 3
 
 
 
-    private void listEffects_ItemMoved( object sender, Controls.ArrangedItemEntry Item1, Controls.ArrangedItemEntry Item2 )
+    private void listEffects_ItemMoved( object sender, Controls.ArrangedItemEntry Item, int originalIndex )
     {
-      var effect1 = (SFXProject.SFXEffect)Item1.Tag;
-      var effect2 = (SFXProject.SFXEffect)Item2.Tag;
-
-      if ( ( effect1 == null )
-      || ( effect2 == null ) )
+      // If one or both not found, rebuild the list from the control order
+      _project.Effects.Clear();
+      foreach ( Controls.ArrangedItemEntry entry in listEffects.Items )
       {
-        return;
-      }
-
-      int index1 = _project.Effects.IndexOf( effect1 );
-      int index2 = _project.Effects.IndexOf( effect2 );
-
-      if ( ( index1 == -1 )
-      || ( index2 == -1 ) )
-      {
-        // If one or both not found, rebuild the list from the control order
-        _project.Effects.Clear();
-        foreach ( Controls.ArrangedItemEntry entry in listEffects.Items )
+        var eff = entry.Tag as SFXProject.SFXEffect;
+        if ( eff != null )
         {
-          var eff = entry.Tag as SFXProject.SFXEffect;
-          if ( eff != null )
-          {
-            _project.Effects.Add( eff );
-          }
+          _project.Effects.Add( eff );
         }
-        SetModified();
-        return;
       }
-
-      // swap the two effects in the underlying list
-      var tmp = _project.Effects[index1];
-      _project.Effects[index1] = _project.Effects[index2];
-      _project.Effects[index2] = tmp;
       SetModified();
     }
 

@@ -92,7 +92,7 @@
       this.asmLibraryPathList.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
       this.asmLibraryPathList.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
       this.asmLibraryPathList.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemRemoved);
-      this.asmLibraryPathList.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.asmLibraryPathList_ItemMoved);
+      this.asmLibraryPathList.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemMovedEventHandler(this.asmLibraryPathList_ItemMoved);
       // 
       // PrefLibraryPaths
       // 

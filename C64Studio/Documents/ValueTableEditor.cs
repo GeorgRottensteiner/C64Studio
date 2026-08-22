@@ -314,7 +314,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listValues_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    private void listValues_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
     {
       ValuesChanged();
     }

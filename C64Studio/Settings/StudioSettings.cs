@@ -82,7 +82,9 @@ namespace RetroDevStudio
     [Description( "Palette Editor" )]
     PALETTE_EDITOR,
     [Description( "Sound Effect Editor" )]
-    SFX_EDITOR
+    SFX_EDITOR,
+    [Description( "Path Editor" )]
+    PATH_EDITOR
   };
 
   public enum MemoryDisplayType

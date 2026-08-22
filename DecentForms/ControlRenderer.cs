@@ -1256,6 +1256,13 @@ namespace DecentForms
         int   realIndex = firstItem + i;
         if ( realIndex >= listBox.Items.Count )
         {
+          if ( ( listBox.DragTargetItemIndex == realIndex - 1 )
+          &&   ( listBox.DragTargetItemIndex != -1 )
+          &&   ( !listBox.DragTargetUpperHalf ) )
+          {
+            var rectx = listBox.GetItemRect( realIndex - 1 );
+            FillRectangle( rectx.Left, rectx.Bottom, rectx.Width, 1, 0xff000000 );
+          }
           break;
         }
         var item = listBox.Items[realIndex];
@@ -1301,7 +1308,23 @@ namespace DecentForms
 
           DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
         }
-
+        if ( listBox.DragTargetItemIndex != -1 )
+        {
+          if ( ( ( listBox.DragTargetItemIndex == realIndex )
+          &&     ( listBox.DragTargetUpperHalf ) )
+          ||   ( ( listBox.DragTargetItemIndex == realIndex - 1 )
+          &&     ( !listBox.DragTargetUpperHalf ) ) )
+          {
+            FillRectangle( rect.Left, rect.Top, rect.Width, 1, 0xff000000 );
+          }
+          else if ( ( ( listBox.DragTargetItemIndex == realIndex ) 
+          &&          ( !listBox.DragTargetUpperHalf ) )  
+          ||        ( ( listBox.DragTargetItemIndex == realIndex + 1 )
+          &&          ( listBox.DragTargetUpperHalf ) ) )
+          {
+            FillRectangle( rect.Left, rect.Bottom - 1, rect.Width, 1, 0xff000000 );
+          }
+        }
       }
     }
 

@@ -12,6 +12,11 @@ namespace DecentForms
 {
   public partial class ListBox : ControlBase
   {
+    public delegate bool ItemSwappingEventHandler( DecentForms.ControlBase Sender, ListBoxItem item, int newIndex );
+    public delegate void ItemSwappedEventHandler( DecentForms.ControlBase Sender, ListBoxItem item, int originalIndex );
+
+
+
     private VScrollBar    _ScrollBar = new VScrollBar();
     private HScrollBar    _ScrollBarH = new HScrollBar();
     private bool          _ScrollAlwaysVisible = false;
@@ -25,8 +30,10 @@ namespace DecentForms
     private bool          _RedrawRequired = false;
     private bool          _HasCheckBoxes = false;
 
-    public event EventHandler       SelectedIndexChanged;
-    public event EventHandler       ItemCheck;
+    public event EventHandler             SelectedIndexChanged;
+    public event EventHandler             ItemCheck;
+    public event ItemSwappingEventHandler ItemSwapping;
+    public event ItemSwappedEventHandler  ItemSwapped;
 
 
 
@@ -73,7 +80,29 @@ namespace DecentForms
 
 
 
-    private int _ItemHeight = 15;
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
+    public int DragTargetItemIndex
+    {
+      get;
+      internal set;
+    } = -1;
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
+    public bool DragTargetUpperHalf
+    {
+      get;
+      internal set;
+    } = true;
+
+
+
+    private int   _ItemHeight = 15;
+    private Point _MouseDownPos;
+    private bool  _MouseButtonReleased;
+    private int   _draggedItemIndex = -1;
+
+
 
     [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int ItemHeight
@@ -131,6 +160,11 @@ namespace DecentForms
         Invalidate();
       }
     }
+
+
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
+    public bool AllowDrag { get; set; } = false;
 
 
 
@@ -481,6 +515,22 @@ namespace DecentForms
           break;
         case ControlEvent.EventType.MOUSE_UPDATE:
           {
+            if ( ( Event.MouseButtons & 1 ) == 0 )
+            {
+              _MouseButtonReleased = true;
+
+              if ( _draggedItemIndex != -1 )
+              {
+                OnDropDraggedItem();
+                return;
+              }
+            }
+            else if ( _draggedItemIndex != -1 )
+            {
+              UpdateDraggedItemTarget( Event.MouseX, Event.MouseY );
+              return;
+            }
+
             int   itemBelow = ItemIndexFromPosition( Event.MouseX, Event.MouseY );
             if ( itemBelow != _MouseOverItem )
             {
@@ -494,7 +544,20 @@ namespace DecentForms
                 Invalidate( GetItemRect( _MouseOverItem ) );
               }
             }
-            
+            if ( ( Event.MouseButtons & 1 ) != 0 )
+            {
+              // start dragging?
+              if ( ( AllowDrag )
+              &&   ( _SelectedIndex != -1 )
+              &&   ( ( Math.Abs( _MouseDownPos.X - Event.MouseX ) >= 5 )
+              ||     ( Math.Abs( _MouseDownPos.Y - Event.MouseY ) >= 5 ) ) )
+              {
+                if ( OnItemDrag( Event.MouseButtons, _SelectedIndex ) )
+                {
+                  UpdateDraggedItemTarget( Event.MouseX, Event.MouseY );
+                }
+              }
+            }
           }
           break;
         case ControlEvent.EventType.MOUSE_LEAVE:
@@ -511,6 +574,7 @@ namespace DecentForms
           {
             SelectedIndex = _MouseOverItem;
           }
+          _MouseDownPos = new Point( Event.MouseX, Event.MouseY );
           if ( ( SelectedIndex != -1 )
           &&   ( GetItemCheckRect( SelectedIndex ).Contains( Event.MouseX, Event.MouseY ) ) )
           {
@@ -522,6 +586,7 @@ namespace DecentForms
           break;
         case ControlEvent.EventType.MOUSE_UP:
           Capture = false;
+          _MouseButtonReleased = true;
           Invalidate();
           break;
         case ControlEvent.EventType.KEY_DOWN:
@@ -634,6 +699,92 @@ namespace DecentForms
           break;
       }
       base.OnControlEvent( Event );
+    }
+
+
+
+    private void OnDropDraggedItem()
+    {
+      if ( _draggedItemIndex == -1 )
+      {
+        return;
+      }
+
+      if ( ( ( DragTargetUpperHalf )
+      &&     ( DragTargetItemIndex == _draggedItemIndex ) )
+      ||   ( ( !DragTargetUpperHalf )
+      &&     ( DragTargetItemIndex == _draggedItemIndex + 1 ) ) )
+      {
+        // no change
+      }
+      else
+      {
+        int  targetIndex = DragTargetItemIndex;
+        if ( !DragTargetUpperHalf )
+        {
+          ++targetIndex;
+        }
+
+        var item = Items[_draggedItemIndex];
+        if ( ( ItemSwapping == null )
+        ||   ( ItemSwapping.Invoke( this, item, targetIndex ) ) )
+        {
+          if ( _draggedItemIndex > targetIndex )
+          {
+            Items.RemoveAt( _draggedItemIndex );
+            Items.Insert( targetIndex, item );
+          }
+          else
+          {
+            Items.Insert( targetIndex, item );
+            Items.RemoveAt( _draggedItemIndex );
+          }
+          ItemSwapped?.Invoke( this, item, _draggedItemIndex );
+        }
+      }
+
+      _draggedItemIndex             = -1;
+      DragTargetItemIndex           = -1;
+      DragTargetUpperHalf           = true;
+      Invalidate();
+    }
+
+
+
+    private bool OnItemDrag( uint mouseButtons, int itemIndex )
+    {
+      if ( !_MouseButtonReleased )
+      {
+        return false;
+      }
+      _MouseButtonReleased = false;
+      if ( Items.Count <= 1 )
+      {
+        return false;
+      }
+      _draggedItemIndex = itemIndex;
+      DragTargetItemIndex = itemIndex;
+      DragTargetUpperHalf = true;
+      Invalidate();
+
+      return true;
+    }
+
+
+
+    private void UpdateDraggedItemTarget( int X, int Y )
+    {
+      int itemAtPosition = ItemIndexFromPosition( X, Y );
+      
+      bool targetUpperHalf = ( Y % ItemHeight ) < ( ItemHeight / 2 );
+
+      if ( ( itemAtPosition != DragTargetItemIndex )
+      ||   ( DragTargetUpperHalf != targetUpperHalf ) )
+      {
+        DragTargetItemIndex = itemAtPosition;
+        DragTargetUpperHalf = targetUpperHalf;
+        Invalidate();
+      }
     }
 
 

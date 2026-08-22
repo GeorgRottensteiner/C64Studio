@@ -253,6 +253,7 @@ namespace RetroDevStudio
       mainDebugAdvanceToLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       mainDebugAdvanceFrame = new System.Windows.Forms.ToolStripButton();
       timerAutoSave = new System.Windows.Forms.Timer( components );
+      pathEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       mainMenu.SuspendLayout();
       mainTools.SuspendLayout();
       mainStatus.SuspendLayout();
@@ -1160,7 +1161,7 @@ namespace RetroDevStudio
       // windowToolStripMenuItem
       // 
       windowToolStripMenuItem.AutoSize = false;
-      windowToolStripMenuItem.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] { breakpointsToolStripMenuItem, debugMemoryToolStripMenuItem, debugRegistersToolStripMenuItem, debugWatchToolStripMenuItem, toolStripSeparator11, binaryEditorToolStripMenuItem, charsetEditorToolStripMenuItem, charScreenEditorToolStripMenuItem, graphicScreenEditorToolStripMenuItem, mapEditorToolStripMenuItem, spriteEditorToolStripMenuItem, valueTableEditorToolStripMenuItem, paletteEditorToolStripMenuItem, sfxEditorToolStripMenuItem, toolStripSeparator13, bookmarksToolStripMenuItem, calculatorToolStripMenuItem, compileResulttoolStripMenuItem, disassemblerToolStripMenuItem, findReferencesToolStripMenuItem, labelExplorerToolStripMenuItem, outlineToolStripMenuItem, outputToolStripMenuItem, petSCIITableToolStripMenuItem, searchReplaceToolStripMenuItem, searchResultsToolStripMenuItem, projectExplorerToolStripMenuItem, toolStripSeparator12, helpToolStripMenuItem, toolStripSeparator8, toolbarsToolStripMenuItem } );
+      windowToolStripMenuItem.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] { breakpointsToolStripMenuItem, debugMemoryToolStripMenuItem, debugRegistersToolStripMenuItem, debugWatchToolStripMenuItem, toolStripSeparator11, binaryEditorToolStripMenuItem, charsetEditorToolStripMenuItem, charScreenEditorToolStripMenuItem, graphicScreenEditorToolStripMenuItem, mapEditorToolStripMenuItem, spriteEditorToolStripMenuItem, valueTableEditorToolStripMenuItem, pathEditorToolStripMenuItem, paletteEditorToolStripMenuItem, sfxEditorToolStripMenuItem, toolStripSeparator13, bookmarksToolStripMenuItem, calculatorToolStripMenuItem, compileResulttoolStripMenuItem, disassemblerToolStripMenuItem, findReferencesToolStripMenuItem, labelExplorerToolStripMenuItem, outlineToolStripMenuItem, outputToolStripMenuItem, petSCIITableToolStripMenuItem, searchReplaceToolStripMenuItem, searchResultsToolStripMenuItem, projectExplorerToolStripMenuItem, toolStripSeparator12, helpToolStripMenuItem, toolStripSeparator8, toolbarsToolStripMenuItem } );
       windowToolStripMenuItem.Name = "windowToolStripMenuItem";
       windowToolStripMenuItem.Size = new System.Drawing.Size( 63, 20 );
       windowToolStripMenuItem.Text = "&Window";
@@ -1817,7 +1818,7 @@ namespace RetroDevStudio
       // mainDebugGoRunForOneSecondToolStripMenuItem
       // 
       mainDebugGoRunForOneSecondToolStripMenuItem.Name = "mainDebugGoRunForOneSecondToolStripMenuItem";
-      mainDebugGoRunForOneSecondToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
+      mainDebugGoRunForOneSecondToolStripMenuItem.Size = new System.Drawing.Size( 177, 22 );
       mainDebugGoRunForOneSecondToolStripMenuItem.Text = "Run for one second";
       mainDebugGoRunForOneSecondToolStripMenuItem.Click +=  mainDebugGoRunForOneSecondToolStripMenuItem_Click ;
       // 
@@ -1922,6 +1923,12 @@ namespace RetroDevStudio
       // 
       timerAutoSave.Interval = 300000;
       timerAutoSave.Tick +=  timerAutoSave_Tick ;
+      // 
+      // pathEditorToolStripMenuItem
+      // 
+      pathEditorToolStripMenuItem.Name = "pathEditorToolStripMenuItem";
+      pathEditorToolStripMenuItem.Size = new System.Drawing.Size( 187, 22 );
+      pathEditorToolStripMenuItem.Text = "Path Editor";
       // 
       // MainForm
       // 
@@ -2191,6 +2198,7 @@ namespace RetroDevStudio
     private System.Windows.Forms.ToolStripButton mainDebugAdvanceFrame;
     private System.Windows.Forms.ToolStripSplitButton mainDebugGo;
     private System.Windows.Forms.ToolStripMenuItem mainDebugGoRunForOneSecondToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem pathEditorToolStripMenuItem;
   }
 }
 

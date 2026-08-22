@@ -2283,7 +2283,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listLayerSprites_ItemMoved( object sender, ArrangedItemEntry Item, ArrangedItemEntry OtherItem )
+    private void listLayerSprites_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
     {
       m_CurrentLayer.Sprites.Clear();
       foreach ( ArrangedItemEntry item in listLayerSprites.Items )
@@ -2448,7 +2448,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listLayers_ItemMoved( object sender, ArrangedItemEntry Item, ArrangedItemEntry OtherItem )
+    private void listLayers_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
     {
       m_SpriteProject.SpriteLayers.Clear();
       foreach ( ArrangedItemEntry item in listLayers.Items )
@@ -2581,16 +2581,16 @@ namespace RetroDevStudio.Documents
 
 
 
-    private bool listLayerSprites_MovingItem( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    private bool listLayerSprites_MovingItem( object sender, ArrangedItemEntry Item, int originalIndex )
     {
       return true;
     }
 
 
 
-    private bool listLayers_MovingItem( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    private bool listLayers_MovingItem( object sender, ArrangedItemEntry Item, int originalIndex )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetExchangeLayer( this, m_SpriteProject, Item1.Index, Item2.Index ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetExchangeLayer( this, m_SpriteProject, Item.Index, originalIndex ) );
 
       return true;
     }

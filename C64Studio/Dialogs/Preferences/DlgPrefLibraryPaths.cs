@@ -106,7 +106,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void asmLibraryPathList_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    private void asmLibraryPathList_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
     {
       ApplyLibraryPathsFromList();
     }

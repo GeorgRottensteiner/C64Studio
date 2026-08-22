@@ -115,7 +115,7 @@ namespace RetroDevStudio
 
 
 
-    private void listBuildChainProjects_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    private void listBuildChainProjects_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
     {
       BuildChain.Entries.Clear();
       foreach ( ArrangedItemEntry item in listBuildChainProjects.Items )

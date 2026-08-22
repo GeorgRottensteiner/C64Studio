@@ -9,6 +9,7 @@ using System.Drawing;
 using RetroDevStudio.Controls;
 using System.Linq;
 using GR.Image;
+using System.ComponentModel;
 
 namespace RetroDevStudio.Documents
 {
@@ -1185,6 +1186,8 @@ namespace RetroDevStudio.Documents
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public MachineType PreferredMachineType
     {
       get

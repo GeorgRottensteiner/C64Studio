@@ -63,6 +63,13 @@
     public const ushort    SFX_EFFECT_LIST                = 0x1412;
     public const ushort    SFX_EFFECT                     = 0x1413;
 
+    public const ushort    PATH_PROJECT                   = 0x1420;
+    public const ushort    PATH_PROJECT_INFO              = 0x1421;
+    public const ushort    PATH                           = 0x1422;
+    public const ushort    PATH_INFO                      = 0x1423;
+    public const ushort    PATH_STEPS                     = 0x1424;
+    public const ushort    PATH_STEP                      = 0x1425;
+
     public const ushort    MULTICOLOR_DATA                = 0x1500;
     public const ushort    CHARSET_DATA                   = 0x1501;   // multicolor-data und binary data
     public const ushort    PALETTE                        = 0x1502;   // int num entries, n * ARGB (uint)

@@ -28,131 +28,138 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
+      components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArrangedItemList));
-      this.listItems = new DecentForms.ListBox();
-      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.btnMoveDown = new DecentForms.Button();
-      this.btnMoveUp = new DecentForms.Button();
-      this.btnDelete = new DecentForms.Button();
-      this.btnAdd = new DecentForms.Button();
-      this.toolTipArrangedList = new System.Windows.Forms.ToolTip(this.components);
-      this.btnClone = new DecentForms.Button();
-      this.SuspendLayout();
+      listItems = new DecentForms.ListBox();
+      columnHeader1 = new System.Windows.Forms.ColumnHeader();
+      btnMoveDown = new DecentForms.Button();
+      btnMoveUp = new DecentForms.Button();
+      btnDelete = new DecentForms.Button();
+      btnAdd = new DecentForms.Button();
+      toolTipArrangedList = new System.Windows.Forms.ToolTip( components );
+      btnClone = new DecentForms.Button();
+      SuspendLayout();
       // 
       // listItems
       // 
-      this.listItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.listItems.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.listItems.ItemHeight = 15;
-      this.listItems.Location = new System.Drawing.Point(3, 3);
-      this.listItems.Name = "listItems";
-      this.listItems.ScrollAlwaysVisible = false;
-      this.listItems.SelectedIndex = -1;
-      this.listItems.SelectedItem = null;
-      this.listItems.SelectionMode = DecentForms.SelectionMode.NONE;
-      this.listItems.Size = new System.Drawing.Size(234, 199);
-      this.listItems.TabIndex = 0;
-      this.listItems.SelectedIndexChanged += new DecentForms.EventHandler(this.listItems_SelectedIndexChanged);
+      listItems.AllowDrag = true;
+      listItems.AllowDrop = true;
+      listItems.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      listItems.BorderStyle = DecentForms.BorderStyle.FLAT;
+      listItems.DisplayAntiAliased = true;
+      listItems.HasCheckBoxes = false;
+      listItems.ItemHeight = 15;
+      listItems.Location = new System.Drawing.Point( 0, 0 );
+      listItems.Name = "listItems";
+      listItems.ScrollAlwaysVisible = false;
+      listItems.SelectionMode = DecentForms.SelectionMode.NONE;
+      listItems.Size = new System.Drawing.Size( 240, 205 );
+      listItems.TabIndex = 0;
+      listItems.SelectedIndexChanged +=  listItems_SelectedIndexChanged ;
+      listItems.ItemSwapping +=  listItems_ItemSwapping ;
+      listItems.ItemSwapped +=  listItems_ItemSwapped ;
       // 
       // columnHeader1
       // 
-      this.columnHeader1.Text = "Entries";
-      this.columnHeader1.Width = 300;
+      columnHeader1.Text = "Entries";
+      columnHeader1.Width = 300;
       // 
       // btnMoveDown
       // 
-      this.btnMoveDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnMoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnMoveDown.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnMoveDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnMoveDown.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnMoveDown.Enabled = false;
-      this.btnMoveDown.Image = ((System.Drawing.Image)(resources.GetObject("btnMoveDown.Image")));
-      this.btnMoveDown.Location = new System.Drawing.Point(203, 211);
-      this.btnMoveDown.Name = "btnMoveDown";
-      this.btnMoveDown.Size = new System.Drawing.Size(29, 23);
-      this.btnMoveDown.TabIndex = 5;
-      this.toolTipArrangedList.SetToolTip(this.btnMoveDown, "Move Entry Down");
-      this.btnMoveDown.Click += new DecentForms.EventHandler(this.btnMoveDown_Click);
+      btnMoveDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnMoveDown.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      btnMoveDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnMoveDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnMoveDown.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnMoveDown.DisplayAntiAliased = true;
+      btnMoveDown.Enabled = false;
+      btnMoveDown.Image = (System.Drawing.Image)resources.GetObject( "btnMoveDown.Image" );
+      btnMoveDown.Location = new System.Drawing.Point( 203, 211 );
+      btnMoveDown.Name = "btnMoveDown";
+      btnMoveDown.Size = new System.Drawing.Size( 29, 23 );
+      btnMoveDown.TabIndex = 5;
+      toolTipArrangedList.SetToolTip( btnMoveDown, "Move Entry Down" );
+      btnMoveDown.Click +=  btnMoveDown_Click ;
       // 
       // btnMoveUp
       // 
-      this.btnMoveUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnMoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnMoveUp.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnMoveUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnMoveUp.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnMoveUp.Enabled = false;
-      this.btnMoveUp.Image = ((System.Drawing.Image)(resources.GetObject("btnMoveUp.Image")));
-      this.btnMoveUp.Location = new System.Drawing.Point(153, 211);
-      this.btnMoveUp.Name = "btnMoveUp";
-      this.btnMoveUp.Size = new System.Drawing.Size(29, 23);
-      this.btnMoveUp.TabIndex = 4;
-      this.toolTipArrangedList.SetToolTip(this.btnMoveUp, "Move Entry Up");
-      this.btnMoveUp.Click += new DecentForms.EventHandler(this.btnMoveUp_Click);
+      btnMoveUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnMoveUp.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      btnMoveUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnMoveUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnMoveUp.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnMoveUp.DisplayAntiAliased = true;
+      btnMoveUp.Enabled = false;
+      btnMoveUp.Image = (System.Drawing.Image)resources.GetObject( "btnMoveUp.Image" );
+      btnMoveUp.Location = new System.Drawing.Point( 153, 211 );
+      btnMoveUp.Name = "btnMoveUp";
+      btnMoveUp.Size = new System.Drawing.Size( 29, 23 );
+      btnMoveUp.TabIndex = 4;
+      toolTipArrangedList.SetToolTip( btnMoveUp, "Move Entry Up" );
+      btnMoveUp.Click +=  btnMoveUp_Click ;
       // 
       // btnDelete
       // 
-      this.btnDelete.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnDelete.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnDelete.Enabled = false;
-      this.btnDelete.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.Image")));
-      this.btnDelete.Location = new System.Drawing.Point(103, 211);
-      this.btnDelete.Name = "btnDelete";
-      this.btnDelete.Size = new System.Drawing.Size(29, 23);
-      this.btnDelete.TabIndex = 3;
-      this.toolTipArrangedList.SetToolTip(this.btnDelete, "Delete Entry");
-      this.btnDelete.Click += new DecentForms.EventHandler(this.btnDelete_Click);
+      btnDelete.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnDelete.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      btnDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnDelete.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnDelete.DisplayAntiAliased = true;
+      btnDelete.Enabled = false;
+      btnDelete.Image = (System.Drawing.Image)resources.GetObject( "btnDelete.Image" );
+      btnDelete.Location = new System.Drawing.Point( 103, 211 );
+      btnDelete.Name = "btnDelete";
+      btnDelete.Size = new System.Drawing.Size( 29, 23 );
+      btnDelete.TabIndex = 3;
+      toolTipArrangedList.SetToolTip( btnDelete, "Delete Entry" );
+      btnDelete.Click +=  btnDelete_Click ;
       // 
       // btnAdd
       // 
-      this.btnAdd.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnAdd.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnAdd.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnAdd.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
-      this.btnAdd.Location = new System.Drawing.Point(3, 211);
-      this.btnAdd.Name = "btnAdd";
-      this.btnAdd.Size = new System.Drawing.Size(29, 23);
-      this.btnAdd.TabIndex = 1;
-      this.toolTipArrangedList.SetToolTip(this.btnAdd, "Add Entry");
-      this.btnAdd.Click += new DecentForms.EventHandler(this.btnAdd_Click);
+      btnAdd.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnAdd.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      btnAdd.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnAdd.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnAdd.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnAdd.DisplayAntiAliased = true;
+      btnAdd.Image = (System.Drawing.Image)resources.GetObject( "btnAdd.Image" );
+      btnAdd.Location = new System.Drawing.Point( 3, 211 );
+      btnAdd.Name = "btnAdd";
+      btnAdd.Size = new System.Drawing.Size( 29, 23 );
+      btnAdd.TabIndex = 1;
+      toolTipArrangedList.SetToolTip( btnAdd, "Add Entry" );
+      btnAdd.Click +=  btnAdd_Click ;
       // 
       // btnClone
       // 
-      this.btnClone.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnClone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnClone.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnClone.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnClone.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnClone.Image = ((System.Drawing.Image)(resources.GetObject("btnClone.Image")));
-      this.btnClone.Location = new System.Drawing.Point(54, 211);
-      this.btnClone.Name = "btnClone";
-      this.btnClone.Size = new System.Drawing.Size(29, 23);
-      this.btnClone.TabIndex = 2;
-      this.toolTipArrangedList.SetToolTip(this.btnClone, "Clone Entry");
-      this.btnClone.Click += new DecentForms.EventHandler(this.btnClone_Click);
+      btnClone.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnClone.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      btnClone.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnClone.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnClone.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnClone.DisplayAntiAliased = true;
+      btnClone.Image = (System.Drawing.Image)resources.GetObject( "btnClone.Image" );
+      btnClone.Location = new System.Drawing.Point( 54, 211 );
+      btnClone.Name = "btnClone";
+      btnClone.Size = new System.Drawing.Size( 29, 23 );
+      btnClone.TabIndex = 2;
+      toolTipArrangedList.SetToolTip( btnClone, "Clone Entry" );
+      btnClone.Click +=  btnClone_Click ;
       // 
       // ArrangedItemList
       // 
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.Controls.Add(this.btnClone);
-      this.Controls.Add(this.btnMoveDown);
-      this.Controls.Add(this.btnMoveUp);
-      this.Controls.Add(this.btnDelete);
-      this.Controls.Add(this.btnAdd);
-      this.Controls.Add(this.listItems);
-      this.Name = "ArrangedItemList";
-      this.Size = new System.Drawing.Size(240, 237);
-      this.SizeChanged += new System.EventHandler(this.ArrangedItemList_SizeChanged);
-      this.ResumeLayout(false);
+      AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+      Controls.Add( btnClone );
+      Controls.Add( btnMoveDown );
+      Controls.Add( btnMoveUp );
+      Controls.Add( btnDelete );
+      Controls.Add( btnAdd );
+      Controls.Add( listItems );
+      Name = "ArrangedItemList";
+      Size = new System.Drawing.Size( 240, 237 );
+      SizeChanged +=  ArrangedItemList_SizeChanged ;
+      ResumeLayout( false );
 
     }
 

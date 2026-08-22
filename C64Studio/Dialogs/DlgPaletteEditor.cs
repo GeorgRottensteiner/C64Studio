@@ -443,7 +443,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void paletteList_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    private void paletteList_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
     {
       var newPalList = new List<Palette>();
 

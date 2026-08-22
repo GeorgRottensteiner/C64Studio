@@ -439,6 +439,9 @@
     <Compile Update="Documents\Bookmarks.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Documents\PathEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Documents\SFXEditor.cs">
       <SubType>Form</SubType>
     </Compile>

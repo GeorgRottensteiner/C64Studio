@@ -545,7 +545,7 @@
       this.paletteList.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.paletteList_CloningItem);
       this.paletteList.RemovingItem += new RetroDevStudio.Controls.ArrangedItemList.RemovingItemEventHandler(this.paletteList_RemovingItem);
       this.paletteList.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_ItemRemoved);
-      this.paletteList.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.paletteList_ItemMoved);
+      this.paletteList.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemMovedEventHandler(this.paletteList_ItemMoved);
       this.paletteList.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_SelectedIndexChanged);
       // 
       // btnImportFromAssembly

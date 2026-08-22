@@ -320,7 +320,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void alistTools_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    private void alistTools_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
     {
       Core.Settings.ToolInfos.Clear();
       foreach ( ArrangedItemEntry item in alistTools.Items )

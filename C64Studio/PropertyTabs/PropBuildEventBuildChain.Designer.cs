@@ -105,7 +105,7 @@
       this.listBuildChainProjects.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.listBuildChainProjects_CloningItem);
       this.listBuildChainProjects.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemAdded);
       this.listBuildChainProjects.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemRemoved);
-      this.listBuildChainProjects.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listBuildChainProjects_ItemMoved);
+      this.listBuildChainProjects.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemMovedEventHandler(this.listBuildChainProjects_ItemMoved);
       this.listBuildChainProjects.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_SelectedIndexChanged);
       // 
       // labelDefines

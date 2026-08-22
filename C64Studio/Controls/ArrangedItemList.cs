@@ -20,10 +20,10 @@ namespace RetroDevStudio.Controls
     public delegate ArrangedItemEntry CloningItemEventHandler( object sender, ArrangedItemEntry Item );
     public delegate bool RemovingItemEventHandler( object sender, ArrangedItemEntry Item );
     public delegate void ItemModifiedEventHandler( object sender, ArrangedItemEntry Item );
-    public delegate bool ItemExchangingEventHandler( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 );
-    public delegate void ItemExchangedEventHandler( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 );
+    public delegate bool ItemMovingEventHandler( object sender, ArrangedItemEntry Item, int newIndex );
+    public delegate void ItemMovedEventHandler( object sender, ArrangedItemEntry Item, int originalIndex );
 
-
+    // called when a new item is to be added (allows generating a custom object)
     public event AddingItemEventHandler AddingItem;
     public event CloningItemEventHandler CloningItem;
 
@@ -34,8 +34,8 @@ namespace RetroDevStudio.Controls
     public event ItemModifiedEventHandler ItemAdded;
     public event ItemModifiedEventHandler ItemRemoved;
     // return true to allow move
-    public event ItemExchangingEventHandler MovingItem;
-    public event ItemExchangedEventHandler ItemMoved;
+    public event ItemMovingEventHandler MovingItem;
+    public event ItemMovedEventHandler ItemMoved;
     public event ItemModifiedEventHandler SelectedIndexChanged;
 
     private ArrangedItemListCollection _Items;
@@ -178,6 +178,7 @@ namespace RetroDevStudio.Controls
       set
       {
         btnAdd.Enabled = value;
+        listItems.AllowDrag = value;
       }
     }
 
@@ -259,7 +260,7 @@ namespace RetroDevStudio.Controls
       set
       {
         if ( ( value < -1 )
-        ||   ( value >= listItems.Items.Count ) )
+        || ( value >= listItems.Items.Count ) )
         {
           throw new ArgumentOutOfRangeException( "SelectedIndex", $"Index {value} out of range!" );
         }
@@ -376,7 +377,7 @@ namespace RetroDevStudio.Controls
         ItemRemoved( this, itemToRemove );
       }
       if ( ( indexToRemove >= listItems.Items.Count )
-      &&   ( indexToRemove > 0 ) )
+      && ( indexToRemove > 0 ) )
       {
         --indexToRemove;
       }
@@ -412,7 +413,7 @@ namespace RetroDevStudio.Controls
     private void btnMoveUp_Click( DecentForms.ControlBase Sender )
     {
       if ( ( listItems.SelectedIndices.Count == 0 )
-      ||   ( listItems.SelectedIndices[0] == 0 ) )
+      || ( listItems.SelectedIndices[0] == 0 ) )
       {
         return;
       }
@@ -427,7 +428,7 @@ namespace RetroDevStudio.Controls
       bool    allowMove = true;
       if ( MovingItem != null )
       {
-        allowMove = MovingItem( this, itemToMove, otherItem );
+        allowMove = MovingItem( this, itemToMove, indexToMove - 1 );
       }
       if ( !allowMove )
       {
@@ -442,7 +443,7 @@ namespace RetroDevStudio.Controls
 
       if ( ItemMoved != null )
       {
-        ItemMoved( this, itemToMove, otherItem );
+        ItemMoved( this, itemToMove, indexToMove - 1 );
       }
     }
 
@@ -466,7 +467,7 @@ namespace RetroDevStudio.Controls
       bool    allowMove = true;
       if ( MovingItem != null )
       {
-        allowMove = MovingItem( this, itemToMove, otherItem );
+        allowMove = MovingItem( this, itemToMove, indexToMove + 1 );
       }
       if ( !allowMove )
       {
@@ -482,7 +483,7 @@ namespace RetroDevStudio.Controls
 
       if ( ItemMoved != null )
       {
-        ItemMoved( this, itemToMove, otherItem );
+        ItemMoved( this, itemToMove, indexToMove + 1 );
       }
     }
 
@@ -628,6 +629,35 @@ namespace RetroDevStudio.Controls
         }
       }
     }
+
+
+
+    private bool listItems_ItemSwapping( DecentForms.ControlBase Sender, DecentForms.ListBox.ListBoxItem item, int newIndex )
+    {
+      ArrangedItemEntry  itemToMove = (ArrangedItemEntry)listItems.Items[item.Index];
+
+      bool    allowMove = true;
+      if ( MovingItem != null )
+      {
+        allowMove = MovingItem( this, itemToMove, newIndex );
+      }
+      return allowMove;
+    }
+
+
+
+    private void listItems_ItemSwapped( DecentForms.ControlBase Sender, DecentForms.ListBox.ListBoxItem item, int originalIndex )
+    {
+      UpdateUI();
+
+      if ( ItemMoved != null )
+      {
+        ItemMoved( this, (ArrangedItemEntry)listItems.Items[item.Index], originalIndex );
+      }
+    }
+
+
+
   }
 
 

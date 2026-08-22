@@ -2767,7 +2767,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listColorMappingTargets_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    private void listColorMappingTargets_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
     {
       int     sourceColor = listColorMappingColors.SelectedIndex;
       if ( sourceColor == -1 )
@@ -2801,17 +2801,8 @@ namespace RetroDevStudio.Documents
 
 
 
-    private bool listColorMappingTargets_MovingItem( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    private bool listColorMappingTargets_MovingItem( object sender, ArrangedItemEntry Item, int originalIndex )
     {
-            /*
-      var     colorMapping1 = ColorMappingFromItem( Item1 );
-      var     colorMapping2 = ColorMappingFromItem( Item2 );
-
-      if ( ( colorMapping1 == Formats.GraphicScreenProject.ColorMappingTarget.ANY )
-      ||   ( colorMapping2 == Formats.GraphicScreenProject.ColorMappingTarget.ANY ) )
-      {
-        return false;
-      }*/
       return true;
     }
 

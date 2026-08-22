@@ -706,8 +706,8 @@
       this.listColorMappingTargets.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.listColorMappingTargets_AddingItem);
       this.listColorMappingTargets.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemAdded);
       this.listColorMappingTargets.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemRemoved);
-      this.listColorMappingTargets.MovingItem += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangingEventHandler(this.listColorMappingTargets_MovingItem);
-      this.listColorMappingTargets.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listColorMappingTargets_ItemMoved);
+      this.listColorMappingTargets.MovingItem += new RetroDevStudio.Controls.ArrangedItemList.ItemMovingEventHandler(this.listColorMappingTargets_MovingItem);
+      this.listColorMappingTargets.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemMovedEventHandler(this.listColorMappingTargets_ItemMoved);
       this.listColorMappingTargets.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_SelectedIndexChanged);
       // 
       // comboColorMappingTargets

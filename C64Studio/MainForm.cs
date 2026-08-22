@@ -53,6 +53,7 @@ namespace RetroDevStudio
     public ValueTableEditor       m_ValueTableEditor = null;
     public PaletteEditor          m_PaletteEditor = null;
     public SFXEditor              m_SFXEditor = null;
+    public PathEditor             m_PathEditor = null;
     public Documents.Help         m_Help = null;
     public Documents.SampleExplorer   m_SampleExplorer = null;
     public Documents.FileManager      m_FileManager = null;
@@ -525,6 +526,7 @@ namespace RetroDevStudio
       m_ValueTableEditor = new ValueTableEditor( StudioCore );
       m_PaletteEditor = new PaletteEditor( StudioCore );
       m_SFXEditor = new SFXEditor( StudioCore );
+      m_PathEditor = new PathEditor( StudioCore );
       m_FindReplace = new FormFindReplace( StudioCore );
       m_Help = new Documents.Help( StudioCore );
       m_Bookmarks = new Bookmarks( StudioCore );
@@ -540,6 +542,7 @@ namespace RetroDevStudio
       m_Disassembler.SetInternal();
       m_ValueTableEditor.SetInternal();
       m_SFXEditor.SetInternal();
+      m_PathEditor.SetInternal();
 
       // butt ugly hack
       StudioCore.Settings.ToolTiny64.Type = ToolInfo.ToolType.EMULATOR;
@@ -565,6 +568,7 @@ namespace RetroDevStudio
       AddToolWindow( ToolWindowType.MAP_EDITOR, m_MapEditor, DockState.Document, mapEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.PALETTE_EDITOR, m_PaletteEditor, DockState.Document, paletteEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.SFX_EDITOR, m_SFXEditor, DockState.Document, sfxEditorToolStripMenuItem, false, false );
+      AddToolWindow( ToolWindowType.PATH_EDITOR, m_PathEditor, DockState.DockLeft, pathEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.PETSCII_TABLE, m_PetSCIITable, DockState.Float, petSCIITableToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.CALCULATOR, m_Calculator, DockState.DockRight, calculatorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.HELP, m_Help, DockState.Document, helpToolStripMenuItem, false, false );
@@ -598,6 +602,7 @@ namespace RetroDevStudio
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.LABEL_EXPLORER )] = m_LabelExplorer;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.PALETTE_EDITOR )] = m_PaletteEditor;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SFX_EDITOR )] = m_SFXEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.PATH_EDITOR )] = m_PathEditor;
 
 
       StudioCore.Settings.Functions[Function.COMPILE].MenuItem = compileToolStripMenuItem;
@@ -6618,12 +6623,17 @@ namespace RetroDevStudio
         document = new SFXEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
+      else if ( extension == ".PATHPROJECT" )
+      {
+        document = new PathEditor( StudioCore );
+        document.ShowHint = DockState.Document;
+      }
       else if ( ( extension == ".TXT" )
-      || ( extension == ".CFG" )
-      || ( extension == ".BAT" )
-      || ( extension == ".PS1" )
-      || ( extension == ".HTML" )
-      || ( extension == ".HTM" ) )
+      ||        ( extension == ".CFG" )
+      ||        ( extension == ".BAT" )
+      ||        ( extension == ".PS1" )
+      ||        ( extension == ".HTML" )
+      ||        ( extension == ".HTM" ) )
       {
         document = new TextFile( StudioCore );
         document.ShowHint = DockState.Document;
