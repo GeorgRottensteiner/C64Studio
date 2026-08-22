@@ -202,7 +202,11 @@ namespace RetroDevStudio.Controls
 
       if ( !Enabled )
       {
-        pe.Graphics.FillRectangle( new SolidBrush( SystemColors.ButtonFace ), pe.ClipRectangle );
+        // Dispose brush deterministically to avoid GDI handle leak in paint path
+        using ( SolidBrush disabledBrush = new SolidBrush( SystemColors.ButtonFace ) )
+        {
+          pe.Graphics.FillRectangle( disabledBrush, pe.ClipRectangle );
+        }
         return;
       }
       // OnPaint-Basisklasse wird aufgerufen
@@ -213,7 +217,10 @@ namespace RetroDevStudio.Controls
       {
         rect.Width -= ( rect.Width % letterWidth );
       }
-      pe.Graphics.FillRectangle( new SolidBrush( SystemColors.Window ), pe.ClipRectangle );
+      using ( SolidBrush backgroundBrush = new SolidBrush( SystemColors.Window ) )
+      {
+        pe.Graphics.FillRectangle( backgroundBrush, pe.ClipRectangle );
+      }
       if ( HasSelection )
       {
         int  L,R,T,B;
@@ -231,40 +238,52 @@ namespace RetroDevStudio.Controls
           R = m_SelectionEndPos * letterWidth - 1;
         }
         Rectangle selRect = new Rectangle( L, T, R - L, B - T );
-        pe.Graphics.FillRectangle( new SolidBrush( SystemColors.Highlight ), selRect );
-      }
-      StringFormat sf = new StringFormat();
-      sf.LineAlignment = StringAlignment.Center;
-      sf.Alignment = StringAlignment.Center;
-
-      for ( int i = 0; i < maxCharacters; ++i )
-      {
-        pe.Graphics.DrawRectangle( new Pen( SystemColors.ControlLight ), new Rectangle( i * letterWidth, 0, letterWidth - 1, this.Height - 1 ) );
-        if ( i < Text.Length )
+        using ( SolidBrush selectionBrush = new SolidBrush( SystemColors.Highlight ) )
         {
-          RectangleF  letterBounds = new RectangleF( (float)i * letterWidth, 0.0f, (float)letterWidth, (float)Height );
+          pe.Graphics.FillRectangle( selectionBrush, selRect );
+        }
+      }
+      using ( StringFormat sf = new StringFormat() )
+      {
+        sf.LineAlignment = StringAlignment.Center;
+        sf.Alignment = StringAlignment.Center;
 
-          if ( HasSelection )
+        // Hoist grid pen and text brushes out of the loop and dispose them,
+        // to avoid allocating/disposing GDI objects per iteration (handle leak)
+        using ( Pen gridPen = new Pen( SystemColors.ControlLight ) )
+        using ( SolidBrush highlightTextBrush = new SolidBrush( SystemColors.HighlightText ) )
+        using ( SolidBrush windowTextBrush = new SolidBrush( SystemColors.WindowText ) )
+        {
+          for ( int i = 0; i < maxCharacters; ++i )
           {
-            if ( ( m_SelectionStartPos > m_SelectionEndPos )
-            &&   ( i >= m_SelectionEndPos )
-            &&   ( i < m_SelectionStartPos ) )
+            pe.Graphics.DrawRectangle( gridPen, new Rectangle( i * letterWidth, 0, letterWidth - 1, this.Height - 1 ) );
+            if ( i < Text.Length )
             {
-              pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.HighlightText ), letterBounds, sf );
+              RectangleF  letterBounds = new RectangleF( (float)i * letterWidth, 0.0f, (float)letterWidth, (float)Height );
+
+              if ( HasSelection )
+              {
+                if ( ( m_SelectionStartPos > m_SelectionEndPos )
+                &&   ( i >= m_SelectionEndPos )
+                &&   ( i < m_SelectionStartPos ) )
+                {
+                  pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, highlightTextBrush, letterBounds, sf );
+                }
+                else if ( ( i >= m_SelectionStartPos )
+                &&        ( i < m_SelectionEndPos ) )
+                {
+                  pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, highlightTextBrush, letterBounds, sf );
+                }
+                else
+                {
+                  pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, windowTextBrush, letterBounds, sf );
+                }
+              }
+              else
+              {
+                pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, windowTextBrush, letterBounds, sf );
+              }
             }
-            else if ( ( i >= m_SelectionStartPos )
-            &&        ( i < m_SelectionEndPos ) )
-            {
-              pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.HighlightText ), letterBounds, sf );
-            }
-            else
-            {
-              pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.WindowText ), letterBounds, sf );
-            }
-          }
-          else
-          {
-            pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.WindowText ), letterBounds, sf );
           }
         }
       }
