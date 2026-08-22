@@ -869,6 +869,10 @@ namespace RetroDevStudio.Formats
     public override bool RenameFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer NewFilename )
     {
       _LastError = "";
+
+      // normalize the new filename to 16 bytes with 0xa0 padding (like CreateFile does)
+      NewFilename = PadFilename( NewFilename );
+
       int curTrack = TRACK_DIRECTORY;
       int curSector = SECTOR_DIRECTORY;
       while ( true )
