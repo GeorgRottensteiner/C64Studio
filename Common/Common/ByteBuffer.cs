@@ -1109,7 +1109,8 @@ namespace GR
         {
           return -1;
         }
-        for ( int i = StartIndex; i < Length - Key.Length; ++i )
+        // include the last valid start position ( key ending exactly at the buffer end )
+        for ( int i = StartIndex; i <= Length - Key.Length; ++i )
         {
           bool  foundMatch = true;
           for ( int j = 0; j < Key.Length; ++j )
