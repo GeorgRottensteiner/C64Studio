@@ -3649,43 +3649,45 @@ namespace RetroDevStudio.Documents
     private void editSource_PaintLine( object sender, FastColoredTextBoxNS.PaintLineEventArgs e )
     {
       // display breakpoints
-      var textBrush = new SolidBrush( editSource.ForeColor );
-
-      if ( m_BreakPoints.ContainsKey( e.LineIndex ) )
+      // brush is owned here and must be disposed on every code path (called once per visible line per repaint)
+      using ( var textBrush = new SolidBrush( editSource.ForeColor ) )
       {
-        e.Graphics.DrawImage( RetroDevStudio.Properties.Resources.breakpoint, m_BreakpointOffset, e.LineRect.Top );
-      }
-
-      var lineInfo = FetchLineInfo( e.LineIndex );
-      if ( lineInfo != null )
-      {
-        if ( m_CycleOffset != -1 )
+        if ( m_BreakPoints.ContainsKey( e.LineIndex ) )
         {
-          if ( lineInfo.Opcode != null )
+          e.Graphics.DrawImage( RetroDevStudio.Properties.Resources.breakpoint, m_BreakpointOffset, e.LineRect.Top );
+        }
+
+        var lineInfo = FetchLineInfo( e.LineIndex );
+        if ( lineInfo != null )
+        {
+          if ( m_CycleOffset != -1 )
           {
-            if ( lineInfo.Opcode.NumPenaltyCycles > 0 )
+            if ( lineInfo.Opcode != null )
             {
-              e.Graphics.DrawString( lineInfo.Opcode.NumCycles.ToString() + "+" + lineInfo.Opcode.NumPenaltyCycles.ToString(), editSource.Font, textBrush, m_CycleOffset, e.LineRect.Top );
+              if ( lineInfo.Opcode.NumPenaltyCycles > 0 )
+              {
+                e.Graphics.DrawString( lineInfo.Opcode.NumCycles.ToString() + "+" + lineInfo.Opcode.NumPenaltyCycles.ToString(), editSource.Font, textBrush, m_CycleOffset, e.LineRect.Top );
+              }
+              else
+              {
+                e.Graphics.DrawString( lineInfo.Opcode.NumCycles.ToString(), editSource.Font, textBrush, m_CycleOffset, e.LineRect.Top );
+              }
+            }
+          }
+          if ( m_ByteSizeOffset != -1 )
+          {
+            e.Graphics.DrawString( lineInfo.NumBytes.ToString(), editSource.Font, textBrush, m_ByteSizeOffset, e.LineRect.Top );
+          }
+          if ( m_AddressOffset != -1 )
+          {
+            if ( lineInfo.AddressStart != -1 )
+            {
+              e.Graphics.DrawString( "$" + lineInfo.AddressStart.ToString( "X4" ), editSource.Font, textBrush, m_AddressOffset, e.LineRect.Top );
             }
             else
             {
-              e.Graphics.DrawString( lineInfo.Opcode.NumCycles.ToString(), editSource.Font, textBrush, m_CycleOffset, e.LineRect.Top );
+              e.Graphics.DrawString( "????", editSource.Font, textBrush, m_AddressOffset, e.LineRect.Top );
             }
-          }
-        }
-        if ( m_ByteSizeOffset != -1 )
-        {
-          e.Graphics.DrawString( lineInfo.NumBytes.ToString(), editSource.Font, textBrush, m_ByteSizeOffset, e.LineRect.Top );
-        }
-        if ( m_AddressOffset != -1 )
-        {
-          if ( lineInfo.AddressStart != -1 )
-          {
-            e.Graphics.DrawString( "$" + lineInfo.AddressStart.ToString( "X4" ), editSource.Font, textBrush, m_AddressOffset, e.LineRect.Top );
-          }
-          else
-          {
-            e.Graphics.DrawString( "????", editSource.Font, textBrush, m_AddressOffset, e.LineRect.Top );
           }
         }
       }
