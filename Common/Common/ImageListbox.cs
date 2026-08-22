@@ -1042,8 +1042,10 @@ namespace GR.Forms
 
         if ( Items[itemIndex].Highlighted )
         {
-          System.Drawing.SolidBrush highlightColorBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( m_HighlightColors[Items[itemIndex].HighlightGroup % m_HighlightColors.Count] ) );
-          e.Graphics.FillRectangle( highlightColorBrush, ItemRect( itemIndex ) );
+          using ( System.Drawing.SolidBrush highlightColorBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( m_HighlightColors[Items[itemIndex].HighlightGroup % m_HighlightColors.Count] ) ) )
+          {
+            e.Graphics.FillRectangle( highlightColorBrush, ItemRect( itemIndex ) );
+          }
         }
         if ( m_SelectedIndices.Contains( itemIndex ) )
         {
