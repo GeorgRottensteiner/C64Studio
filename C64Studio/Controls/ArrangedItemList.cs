@@ -43,7 +43,8 @@ namespace RetroDevStudio.Controls
     private bool      _AllowClone = true;
     private bool      _DoNotFireSelectedIndexChanged = false;
     private bool      _UpdateLocked = false;
-    private bool      _RedrawRequired= false;
+    private bool      _RedrawRequired = false;
+    private bool      _AllowDragReordering = true;
 
 
 
@@ -178,6 +179,20 @@ namespace RetroDevStudio.Controls
       set
       {
         btnAdd.Enabled = value;
+      }
+    }
+
+
+
+    public bool AllowDragReordering
+    {
+      get
+      {
+        return _AllowDragReordering;
+      }
+      set
+      {
+        _AllowDragReordering = value;
         listItems.AllowDrag = value;
       }
     }

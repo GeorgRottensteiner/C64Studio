@@ -45,6 +45,13 @@ namespace RetroDevStudio.Documents
     {
       Core = core;
       InitializeComponent();
+
+      foreach ( PathProject.StepType step in Enum.GetValues( typeof( PathProject.StepType ) ) )
+      {
+        comboStepTypes.Items.Add( new GR.Generic.Tupel<PathProject.StepType, string>( step, GR.EnumHelper.GetDescription( step ) ) );
+      }
+      comboStepTypes.SelectedIndex = 0;
+
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }
 
@@ -135,6 +142,89 @@ namespace RetroDevStudio.Documents
     private void editPathName_TextChanged( object sender, EventArgs e )
     {
       listPaths.AddButtonEnabled = !string.IsNullOrEmpty( editPathName.Text );
+      if ( listPaths.SelectedItem != null )
+      {
+        ( (PathProject.Path)listPaths.SelectedItem.Tag ).Name = editPathName.Text;
+      }
+    }
+
+
+
+    private void listPaths_ItemAdded( object sender, ArrangedItemEntry Item )
+    {
+      var newPath = new PathProject.Path();
+      newPath.Name = editPathName.Text;
+      _project.Paths.Add( newPath );
+
+      Item.Tag = newPath;
+      Item.Text = newPath.Name;
+    }
+
+
+
+    private void listPaths_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
+    {
+      RebuildPathList();
+    }
+
+
+
+    private void listPaths_ItemRemoved( object sender, ArrangedItemEntry Item )
+    {
+      RebuildPathList();
+    }
+
+
+
+    private void RebuildPathList()
+    {
+      var paths = new List<PathProject.Path>();
+      foreach ( var item in listPaths.Items )
+      {
+        paths.Add( (PathProject.Path)( (ArrangedItemEntry)item ).Tag );
+      }
+      _project.Paths = paths;
+    }
+
+
+
+    private void listPaths_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
+    {
+      bool  enableStepList = listPaths.SelectedIndex != -1;
+
+      labelStepType.Enabled = enableStepList;
+      comboStepTypes.Enabled = enableStepList;
+      labelStepLength.Enabled = enableStepList;
+      editStepLength.Enabled = enableStepList;
+      listPathSteps.Enabled = enableStepList;
+    }
+
+
+
+    private void listPathSteps_ItemAdded( object sender, ArrangedItemEntry Item )
+    {
+
+    }
+
+
+
+    private void listPathSteps_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
+    {
+
+    }
+
+
+
+    private void listPathSteps_ItemRemoved( object sender, ArrangedItemEntry Item )
+    {
+
+    }
+
+
+
+    private void listPathSteps_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
+    {
+
     }
 
 

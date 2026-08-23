@@ -31,8 +31,8 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PathEditor));
       tabPathEditor = new System.Windows.Forms.TabControl();
       tabEditor = new System.Windows.Forms.TabPage();
-      label5 = new System.Windows.Forms.Label();
-      label4 = new System.Windows.Forms.Label();
+      labelStepLength = new System.Windows.Forms.Label();
+      labelStepType = new System.Windows.Forms.Label();
       label3 = new System.Windows.Forms.Label();
       label6 = new System.Windows.Forms.Label();
       label2 = new System.Windows.Forms.Label();
@@ -63,8 +63,8 @@
       // 
       // tabEditor
       // 
-      tabEditor.Controls.Add( label5 );
-      tabEditor.Controls.Add( label4 );
+      tabEditor.Controls.Add( labelStepLength );
+      tabEditor.Controls.Add( labelStepType );
       tabEditor.Controls.Add( label3 );
       tabEditor.Controls.Add( label6 );
       tabEditor.Controls.Add( label2 );
@@ -83,25 +83,27 @@
       tabEditor.Text = "Editor";
       tabEditor.UseVisualStyleBackColor = true;
       // 
-      // label5
+      // labelStepLength
       // 
-      label5.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      label5.AutoSize = true;
-      label5.Location = new System.Drawing.Point( 217, 464 );
-      label5.Name = "label5";
-      label5.Size = new System.Drawing.Size( 101, 13 );
-      label5.TabIndex = 31;
-      label5.Text = "Step Length/Count:";
+      labelStepLength.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      labelStepLength.AutoSize = true;
+      labelStepLength.Enabled = false;
+      labelStepLength.Location = new System.Drawing.Point( 217, 464 );
+      labelStepLength.Name = "labelStepLength";
+      labelStepLength.Size = new System.Drawing.Size( 101, 13 );
+      labelStepLength.TabIndex = 31;
+      labelStepLength.Text = "Step Length/Count:";
       // 
-      // label4
+      // labelStepType
       // 
-      label4.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      label4.AutoSize = true;
-      label4.Location = new System.Drawing.Point( 217, 424 );
-      label4.Name = "label4";
-      label4.Size = new System.Drawing.Size( 59, 13 );
-      label4.TabIndex = 30;
-      label4.Text = "Step Type:";
+      labelStepType.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      labelStepType.AutoSize = true;
+      labelStepType.Enabled = false;
+      labelStepType.Location = new System.Drawing.Point( 217, 424 );
+      labelStepType.Name = "labelStepType";
+      labelStepType.Size = new System.Drawing.Size( 59, 13 );
+      labelStepType.TabIndex = 30;
+      labelStepType.Text = "Step Type:";
       // 
       // label3
       // 
@@ -143,6 +145,7 @@
       // editStepLength
       // 
       editStepLength.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      editStepLength.Enabled = false;
       editStepLength.Location = new System.Drawing.Point( 217, 480 );
       editStepLength.Name = "editStepLength";
       editStepLength.Size = new System.Drawing.Size( 203, 20 );
@@ -161,8 +164,10 @@
       // 
       listPathSteps.AddButtonEnabled = true;
       listPathSteps.AllowClone = true;
+      listPathSteps.AllowDragReordering = true;
       listPathSteps.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left ;
       listPathSteps.DeleteButtonEnabled = false;
+      listPathSteps.Enabled = false;
       listPathSteps.HasOwnerDrawColumn = false;
       listPathSteps.HighlightColor = System.Drawing.SystemColors.HotTrack;
       listPathSteps.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
@@ -176,11 +181,16 @@
       listPathSteps.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       listPathSteps.Size = new System.Drawing.Size( 203, 397 );
       listPathSteps.TabIndex = 23;
+      listPathSteps.ItemAdded +=  listPathSteps_ItemAdded ;
+      listPathSteps.ItemRemoved +=  listPathSteps_ItemRemoved ;
+      listPathSteps.ItemMoved +=  listPathSteps_ItemMoved ;
+      listPathSteps.SelectedIndexChanged +=  listPathSteps_SelectedIndexChanged ;
       // 
       // listPaths
       // 
       listPaths.AddButtonEnabled = false;
       listPaths.AllowClone = true;
+      listPaths.AllowDragReordering = true;
       listPaths.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left ;
       listPaths.DeleteButtonEnabled = false;
       listPaths.HasOwnerDrawColumn = false;
@@ -196,11 +206,16 @@
       listPaths.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       listPaths.Size = new System.Drawing.Size( 203, 437 );
       listPaths.TabIndex = 22;
+      listPaths.ItemAdded +=  listPaths_ItemAdded ;
+      listPaths.ItemRemoved +=  listPaths_ItemRemoved ;
+      listPaths.ItemMoved +=  listPaths_ItemMoved ;
+      listPaths.SelectedIndexChanged +=  listPaths_SelectedIndexChanged ;
       // 
       // comboStepTypes
       // 
       comboStepTypes.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
       comboStepTypes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboStepTypes.Enabled = false;
       comboStepTypes.FormattingEnabled = true;
       comboStepTypes.Location = new System.Drawing.Point( 217, 440 );
       comboStepTypes.Name = "comboStepTypes";
@@ -251,8 +266,8 @@
     private System.Windows.Forms.TabControl tabPathEditor;
     private System.Windows.Forms.TabPage tabEditor;
     private System.Windows.Forms.TabPage tabExport;
-    private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.Label labelStepLength;
+    private System.Windows.Forms.Label labelStepType;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label label2;
