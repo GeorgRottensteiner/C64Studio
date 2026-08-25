@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio.Controls
+namespace RetroDevStudio.Controls
 {
   partial class PaletteEditorControl
   {
@@ -28,602 +28,596 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
-      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.tabPalette = new System.Windows.Forms.TabControl();
-      this.tabEditor = new System.Windows.Forms.TabPage();
-      this.groupBox4 = new System.Windows.Forms.GroupBox();
-      this.comboSystem = new System.Windows.Forms.ComboBox();
-      this.editPaletteName = new System.Windows.Forms.TextBox();
-      this.label6 = new System.Windows.Forms.Label();
-      this.label4 = new System.Windows.Forms.Label();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.listPalette = new System.Windows.Forms.ListBox();
-      this.groupBox3 = new System.Windows.Forms.GroupBox();
-      this.panelColorPreview = new System.Windows.Forms.Panel();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.scrollB = new System.Windows.Forms.HScrollBar();
-      this.scrollG = new System.Windows.Forms.HScrollBar();
-      this.scrollR = new System.Windows.Forms.HScrollBar();
-      this.editBHex = new System.Windows.Forms.TextBox();
-      this.editB = new System.Windows.Forms.TextBox();
-      this.editGHex = new System.Windows.Forms.TextBox();
-      this.editG = new System.Windows.Forms.TextBox();
-      this.editRHex = new System.Windows.Forms.TextBox();
-      this.editR = new System.Windows.Forms.TextBox();
-      this.label3 = new System.Windows.Forms.Label();
-      this.label2 = new System.Windows.Forms.Label();
-      this.label1 = new System.Windows.Forms.Label();
-      this.tabImportExport = new System.Windows.Forms.TabPage();
-      this.groupBox6 = new System.Windows.Forms.GroupBox();
-      this.checkImportColorsSorted = new System.Windows.Forms.CheckBox();
-      this.checkImportSwizzle = new System.Windows.Forms.CheckBox();
-      this.editDataImport = new System.Windows.Forms.TextBox();
-      this.groupBox5 = new System.Windows.Forms.GroupBox();
-      this.comboPaletteExportFormat = new System.Windows.Forms.ComboBox();
-      this.checkExportSwizzled = new System.Windows.Forms.CheckBox();
-      this.checkExportHex = new System.Windows.Forms.CheckBox();
-      this.editPrefix = new System.Windows.Forms.TextBox();
-      this.label5 = new System.Windows.Forms.Label();
-      this.editWrapByteCount = new System.Windows.Forms.TextBox();
-      this.checkExportToDataWrap = new System.Windows.Forms.CheckBox();
-      this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
-      this.editDataExport = new System.Windows.Forms.TextBox();
-      this.paletteList = new RetroDevStudio.Controls.ArrangedItemList();
-      this.btnImportFromAssembly = new DecentForms.Button();
-      this.btnImportFromFile = new DecentForms.Button();
-      this.btnExportToFile = new DecentForms.Button();
-      this.btnExportToData = new DecentForms.Button();
-      this.tabPalette.SuspendLayout();
-      this.tabEditor.SuspendLayout();
-      this.groupBox4.SuspendLayout();
-      this.groupBox1.SuspendLayout();
-      this.groupBox3.SuspendLayout();
-      this.groupBox2.SuspendLayout();
-      this.tabImportExport.SuspendLayout();
-      this.groupBox6.SuspendLayout();
-      this.groupBox5.SuspendLayout();
-      this.SuspendLayout();
+      components = new System.ComponentModel.Container();
+      toolTip1 = new System.Windows.Forms.ToolTip( components );
+      tabPalette = new System.Windows.Forms.TabControl();
+      tabEditor = new System.Windows.Forms.TabPage();
+      groupBox4 = new System.Windows.Forms.GroupBox();
+      comboSystem = new System.Windows.Forms.ComboBox();
+      editPaletteName = new System.Windows.Forms.TextBox();
+      label6 = new System.Windows.Forms.Label();
+      label4 = new System.Windows.Forms.Label();
+      paletteList = new ArrangedItemList();
+      groupBox1 = new System.Windows.Forms.GroupBox();
+      listPalette = new System.Windows.Forms.ListBox();
+      groupBox3 = new System.Windows.Forms.GroupBox();
+      panelColorPreview = new System.Windows.Forms.Panel();
+      groupBox2 = new System.Windows.Forms.GroupBox();
+      scrollB = new System.Windows.Forms.HScrollBar();
+      scrollG = new System.Windows.Forms.HScrollBar();
+      scrollR = new System.Windows.Forms.HScrollBar();
+      editBHex = new System.Windows.Forms.TextBox();
+      editB = new System.Windows.Forms.TextBox();
+      editGHex = new System.Windows.Forms.TextBox();
+      editG = new System.Windows.Forms.TextBox();
+      editRHex = new System.Windows.Forms.TextBox();
+      editR = new System.Windows.Forms.TextBox();
+      label3 = new System.Windows.Forms.Label();
+      label2 = new System.Windows.Forms.Label();
+      label1 = new System.Windows.Forms.Label();
+      tabImportExport = new System.Windows.Forms.TabPage();
+      groupBox6 = new System.Windows.Forms.GroupBox();
+      checkImportColorsSorted = new System.Windows.Forms.CheckBox();
+      checkImportSwizzle = new System.Windows.Forms.CheckBox();
+      btnImportFromAssembly = new DecentForms.Button();
+      btnImportFromFile = new DecentForms.Button();
+      editDataImport = new System.Windows.Forms.TextBox();
+      groupBox5 = new System.Windows.Forms.GroupBox();
+      comboPaletteExportFormat = new System.Windows.Forms.ComboBox();
+      checkExportSwizzled = new System.Windows.Forms.CheckBox();
+      checkExportHex = new System.Windows.Forms.CheckBox();
+      editPrefix = new System.Windows.Forms.TextBox();
+      label5 = new System.Windows.Forms.Label();
+      editWrapByteCount = new System.Windows.Forms.TextBox();
+      checkExportToDataWrap = new System.Windows.Forms.CheckBox();
+      checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
+      editDataExport = new System.Windows.Forms.TextBox();
+      btnExportToFile = new DecentForms.Button();
+      btnExportToData = new DecentForms.Button();
+      tabPalette.SuspendLayout();
+      tabEditor.SuspendLayout();
+      groupBox4.SuspendLayout();
+      groupBox1.SuspendLayout();
+      groupBox3.SuspendLayout();
+      groupBox2.SuspendLayout();
+      tabImportExport.SuspendLayout();
+      groupBox6.SuspendLayout();
+      groupBox5.SuspendLayout();
+      SuspendLayout();
       // 
       // tabPalette
       // 
-      this.tabPalette.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.tabPalette.Controls.Add(this.tabEditor);
-      this.tabPalette.Controls.Add(this.tabImportExport);
-      this.tabPalette.Location = new System.Drawing.Point(3, 3);
-      this.tabPalette.Name = "tabPalette";
-      this.tabPalette.SelectedIndex = 0;
-      this.tabPalette.Size = new System.Drawing.Size(722, 426);
-      this.tabPalette.TabIndex = 8;
+      tabPalette.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      tabPalette.Controls.Add( tabEditor );
+      tabPalette.Controls.Add( tabImportExport );
+      tabPalette.Location = new System.Drawing.Point( 3, 3 );
+      tabPalette.Name = "tabPalette";
+      tabPalette.SelectedIndex = 0;
+      tabPalette.Size = new System.Drawing.Size( 722, 426 );
+      tabPalette.TabIndex = 8;
       // 
       // tabEditor
       // 
-      this.tabEditor.Controls.Add(this.groupBox4);
-      this.tabEditor.Controls.Add(this.groupBox1);
-      this.tabEditor.Controls.Add(this.groupBox3);
-      this.tabEditor.Controls.Add(this.groupBox2);
-      this.tabEditor.Location = new System.Drawing.Point(4, 22);
-      this.tabEditor.Name = "tabEditor";
-      this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(714, 400);
-      this.tabEditor.TabIndex = 0;
-      this.tabEditor.Text = "Palette";
-      this.tabEditor.UseVisualStyleBackColor = true;
+      tabEditor.Controls.Add( groupBox4 );
+      tabEditor.Controls.Add( groupBox1 );
+      tabEditor.Controls.Add( groupBox3 );
+      tabEditor.Controls.Add( groupBox2 );
+      tabEditor.Location = new System.Drawing.Point( 4, 24 );
+      tabEditor.Name = "tabEditor";
+      tabEditor.Padding = new System.Windows.Forms.Padding( 3 );
+      tabEditor.Size = new System.Drawing.Size( 714, 398 );
+      tabEditor.TabIndex = 0;
+      tabEditor.Text = "Palette";
+      tabEditor.UseVisualStyleBackColor = true;
       // 
       // groupBox4
       // 
-      this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-      this.groupBox4.Controls.Add(this.comboSystem);
-      this.groupBox4.Controls.Add(this.editPaletteName);
-      this.groupBox4.Controls.Add(this.label6);
-      this.groupBox4.Controls.Add(this.label4);
-      this.groupBox4.Controls.Add(this.paletteList);
-      this.groupBox4.Location = new System.Drawing.Point(6, 0);
-      this.groupBox4.Name = "groupBox4";
-      this.groupBox4.Size = new System.Drawing.Size(222, 375);
-      this.groupBox4.TabIndex = 6;
-      this.groupBox4.TabStop = false;
-      this.groupBox4.Text = "Palettes";
+      groupBox4.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left ;
+      groupBox4.Controls.Add( comboSystem );
+      groupBox4.Controls.Add( editPaletteName );
+      groupBox4.Controls.Add( label6 );
+      groupBox4.Controls.Add( label4 );
+      groupBox4.Controls.Add( paletteList );
+      groupBox4.Location = new System.Drawing.Point( 6, 0 );
+      groupBox4.Name = "groupBox4";
+      groupBox4.Size = new System.Drawing.Size( 222, 373 );
+      groupBox4.TabIndex = 6;
+      groupBox4.TabStop = false;
+      groupBox4.Text = "Palettes";
       // 
       // comboSystem
       // 
-      this.comboSystem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboSystem.FormattingEnabled = true;
-      this.comboSystem.Location = new System.Drawing.Point(50, 332);
-      this.comboSystem.Name = "comboSystem";
-      this.comboSystem.Size = new System.Drawing.Size(166, 21);
-      this.comboSystem.TabIndex = 10;
-      this.comboSystem.SelectedIndexChanged += new System.EventHandler(this.comboSystem_SelectedIndexChanged);
+      comboSystem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboSystem.FormattingEnabled = true;
+      comboSystem.Location = new System.Drawing.Point( 50, 332 );
+      comboSystem.Name = "comboSystem";
+      comboSystem.Size = new System.Drawing.Size( 166, 23 );
+      comboSystem.TabIndex = 10;
+      comboSystem.SelectedIndexChanged +=  comboSystem_SelectedIndexChanged ;
       // 
       // editPaletteName
       // 
-      this.editPaletteName.Location = new System.Drawing.Point(50, 302);
-      this.editPaletteName.Name = "editPaletteName";
-      this.editPaletteName.Size = new System.Drawing.Size(166, 20);
-      this.editPaletteName.TabIndex = 9;
-      this.editPaletteName.TextChanged += new System.EventHandler(this.editPaletteName_TextChanged);
+      editPaletteName.Location = new System.Drawing.Point( 50, 302 );
+      editPaletteName.Name = "editPaletteName";
+      editPaletteName.Size = new System.Drawing.Size( 166, 23 );
+      editPaletteName.TabIndex = 9;
+      editPaletteName.TextChanged +=  editPaletteName_TextChanged ;
       // 
       // label6
       // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(6, 335);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(44, 13);
-      this.label6.TabIndex = 8;
-      this.label6.Text = "System:";
+      label6.AutoSize = true;
+      label6.Location = new System.Drawing.Point( 6, 335 );
+      label6.Name = "label6";
+      label6.Size = new System.Drawing.Size( 48, 15 );
+      label6.TabIndex = 8;
+      label6.Text = "System:";
       // 
       // label4
       // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(6, 306);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(38, 13);
-      this.label4.TabIndex = 8;
-      this.label4.Text = "Name:";
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox1.Controls.Add(this.listPalette);
-      this.groupBox1.Location = new System.Drawing.Point(234, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(226, 375);
-      this.groupBox1.TabIndex = 3;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Current Palette";
-      // 
-      // listPalette
-      // 
-      this.listPalette.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.listPalette.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.listPalette.FormattingEnabled = true;
-      this.listPalette.ItemHeight = 16;
-      this.listPalette.Location = new System.Drawing.Point(6, 19);
-      this.listPalette.Name = "listPalette";
-      this.listPalette.Size = new System.Drawing.Size(212, 340);
-      this.listPalette.TabIndex = 2;
-      this.listPalette.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listPalette_DrawItem);
-      this.listPalette.SelectedIndexChanged += new System.EventHandler(this.listPalette_SelectedIndexChanged);
-      // 
-      // groupBox3
-      // 
-      this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox3.Controls.Add(this.panelColorPreview);
-      this.groupBox3.Location = new System.Drawing.Point(466, 182);
-      this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(238, 66);
-      this.groupBox3.TabIndex = 5;
-      this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Preview";
-      // 
-      // panelColorPreview
-      // 
-      this.panelColorPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.panelColorPreview.Location = new System.Drawing.Point(6, 19);
-      this.panelColorPreview.Name = "panelColorPreview";
-      this.panelColorPreview.Size = new System.Drawing.Size(226, 38);
-      this.panelColorPreview.TabIndex = 0;
-      this.panelColorPreview.Paint += new System.Windows.Forms.PaintEventHandler(this.panelColorPreview_Paint);
-      // 
-      // groupBox2
-      // 
-      this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox2.Controls.Add(this.scrollB);
-      this.groupBox2.Controls.Add(this.scrollG);
-      this.groupBox2.Controls.Add(this.scrollR);
-      this.groupBox2.Controls.Add(this.editBHex);
-      this.groupBox2.Controls.Add(this.editB);
-      this.groupBox2.Controls.Add(this.editGHex);
-      this.groupBox2.Controls.Add(this.editG);
-      this.groupBox2.Controls.Add(this.editRHex);
-      this.groupBox2.Controls.Add(this.editR);
-      this.groupBox2.Controls.Add(this.label3);
-      this.groupBox2.Controls.Add(this.label2);
-      this.groupBox2.Controls.Add(this.label1);
-      this.groupBox2.Location = new System.Drawing.Point(466, 0);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(238, 175);
-      this.groupBox2.TabIndex = 4;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Current Color";
-      // 
-      // scrollB
-      // 
-      this.scrollB.Location = new System.Drawing.Point(18, 146);
-      this.scrollB.Maximum = 255;
-      this.scrollB.Name = "scrollB";
-      this.scrollB.Size = new System.Drawing.Size(214, 17);
-      this.scrollB.TabIndex = 3;
-      this.scrollB.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrollB_Scroll);
-      // 
-      // scrollG
-      // 
-      this.scrollG.Location = new System.Drawing.Point(18, 97);
-      this.scrollG.Maximum = 255;
-      this.scrollG.Name = "scrollG";
-      this.scrollG.Size = new System.Drawing.Size(214, 17);
-      this.scrollG.TabIndex = 3;
-      this.scrollG.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrollG_Scroll);
-      // 
-      // scrollR
-      // 
-      this.scrollR.Location = new System.Drawing.Point(18, 48);
-      this.scrollR.Maximum = 255;
-      this.scrollR.Name = "scrollR";
-      this.scrollR.Size = new System.Drawing.Size(214, 17);
-      this.scrollR.TabIndex = 3;
-      this.scrollR.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrollR_Scroll);
-      // 
-      // editBHex
-      // 
-      this.editBHex.Location = new System.Drawing.Point(129, 123);
-      this.editBHex.MaxLength = 2;
-      this.editBHex.Name = "editBHex";
-      this.editBHex.Size = new System.Drawing.Size(49, 20);
-      this.editBHex.TabIndex = 2;
-      this.editBHex.TextChanged += new System.EventHandler(this.editBHex_TextChanged);
-      // 
-      // editB
-      // 
-      this.editB.Location = new System.Drawing.Point(60, 123);
-      this.editB.Name = "editB";
-      this.editB.Size = new System.Drawing.Size(49, 20);
-      this.editB.TabIndex = 2;
-      this.editB.TextChanged += new System.EventHandler(this.editB_TextChanged);
-      // 
-      // editGHex
-      // 
-      this.editGHex.Location = new System.Drawing.Point(129, 74);
-      this.editGHex.MaxLength = 2;
-      this.editGHex.Name = "editGHex";
-      this.editGHex.Size = new System.Drawing.Size(49, 20);
-      this.editGHex.TabIndex = 2;
-      this.editGHex.TextChanged += new System.EventHandler(this.editGHex_TextChanged);
-      // 
-      // editG
-      // 
-      this.editG.Location = new System.Drawing.Point(60, 74);
-      this.editG.Name = "editG";
-      this.editG.Size = new System.Drawing.Size(49, 20);
-      this.editG.TabIndex = 2;
-      this.editG.TextChanged += new System.EventHandler(this.editG_TextChanged);
-      // 
-      // editRHex
-      // 
-      this.editRHex.Location = new System.Drawing.Point(129, 22);
-      this.editRHex.MaxLength = 2;
-      this.editRHex.Name = "editRHex";
-      this.editRHex.Size = new System.Drawing.Size(49, 20);
-      this.editRHex.TabIndex = 2;
-      this.editRHex.TextChanged += new System.EventHandler(this.editRHex_TextChanged);
-      // 
-      // editR
-      // 
-      this.editR.Location = new System.Drawing.Point(60, 22);
-      this.editR.Name = "editR";
-      this.editR.Size = new System.Drawing.Size(49, 20);
-      this.editR.TabIndex = 2;
-      this.editR.TextChanged += new System.EventHandler(this.editR_TextChanged);
-      // 
-      // label3
-      // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(16, 126);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(31, 13);
-      this.label3.TabIndex = 0;
-      this.label3.Text = "Blue:";
-      // 
-      // label2
-      // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(16, 77);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(39, 13);
-      this.label2.TabIndex = 0;
-      this.label2.Text = "Green:";
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(16, 25);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(30, 13);
-      this.label1.TabIndex = 0;
-      this.label1.Text = "Red:";
-      // 
-      // tabImportExport
-      // 
-      this.tabImportExport.Controls.Add(this.groupBox6);
-      this.tabImportExport.Controls.Add(this.groupBox5);
-      this.tabImportExport.Location = new System.Drawing.Point(4, 22);
-      this.tabImportExport.Name = "tabImportExport";
-      this.tabImportExport.Padding = new System.Windows.Forms.Padding(3);
-      this.tabImportExport.Size = new System.Drawing.Size(714, 400);
-      this.tabImportExport.TabIndex = 1;
-      this.tabImportExport.Text = "Import/Export";
-      this.tabImportExport.UseVisualStyleBackColor = true;
-      // 
-      // groupBox6
-      // 
-      this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox6.Controls.Add(this.checkImportColorsSorted);
-      this.groupBox6.Controls.Add(this.checkImportSwizzle);
-      this.groupBox6.Controls.Add(this.btnImportFromAssembly);
-      this.groupBox6.Controls.Add(this.btnImportFromFile);
-      this.groupBox6.Controls.Add(this.editDataImport);
-      this.groupBox6.Location = new System.Drawing.Point(318, 6);
-      this.groupBox6.Name = "groupBox6";
-      this.groupBox6.Size = new System.Drawing.Size(390, 388);
-      this.groupBox6.TabIndex = 1;
-      this.groupBox6.TabStop = false;
-      this.groupBox6.Text = "Import";
-      // 
-      // checkImportColorsSorted
-      // 
-      this.checkImportColorsSorted.AutoSize = true;
-      this.checkImportColorsSorted.Checked = true;
-      this.checkImportColorsSorted.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkImportColorsSorted.Location = new System.Drawing.Point(213, 19);
-      this.checkImportColorsSorted.Name = "checkImportColorsSorted";
-      this.checkImportColorsSorted.Size = new System.Drawing.Size(57, 17);
-      this.checkImportColorsSorted.TabIndex = 27;
-      this.checkImportColorsSorted.Text = "Sorted";
-      this.checkImportColorsSorted.UseVisualStyleBackColor = true;
-      // 
-      // checkImportSwizzle
-      // 
-      this.checkImportSwizzle.AutoSize = true;
-      this.checkImportSwizzle.Checked = true;
-      this.checkImportSwizzle.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkImportSwizzle.Location = new System.Drawing.Point(129, 19);
-      this.checkImportSwizzle.Name = "checkImportSwizzle";
-      this.checkImportSwizzle.Size = new System.Drawing.Size(78, 17);
-      this.checkImportSwizzle.TabIndex = 27;
-      this.checkImportSwizzle.Text = "De-Swizzle";
-      this.checkImportSwizzle.UseVisualStyleBackColor = true;
-      // 
-      // editDataImport
-      // 
-      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataImport.Location = new System.Drawing.Point(6, 94);
-      this.editDataImport.Multiline = true;
-      this.editDataImport.Name = "editDataImport";
-      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(378, 288);
-      this.editDataImport.TabIndex = 29;
-      this.editDataImport.WordWrap = false;
-      // 
-      // groupBox5
-      // 
-      this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-      this.groupBox5.Controls.Add(this.comboPaletteExportFormat);
-      this.groupBox5.Controls.Add(this.checkExportSwizzled);
-      this.groupBox5.Controls.Add(this.checkExportHex);
-      this.groupBox5.Controls.Add(this.editPrefix);
-      this.groupBox5.Controls.Add(this.label5);
-      this.groupBox5.Controls.Add(this.editWrapByteCount);
-      this.groupBox5.Controls.Add(this.checkExportToDataWrap);
-      this.groupBox5.Controls.Add(this.checkExportToDataIncludeRes);
-      this.groupBox5.Controls.Add(this.editDataExport);
-      this.groupBox5.Controls.Add(this.btnExportToFile);
-      this.groupBox5.Controls.Add(this.btnExportToData);
-      this.groupBox5.Location = new System.Drawing.Point(6, 6);
-      this.groupBox5.Name = "groupBox5";
-      this.groupBox5.Size = new System.Drawing.Size(306, 388);
-      this.groupBox5.TabIndex = 0;
-      this.groupBox5.TabStop = false;
-      this.groupBox5.Text = "Export";
-      // 
-      // comboPaletteExportFormat
-      // 
-      this.comboPaletteExportFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboPaletteExportFormat.FormattingEnabled = true;
-      this.comboPaletteExportFormat.Location = new System.Drawing.Point(118, 92);
-      this.comboPaletteExportFormat.Name = "comboPaletteExportFormat";
-      this.comboPaletteExportFormat.Size = new System.Drawing.Size(139, 21);
-      this.comboPaletteExportFormat.TabIndex = 30;
-      // 
-      // checkExportSwizzled
-      // 
-      this.checkExportSwizzled.AutoSize = true;
-      this.checkExportSwizzled.Checked = true;
-      this.checkExportSwizzled.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkExportSwizzled.Location = new System.Drawing.Point(214, 42);
-      this.checkExportSwizzled.Name = "checkExportSwizzled";
-      this.checkExportSwizzled.Size = new System.Drawing.Size(61, 17);
-      this.checkExportSwizzled.TabIndex = 27;
-      this.checkExportSwizzled.Text = "Swizzle";
-      this.checkExportSwizzled.UseVisualStyleBackColor = true;
-      // 
-      // checkExportHex
-      // 
-      this.checkExportHex.AutoSize = true;
-      this.checkExportHex.Checked = true;
-      this.checkExportHex.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkExportHex.Location = new System.Drawing.Point(118, 42);
-      this.checkExportHex.Name = "checkExportHex";
-      this.checkExportHex.Size = new System.Drawing.Size(92, 17);
-      this.checkExportHex.TabIndex = 27;
-      this.checkExportHex.Text = "Export as Hex";
-      this.checkExportHex.UseVisualStyleBackColor = true;
-      // 
-      // editPrefix
-      // 
-      this.editPrefix.Location = new System.Drawing.Point(214, 17);
-      this.editPrefix.Name = "editPrefix";
-      this.editPrefix.Size = new System.Drawing.Size(43, 20);
-      this.editPrefix.TabIndex = 23;
-      this.editPrefix.Text = "!byte ";
-      // 
-      // label5
-      // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(235, 70);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(32, 13);
-      this.label5.TabIndex = 26;
-      this.label5.Text = "bytes";
-      // 
-      // editWrapByteCount
-      // 
-      this.editWrapByteCount.Enabled = false;
-      this.editWrapByteCount.Location = new System.Drawing.Point(188, 66);
-      this.editWrapByteCount.Name = "editWrapByteCount";
-      this.editWrapByteCount.Size = new System.Drawing.Size(41, 20);
-      this.editWrapByteCount.TabIndex = 25;
-      this.editWrapByteCount.Text = "40";
-      // 
-      // checkExportToDataWrap
-      // 
-      this.checkExportToDataWrap.AutoSize = true;
-      this.checkExportToDataWrap.Checked = true;
-      this.checkExportToDataWrap.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkExportToDataWrap.Location = new System.Drawing.Point(118, 69);
-      this.checkExportToDataWrap.Name = "checkExportToDataWrap";
-      this.checkExportToDataWrap.Size = new System.Drawing.Size(64, 17);
-      this.checkExportToDataWrap.TabIndex = 24;
-      this.checkExportToDataWrap.Text = "Wrap at";
-      this.checkExportToDataWrap.UseVisualStyleBackColor = true;
-      // 
-      // checkExportToDataIncludeRes
-      // 
-      this.checkExportToDataIncludeRes.AutoSize = true;
-      this.checkExportToDataIncludeRes.Checked = true;
-      this.checkExportToDataIncludeRes.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkExportToDataIncludeRes.Location = new System.Drawing.Point(118, 19);
-      this.checkExportToDataIncludeRes.Name = "checkExportToDataIncludeRes";
-      this.checkExportToDataIncludeRes.Size = new System.Drawing.Size(74, 17);
-      this.checkExportToDataIncludeRes.TabIndex = 22;
-      this.checkExportToDataIncludeRes.Text = "Prefix with";
-      this.checkExportToDataIncludeRes.UseVisualStyleBackColor = true;
-      // 
-      // editDataExport
-      // 
-      this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(0, 119);
-      this.editDataExport.Multiline = true;
-      this.editDataExport.Name = "editDataExport";
-      this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(300, 263);
-      this.editDataExport.TabIndex = 29;
-      this.editDataExport.WordWrap = false;
+      label4.AutoSize = true;
+      label4.Location = new System.Drawing.Point( 6, 306 );
+      label4.Name = "label4";
+      label4.Size = new System.Drawing.Size( 42, 15 );
+      label4.TabIndex = 8;
+      label4.Text = "Name:";
       // 
       // paletteList
       // 
-      this.paletteList.AddButtonEnabled = true;
-      this.paletteList.AllowClone = true;
-      this.paletteList.DeleteButtonEnabled = false;
-      this.paletteList.HasOwnerDrawColumn = true;
-      this.paletteList.HighlightColor = System.Drawing.SystemColors.HotTrack;
-      this.paletteList.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
-      this.paletteList.Location = new System.Drawing.Point(6, 19);
-      this.paletteList.MoveDownButtonEnabled = false;
-      this.paletteList.MoveUpButtonEnabled = false;
-      this.paletteList.MustHaveOneElement = true;
-      this.paletteList.Name = "paletteList";
-      this.paletteList.SelectedIndex = -1;
-      this.paletteList.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      this.paletteList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.paletteList.Size = new System.Drawing.Size(210, 277);
-      this.paletteList.TabIndex = 7;
-      this.paletteList.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.paletteList_AddingItem);
-      this.paletteList.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.paletteList_CloningItem);
-      this.paletteList.RemovingItem += new RetroDevStudio.Controls.ArrangedItemList.RemovingItemEventHandler(this.paletteList_RemovingItem);
-      this.paletteList.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_ItemRemoved);
-      this.paletteList.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemMovedEventHandler(this.paletteList_ItemMoved);
-      this.paletteList.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_SelectedIndexChanged);
+      paletteList.AddButtonEnabled = true;
+      paletteList.AllowClone = true;
+      paletteList.AllowDragReordering = true;
+      paletteList.DeleteButtonEnabled = false;
+      paletteList.HasOwnerDrawColumn = true;
+      paletteList.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      paletteList.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
+      paletteList.Location = new System.Drawing.Point( 6, 19 );
+      paletteList.MoveDownButtonEnabled = false;
+      paletteList.MoveUpButtonEnabled = false;
+      paletteList.MustHaveOneElement = true;
+      paletteList.Name = "paletteList";
+      paletteList.SelectedIndex = -1;
+      paletteList.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      paletteList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
+      paletteList.Size = new System.Drawing.Size( 210, 277 );
+      paletteList.TabIndex = 7;
+      paletteList.AddingItem +=  paletteList_AddingItem ;
+      paletteList.CloningItem +=  paletteList_CloningItem ;
+      paletteList.RemovingItem +=  paletteList_RemovingItem ;
+      paletteList.ItemRemoved +=  paletteList_ItemRemoved ;
+      paletteList.ItemMoved +=  paletteList_ItemMoved ;
+      paletteList.SelectedIndexChanged +=  paletteList_SelectedIndexChanged ;
+      // 
+      // groupBox1
+      // 
+      groupBox1.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      groupBox1.Controls.Add( listPalette );
+      groupBox1.Location = new System.Drawing.Point( 234, 0 );
+      groupBox1.Name = "groupBox1";
+      groupBox1.Size = new System.Drawing.Size( 226, 373 );
+      groupBox1.TabIndex = 3;
+      groupBox1.TabStop = false;
+      groupBox1.Text = "Current Palette";
+      // 
+      // listPalette
+      // 
+      listPalette.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      listPalette.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      listPalette.FormattingEnabled = true;
+      listPalette.Location = new System.Drawing.Point( 6, 19 );
+      listPalette.Name = "listPalette";
+      listPalette.Size = new System.Drawing.Size( 212, 324 );
+      listPalette.TabIndex = 2;
+      listPalette.DrawItem +=  listPalette_DrawItem ;
+      listPalette.SelectedIndexChanged +=  listPalette_SelectedIndexChanged ;
+      // 
+      // groupBox3
+      // 
+      groupBox3.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      groupBox3.Controls.Add( panelColorPreview );
+      groupBox3.Location = new System.Drawing.Point( 466, 182 );
+      groupBox3.Name = "groupBox3";
+      groupBox3.Size = new System.Drawing.Size( 238, 66 );
+      groupBox3.TabIndex = 5;
+      groupBox3.TabStop = false;
+      groupBox3.Text = "Preview";
+      // 
+      // panelColorPreview
+      // 
+      panelColorPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      panelColorPreview.Location = new System.Drawing.Point( 6, 19 );
+      panelColorPreview.Name = "panelColorPreview";
+      panelColorPreview.Size = new System.Drawing.Size( 226, 38 );
+      panelColorPreview.TabIndex = 0;
+      panelColorPreview.Paint +=  panelColorPreview_Paint ;
+      // 
+      // groupBox2
+      // 
+      groupBox2.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      groupBox2.Controls.Add( scrollB );
+      groupBox2.Controls.Add( scrollG );
+      groupBox2.Controls.Add( scrollR );
+      groupBox2.Controls.Add( editBHex );
+      groupBox2.Controls.Add( editB );
+      groupBox2.Controls.Add( editGHex );
+      groupBox2.Controls.Add( editG );
+      groupBox2.Controls.Add( editRHex );
+      groupBox2.Controls.Add( editR );
+      groupBox2.Controls.Add( label3 );
+      groupBox2.Controls.Add( label2 );
+      groupBox2.Controls.Add( label1 );
+      groupBox2.Location = new System.Drawing.Point( 466, 0 );
+      groupBox2.Name = "groupBox2";
+      groupBox2.Size = new System.Drawing.Size( 238, 175 );
+      groupBox2.TabIndex = 4;
+      groupBox2.TabStop = false;
+      groupBox2.Text = "Current Color";
+      // 
+      // scrollB
+      // 
+      scrollB.Location = new System.Drawing.Point( 18, 146 );
+      scrollB.Maximum = 255;
+      scrollB.Name = "scrollB";
+      scrollB.Size = new System.Drawing.Size( 214, 17 );
+      scrollB.TabIndex = 3;
+      scrollB.Scroll +=  scrollB_Scroll ;
+      // 
+      // scrollG
+      // 
+      scrollG.Location = new System.Drawing.Point( 18, 97 );
+      scrollG.Maximum = 255;
+      scrollG.Name = "scrollG";
+      scrollG.Size = new System.Drawing.Size( 214, 17 );
+      scrollG.TabIndex = 3;
+      scrollG.Scroll +=  scrollG_Scroll ;
+      // 
+      // scrollR
+      // 
+      scrollR.Location = new System.Drawing.Point( 18, 48 );
+      scrollR.Maximum = 255;
+      scrollR.Name = "scrollR";
+      scrollR.Size = new System.Drawing.Size( 214, 17 );
+      scrollR.TabIndex = 3;
+      scrollR.Scroll +=  scrollR_Scroll ;
+      // 
+      // editBHex
+      // 
+      editBHex.Location = new System.Drawing.Point( 129, 123 );
+      editBHex.MaxLength = 2;
+      editBHex.Name = "editBHex";
+      editBHex.Size = new System.Drawing.Size( 49, 23 );
+      editBHex.TabIndex = 2;
+      editBHex.TextChanged +=  editBHex_TextChanged ;
+      // 
+      // editB
+      // 
+      editB.Location = new System.Drawing.Point( 60, 123 );
+      editB.Name = "editB";
+      editB.Size = new System.Drawing.Size( 49, 23 );
+      editB.TabIndex = 2;
+      editB.TextChanged +=  editB_TextChanged ;
+      // 
+      // editGHex
+      // 
+      editGHex.Location = new System.Drawing.Point( 129, 74 );
+      editGHex.MaxLength = 2;
+      editGHex.Name = "editGHex";
+      editGHex.Size = new System.Drawing.Size( 49, 23 );
+      editGHex.TabIndex = 2;
+      editGHex.TextChanged +=  editGHex_TextChanged ;
+      // 
+      // editG
+      // 
+      editG.Location = new System.Drawing.Point( 60, 74 );
+      editG.Name = "editG";
+      editG.Size = new System.Drawing.Size( 49, 23 );
+      editG.TabIndex = 2;
+      editG.TextChanged +=  editG_TextChanged ;
+      // 
+      // editRHex
+      // 
+      editRHex.Location = new System.Drawing.Point( 129, 22 );
+      editRHex.MaxLength = 2;
+      editRHex.Name = "editRHex";
+      editRHex.Size = new System.Drawing.Size( 49, 23 );
+      editRHex.TabIndex = 2;
+      editRHex.TextChanged +=  editRHex_TextChanged ;
+      // 
+      // editR
+      // 
+      editR.Location = new System.Drawing.Point( 60, 22 );
+      editR.Name = "editR";
+      editR.Size = new System.Drawing.Size( 49, 23 );
+      editR.TabIndex = 2;
+      editR.TextChanged +=  editR_TextChanged ;
+      // 
+      // label3
+      // 
+      label3.AutoSize = true;
+      label3.Location = new System.Drawing.Point( 16, 126 );
+      label3.Name = "label3";
+      label3.Size = new System.Drawing.Size( 33, 15 );
+      label3.TabIndex = 0;
+      label3.Text = "Blue:";
+      // 
+      // label2
+      // 
+      label2.AutoSize = true;
+      label2.Location = new System.Drawing.Point( 16, 77 );
+      label2.Name = "label2";
+      label2.Size = new System.Drawing.Size( 41, 15 );
+      label2.TabIndex = 0;
+      label2.Text = "Green:";
+      // 
+      // label1
+      // 
+      label1.AutoSize = true;
+      label1.Location = new System.Drawing.Point( 16, 25 );
+      label1.Name = "label1";
+      label1.Size = new System.Drawing.Size( 30, 15 );
+      label1.TabIndex = 0;
+      label1.Text = "Red:";
+      // 
+      // tabImportExport
+      // 
+      tabImportExport.Controls.Add( groupBox6 );
+      tabImportExport.Controls.Add( groupBox5 );
+      tabImportExport.Location = new System.Drawing.Point( 4, 24 );
+      tabImportExport.Name = "tabImportExport";
+      tabImportExport.Padding = new System.Windows.Forms.Padding( 3 );
+      tabImportExport.Size = new System.Drawing.Size( 714, 398 );
+      tabImportExport.TabIndex = 1;
+      tabImportExport.Text = "Import/Export";
+      tabImportExport.UseVisualStyleBackColor = true;
+      // 
+      // groupBox6
+      // 
+      groupBox6.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      groupBox6.Controls.Add( checkImportColorsSorted );
+      groupBox6.Controls.Add( checkImportSwizzle );
+      groupBox6.Controls.Add( btnImportFromAssembly );
+      groupBox6.Controls.Add( btnImportFromFile );
+      groupBox6.Controls.Add( editDataImport );
+      groupBox6.Location = new System.Drawing.Point( 318, 6 );
+      groupBox6.Name = "groupBox6";
+      groupBox6.Size = new System.Drawing.Size( 390, 386 );
+      groupBox6.TabIndex = 1;
+      groupBox6.TabStop = false;
+      groupBox6.Text = "Import";
+      // 
+      // checkImportColorsSorted
+      // 
+      checkImportColorsSorted.AutoSize = true;
+      checkImportColorsSorted.Checked = true;
+      checkImportColorsSorted.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkImportColorsSorted.Location = new System.Drawing.Point( 213, 19 );
+      checkImportColorsSorted.Name = "checkImportColorsSorted";
+      checkImportColorsSorted.Size = new System.Drawing.Size( 60, 19 );
+      checkImportColorsSorted.TabIndex = 27;
+      checkImportColorsSorted.Text = "Sorted";
+      checkImportColorsSorted.UseVisualStyleBackColor = true;
+      // 
+      // checkImportSwizzle
+      // 
+      checkImportSwizzle.AutoSize = true;
+      checkImportSwizzle.Checked = true;
+      checkImportSwizzle.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkImportSwizzle.Location = new System.Drawing.Point( 129, 19 );
+      checkImportSwizzle.Name = "checkImportSwizzle";
+      checkImportSwizzle.Size = new System.Drawing.Size( 82, 19 );
+      checkImportSwizzle.TabIndex = 27;
+      checkImportSwizzle.Text = "De-Swizzle";
+      checkImportSwizzle.UseVisualStyleBackColor = true;
       // 
       // btnImportFromAssembly
       // 
-      this.btnImportFromAssembly.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnImportFromAssembly.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnImportFromAssembly.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnImportFromAssembly.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnImportFromAssembly.Image = null;
-      this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 44);
-      this.btnImportFromAssembly.Name = "btnImportFromAssembly";
-      this.btnImportFromAssembly.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromAssembly.TabIndex = 1;
-      this.btnImportFromAssembly.Text = "From assembly";
+      btnImportFromAssembly.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnImportFromAssembly.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnImportFromAssembly.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnImportFromAssembly.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnImportFromAssembly.DisplayAntiAliased = true;
+      btnImportFromAssembly.Image = null;
+      btnImportFromAssembly.Location = new System.Drawing.Point( 6, 44 );
+      btnImportFromAssembly.Name = "btnImportFromAssembly";
+      btnImportFromAssembly.Size = new System.Drawing.Size( 117, 23 );
+      btnImportFromAssembly.TabIndex = 1;
+      btnImportFromAssembly.Text = "From assembly";
+      btnImportFromAssembly.Click +=  btnImportFromAssembly_Click ;
       // 
       // btnImportFromFile
       // 
-      this.btnImportFromFile.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnImportFromFile.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnImportFromFile.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnImportFromFile.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnImportFromFile.Image = null;
-      this.btnImportFromFile.Location = new System.Drawing.Point(6, 15);
-      this.btnImportFromFile.Name = "btnImportFromFile";
-      this.btnImportFromFile.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromFile.TabIndex = 1;
-      this.btnImportFromFile.Text = "From File...";
+      btnImportFromFile.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnImportFromFile.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnImportFromFile.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnImportFromFile.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnImportFromFile.DisplayAntiAliased = true;
+      btnImportFromFile.Image = null;
+      btnImportFromFile.Location = new System.Drawing.Point( 6, 15 );
+      btnImportFromFile.Name = "btnImportFromFile";
+      btnImportFromFile.Size = new System.Drawing.Size( 117, 23 );
+      btnImportFromFile.TabIndex = 1;
+      btnImportFromFile.Text = "From File...";
+      btnImportFromFile.Click +=  btnImportFromFile_Click ;
+      // 
+      // editDataImport
+      // 
+      editDataImport.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      editDataImport.Location = new System.Drawing.Point( 6, 94 );
+      editDataImport.Multiline = true;
+      editDataImport.Name = "editDataImport";
+      editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      editDataImport.Size = new System.Drawing.Size( 378, 286 );
+      editDataImport.TabIndex = 29;
+      editDataImport.WordWrap = false;
+      // 
+      // groupBox5
+      // 
+      groupBox5.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left ;
+      groupBox5.Controls.Add( comboPaletteExportFormat );
+      groupBox5.Controls.Add( checkExportSwizzled );
+      groupBox5.Controls.Add( checkExportHex );
+      groupBox5.Controls.Add( editPrefix );
+      groupBox5.Controls.Add( label5 );
+      groupBox5.Controls.Add( editWrapByteCount );
+      groupBox5.Controls.Add( checkExportToDataWrap );
+      groupBox5.Controls.Add( checkExportToDataIncludeRes );
+      groupBox5.Controls.Add( editDataExport );
+      groupBox5.Controls.Add( btnExportToFile );
+      groupBox5.Controls.Add( btnExportToData );
+      groupBox5.Location = new System.Drawing.Point( 6, 6 );
+      groupBox5.Name = "groupBox5";
+      groupBox5.Size = new System.Drawing.Size( 306, 386 );
+      groupBox5.TabIndex = 0;
+      groupBox5.TabStop = false;
+      groupBox5.Text = "Export";
+      // 
+      // comboPaletteExportFormat
+      // 
+      comboPaletteExportFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboPaletteExportFormat.FormattingEnabled = true;
+      comboPaletteExportFormat.Location = new System.Drawing.Point( 118, 92 );
+      comboPaletteExportFormat.Name = "comboPaletteExportFormat";
+      comboPaletteExportFormat.Size = new System.Drawing.Size( 139, 23 );
+      comboPaletteExportFormat.TabIndex = 30;
+      // 
+      // checkExportSwizzled
+      // 
+      checkExportSwizzled.AutoSize = true;
+      checkExportSwizzled.Checked = true;
+      checkExportSwizzled.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkExportSwizzled.Location = new System.Drawing.Point( 214, 42 );
+      checkExportSwizzled.Name = "checkExportSwizzled";
+      checkExportSwizzled.Size = new System.Drawing.Size( 63, 19 );
+      checkExportSwizzled.TabIndex = 27;
+      checkExportSwizzled.Text = "Swizzle";
+      checkExportSwizzled.UseVisualStyleBackColor = true;
+      // 
+      // checkExportHex
+      // 
+      checkExportHex.AutoSize = true;
+      checkExportHex.Checked = true;
+      checkExportHex.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkExportHex.Location = new System.Drawing.Point( 118, 42 );
+      checkExportHex.Name = "checkExportHex";
+      checkExportHex.Size = new System.Drawing.Size( 96, 19 );
+      checkExportHex.TabIndex = 27;
+      checkExportHex.Text = "Export as Hex";
+      checkExportHex.UseVisualStyleBackColor = true;
+      // 
+      // editPrefix
+      // 
+      editPrefix.Location = new System.Drawing.Point( 214, 17 );
+      editPrefix.Name = "editPrefix";
+      editPrefix.Size = new System.Drawing.Size( 43, 23 );
+      editPrefix.TabIndex = 23;
+      editPrefix.Text = "!byte ";
+      // 
+      // label5
+      // 
+      label5.AutoSize = true;
+      label5.Location = new System.Drawing.Point( 235, 70 );
+      label5.Name = "label5";
+      label5.Size = new System.Drawing.Size( 35, 15 );
+      label5.TabIndex = 26;
+      label5.Text = "bytes";
+      // 
+      // editWrapByteCount
+      // 
+      editWrapByteCount.Enabled = false;
+      editWrapByteCount.Location = new System.Drawing.Point( 188, 66 );
+      editWrapByteCount.Name = "editWrapByteCount";
+      editWrapByteCount.Size = new System.Drawing.Size( 41, 23 );
+      editWrapByteCount.TabIndex = 25;
+      editWrapByteCount.Text = "40";
+      // 
+      // checkExportToDataWrap
+      // 
+      checkExportToDataWrap.AutoSize = true;
+      checkExportToDataWrap.Checked = true;
+      checkExportToDataWrap.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkExportToDataWrap.Location = new System.Drawing.Point( 118, 69 );
+      checkExportToDataWrap.Name = "checkExportToDataWrap";
+      checkExportToDataWrap.Size = new System.Drawing.Size( 67, 19 );
+      checkExportToDataWrap.TabIndex = 24;
+      checkExportToDataWrap.Text = "Wrap at";
+      checkExportToDataWrap.UseVisualStyleBackColor = true;
+      // 
+      // checkExportToDataIncludeRes
+      // 
+      checkExportToDataIncludeRes.AutoSize = true;
+      checkExportToDataIncludeRes.Checked = true;
+      checkExportToDataIncludeRes.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkExportToDataIncludeRes.Location = new System.Drawing.Point( 118, 19 );
+      checkExportToDataIncludeRes.Name = "checkExportToDataIncludeRes";
+      checkExportToDataIncludeRes.Size = new System.Drawing.Size( 81, 19 );
+      checkExportToDataIncludeRes.TabIndex = 22;
+      checkExportToDataIncludeRes.Text = "Prefix with";
+      checkExportToDataIncludeRes.UseVisualStyleBackColor = true;
+      // 
+      // editDataExport
+      // 
+      editDataExport.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      editDataExport.Location = new System.Drawing.Point( 0, 119 );
+      editDataExport.Multiline = true;
+      editDataExport.Name = "editDataExport";
+      editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      editDataExport.Size = new System.Drawing.Size( 300, 261 );
+      editDataExport.TabIndex = 29;
+      editDataExport.WordWrap = false;
       // 
       // btnExportToFile
       // 
-      this.btnExportToFile.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportToFile.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportToFile.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportToFile.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportToFile.Image = null;
-      this.btnExportToFile.Location = new System.Drawing.Point(6, 44);
-      this.btnExportToFile.Name = "btnExportToFile";
-      this.btnExportToFile.Size = new System.Drawing.Size(106, 23);
-      this.btnExportToFile.TabIndex = 28;
-      this.btnExportToFile.Text = "as binary file";
+      btnExportToFile.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnExportToFile.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnExportToFile.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnExportToFile.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnExportToFile.DisplayAntiAliased = true;
+      btnExportToFile.Image = null;
+      btnExportToFile.Location = new System.Drawing.Point( 6, 44 );
+      btnExportToFile.Name = "btnExportToFile";
+      btnExportToFile.Size = new System.Drawing.Size( 106, 23 );
+      btnExportToFile.TabIndex = 28;
+      btnExportToFile.Text = "as binary file";
+      btnExportToFile.Click +=  btnExportToData_Click ;
       // 
       // btnExportToData
       // 
-      this.btnExportToData.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportToData.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportToData.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportToData.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportToData.Image = null;
-      this.btnExportToData.Location = new System.Drawing.Point(6, 15);
-      this.btnExportToData.Name = "btnExportToData";
-      this.btnExportToData.Size = new System.Drawing.Size(106, 23);
-      this.btnExportToData.TabIndex = 21;
-      this.btnExportToData.Text = "as assembly source";
+      btnExportToData.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnExportToData.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnExportToData.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnExportToData.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnExportToData.DisplayAntiAliased = true;
+      btnExportToData.Image = null;
+      btnExportToData.Location = new System.Drawing.Point( 6, 15 );
+      btnExportToData.Name = "btnExportToData";
+      btnExportToData.Size = new System.Drawing.Size( 106, 23 );
+      btnExportToData.TabIndex = 21;
+      btnExportToData.Text = "as assembly source";
+      btnExportToData.Click +=  btnExportToFile_Click ;
       // 
-      // PaletteEditor
+      // PaletteEditorControl
       // 
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.Controls.Add(this.tabPalette);
-      this.Name = "PaletteEditorControl";
-      this.Size = new System.Drawing.Size(725, 429);
-      this.tabPalette.ResumeLayout(false);
-      this.tabEditor.ResumeLayout(false);
-      this.groupBox4.ResumeLayout(false);
-      this.groupBox4.PerformLayout();
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox3.ResumeLayout(false);
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox2.PerformLayout();
-      this.tabImportExport.ResumeLayout(false);
-      this.groupBox6.ResumeLayout(false);
-      this.groupBox6.PerformLayout();
-      this.groupBox5.ResumeLayout(false);
-      this.groupBox5.PerformLayout();
-      this.ResumeLayout(false);
+      AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+      Controls.Add( tabPalette );
+      Name = "PaletteEditorControl";
+      Size = new System.Drawing.Size( 725, 429 );
+      tabPalette.ResumeLayout( false );
+      tabEditor.ResumeLayout( false );
+      groupBox4.ResumeLayout( false );
+      groupBox4.PerformLayout();
+      groupBox1.ResumeLayout( false );
+      groupBox3.ResumeLayout( false );
+      groupBox2.ResumeLayout( false );
+      groupBox2.PerformLayout();
+      tabImportExport.ResumeLayout( false );
+      groupBox6.ResumeLayout( false );
+      groupBox6.PerformLayout();
+      groupBox5.ResumeLayout( false );
+      groupBox5.PerformLayout();
+      ResumeLayout( false );
 
     }
 
-        #endregion
+    #endregion
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.TabControl tabPalette;
     private System.Windows.Forms.TabPage tabEditor;

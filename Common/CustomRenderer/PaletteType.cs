@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+namespace RetroDevStudio
 {
   public enum PaletteType
   {
@@ -7,6 +7,7 @@
     VIC20,
     MEGA65,
     COMMANDER_X16,
-    NES
+    NES,
+    COMMODORE_TED
   }
 }

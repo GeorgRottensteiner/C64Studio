@@ -1,4 +1,4 @@
-﻿using GR.Memory;
+using GR.Memory;
 using RetroDevStudio;
 using RetroDevStudio.Audio;
 using RetroDevStudio.Controls;
@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using static RetroDevStudio.Formats.PathProject;
 
 
 
@@ -98,18 +99,7 @@ namespace RetroDevStudio.Documents
       }
 
 
-      _updatingParams = true;
-      listPaths.Items.Clear();
-      /*
-      foreach ( var effect in _project.Effects )
-      {
-        var item = new ArrangedItemEntry( effect.Name );
-        item.Tag = effect;
-
-        listPaths.Items.Add( item );
-      }*/
-
-      _updatingParams = false;
+      FillPathList();
       return true;
     }
 
@@ -121,8 +111,8 @@ namespace RetroDevStudio.Documents
 
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
-      saveDlg.Title = "Save SFX Project as";
-      saveDlg.Filter = "SFX Projects|*.sfxproject|All Files|*.*";
+      saveDlg.Title = "Save Path Project as";
+      saveDlg.Filter = "Path Projects|*.pathproject|All Files|*.*";
       saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
       if ( DocumentInfo.Project != null )
       {
@@ -139,12 +129,61 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void FillPathList()
+    {
+      _updatingParams = true;
+      listPaths.BeginUpdate();
+      listPaths.Items.Clear();
+
+      foreach ( var path in _project.Paths )
+      {
+        var item = new ArrangedItemEntry( path.Name );
+        item.Tag = path;
+        listPaths.Items.Add( item );
+      }
+      listPaths.EndUpdate();
+      _updatingParams = false;
+    }
+
+
+
+    private void FillPathStepList()
+    {
+      _updatingParams = true;
+      listPathSteps.BeginUpdate();
+      listPathSteps.Items.Clear();
+
+      if ( listPaths.SelectedIndex != -1 )
+      {
+        var pathSteps = (PathProject.Path)listPaths.SelectedItem.Tag;
+
+        foreach ( var step in pathSteps.Steps )
+        {
+          var item = new ArrangedItemEntry( GR.EnumHelper.GetDescription( step.Type ) + ": " + step.Duration );
+          item.Tag = step;
+          listPathSteps.Items.Add( item );
+        }
+      }
+      listPathSteps.EndUpdate();
+      _updatingParams = false;
+    }
+
+
+
     private void editPathName_TextChanged( object sender, EventArgs e )
     {
+      if ( _updatingParams )
+      {
+        return;
+      }
+
       listPaths.AddButtonEnabled = !string.IsNullOrEmpty( editPathName.Text );
       if ( listPaths.SelectedItem != null )
       {
         ( (PathProject.Path)listPaths.SelectedItem.Tag ).Name = editPathName.Text;
+        listPaths.SelectedItem.Text = editPathName.Text;
+        listPaths.Invalidate();
+        SetModified();
       }
     }
 
@@ -152,12 +191,18 @@ namespace RetroDevStudio.Documents
 
     private void listPaths_ItemAdded( object sender, ArrangedItemEntry Item )
     {
+      if ( _updatingParams )
+      {
+        return;
+      }
       var newPath = new PathProject.Path();
       newPath.Name = editPathName.Text;
       _project.Paths.Add( newPath );
 
       Item.Tag = newPath;
       Item.Text = newPath.Name;
+
+      SetModified();
     }
 
 
@@ -197,13 +242,40 @@ namespace RetroDevStudio.Documents
       labelStepLength.Enabled = enableStepList;
       editStepLength.Enabled = enableStepList;
       listPathSteps.Enabled = enableStepList;
+
+      FillPathStepList();
+
+      if ( listPaths.SelectedItem != null )
+      {
+        var path = (PathProject.Path)listPaths.SelectedItem.Tag;
+
+        editPathName.Text = path.Name;
+      }
     }
 
 
 
     private void listPathSteps_ItemAdded( object sender, ArrangedItemEntry Item )
     {
+      if ( _updatingParams )
+      {
+        return;
+      }
+      if ( listPaths.SelectedItem == null )
+      {
+        return;
+      }
+      var path = (PathProject.Path)listPaths.SelectedItem.Tag;
 
+      var newStep = new PathProject.Step()
+      {
+        Type = ( (GR.Generic.Tupel<PathProject.StepType, string>)comboStepTypes.SelectedItem ).first,
+        Duration = GR.Convert.ToI32( editStepLength.Text )
+      };
+      path.Steps.Add( newStep );
+
+      Item.Text = GR.EnumHelper.GetDescription( newStep.Type ) + ": " + newStep.Duration;
+      Item.Tag = newStep;
     }
 
 

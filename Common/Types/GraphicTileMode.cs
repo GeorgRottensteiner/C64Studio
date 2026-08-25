@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace RetroDevStudio
 {
@@ -33,7 +33,13 @@ namespace RetroDevStudio
     [Description( "Commodore HiRes VIC20 8x16" )]
     COMMODORE_HIRES_8X16,
     [Description( "Commodore Multicolor VIC20 8x16" )]
-    COMMODORE_MULTICOLOR_CHARACTERS_8X16
+    COMMODORE_MULTICOLOR_CHARACTERS_8X16,
+    [Description( "Commodore TED HiRes" )]
+    COMMODORE_TED_HIRES,
+    [Description( "Commodore TED Multicolor" )]
+    COMMODORE_TED_MULTICOLOR,
+    [Description( "Commodore TED ECM" )]
+    COMMODORE_TED_ECM
   }
 
 }

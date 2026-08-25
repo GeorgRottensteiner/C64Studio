@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace RetroDevStudio
 {
@@ -35,7 +35,11 @@ namespace RetroDevStudio
     [Description( "Sinclair ZX Spectrum" )]
     ZX_SPECTRUM,
     [Description( "Commodore Amiga" )]
-    AMIGA
+    AMIGA,
+    [Description( "Commodore 116" )]
+    COMMODORE_116,
+    [Description( "Commodore 16" )]
+    COMMODORE_16
   }
 
 

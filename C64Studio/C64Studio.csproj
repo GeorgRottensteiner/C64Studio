@@ -33,6 +33,9 @@
     <Compile Update="Controls\ColorPickerChars\ColorPickerCharsBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorPickerChars\ColorPickerCharsCommodoreTED.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ColorPickerGraphic\ColorPickerGraphicBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -58,6 +61,12 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ColorPickerChars\ColorPickerCharsCommodore.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsECMTED.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacterTED.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsNES.cs">

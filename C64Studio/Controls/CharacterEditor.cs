@@ -1,4 +1,4 @@
-﻿using GR.Collections;
+using GR.Collections;
 using GR.Forms;
 using GR.Generic;
 using GR.Image;
@@ -45,7 +45,7 @@ namespace RetroDevStudio.Controls
     private bool                        _AllowModeChange = true;
 
     private ColorSettingsBase           _ColorSettingsDlg = null;
-    private ColorPickerCharsBase             _ColorPickerDlg = null;
+    private ColorPickerCharsBase        _ColorPickerDlg = null;
 
     private int                         _NumColorsInColorSelector = 16;
 
@@ -1331,6 +1331,11 @@ namespace RetroDevStudio.Controls
         case TextCharMode.MEGA65_HIRES:
           _ColorPickerDlg = new ColorPickerCharsMega65_32( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
           break;
+        case TextCharMode.COMMODORE_TED_HIRES:
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+        case TextCharMode.COMMODORE_TED_ECM:
+          _ColorPickerDlg = new ColorPickerCharsCommodoreTED( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
+          break;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_NCM:
@@ -2082,11 +2087,15 @@ namespace RetroDevStudio.Controls
         case TextCharMode.COMMODORE_ECM:
           _ColorSettingsDlg = new ColorSettingsECM( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
+        case TextCharMode.COMMODORE_TED_ECM:
+          _ColorSettingsDlg = new ColorSettingsECMTED( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
         case TextCharMode.MEGA65_ECM:
           _ColorSettingsDlg = new ColorSettingsECMMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_128_VDC_HIRES:
+        case TextCharMode.COMMODORE_TED_HIRES:
           _ColorSettingsDlg = new ColorSettingsHiRes( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.MEGA65_NCM:
@@ -2097,6 +2106,9 @@ namespace RetroDevStudio.Controls
           break;
         case TextCharMode.COMMODORE_MULTICOLOR:
           _ColorSettingsDlg = new ColorSettingsMCCharacter( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+          _ColorSettingsDlg = new ColorSettingsMCCharacterTED( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.VIC20:
         case TextCharMode.VIC20_8X16:
@@ -2387,6 +2399,11 @@ namespace RetroDevStudio.Controls
           break;
         case TextCharMode.NES:
           m_Project.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.NES );
+          break;
+        case TextCharMode.COMMODORE_TED_HIRES:
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+        case TextCharMode.COMMODORE_TED_ECM:
+          m_Project.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.PLUS4 );
           break;
         default:
           Debug.Log( "UpdatePalette - unsupported TextCharMode " + m_Project.Mode );

@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Formats;
 using System;
 
 namespace RetroDevStudio
@@ -50,6 +50,10 @@ namespace RetroDevStudio
           return ConstantData.DefaultPaletteC128();
         case TextCharMode.NES:
           return ConstantData.DefaultPaletteNES();
+        case TextCharMode.COMMODORE_TED_HIRES:
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+        case TextCharMode.COMMODORE_TED_ECM:
+          return ConstantData.DefaultPaletteTED();
         default:
           Debug.Log( $"PaletteFromMode unsupported mode {Mode}" );
           break;

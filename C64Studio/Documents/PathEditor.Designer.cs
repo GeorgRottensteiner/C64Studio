@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio.Documents
+namespace RetroDevStudio.Documents
 {
   partial class PathEditor
   {

@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Controls;
+using RetroDevStudio.Controls;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
@@ -446,6 +446,7 @@ namespace RetroDevStudio.Displayer
       var color     = AlternativeSettings.CustomColor;
 
       if ( ( mode == TextCharMode.COMMODORE_ECM )
+      ||   ( mode == TextCharMode.COMMODORE_TED_ECM )
       ||   ( mode == TextCharMode.MEGA65_ECM ) )
       {
         // ECM
@@ -466,12 +467,14 @@ namespace RetroDevStudio.Displayer
         }
         DisplayHiResChar( origChar.Tile, ecmBGColor, color, Context );
       }
-      else if ( mode == TextCharMode.COMMODORE_MULTICOLOR )
+      else if ( ( mode == TextCharMode.COMMODORE_MULTICOLOR )
+      ||        ( mode == TextCharMode.COMMODORE_TED_MULTICOLOR ) )
       {
         DisplayMultiColorChar( Char.Tile, bgColor, mColor1, mColor2, color, Context, 0, 0 );
       }
       else if ( ( mode == TextCharMode.COMMODORE_HIRES )
       ||        ( mode == TextCharMode.MEGA65_HIRES )
+      ||        ( mode == TextCharMode.COMMODORE_TED_HIRES )
       ||        ( mode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
       {
         DisplayHiResChar( Char.Tile, bgColor, color, Context );
@@ -539,6 +542,7 @@ namespace RetroDevStudio.Displayer
       var color = AlternativeSettings.CustomColor;
 
       if ( ( mode == TextCharMode.COMMODORE_ECM )
+      ||   ( mode == TextCharMode.COMMODORE_TED_ECM )
       ||   ( mode == TextCharMode.MEGA65_ECM ) )
       {
         // ECM
@@ -559,12 +563,14 @@ namespace RetroDevStudio.Displayer
         }
         DisplayHiResChar( origChar.Tile, palette, altBGColor, color, TargetImage, X, Y );
       }
-      else if ( mode == TextCharMode.COMMODORE_MULTICOLOR )
+      else if ( ( mode == TextCharMode.COMMODORE_MULTICOLOR )
+      ||        ( mode == TextCharMode.COMMODORE_TED_MULTICOLOR ) )
       {
         DisplayMultiColorChar( Char.Tile, palette, bgColor, mColor1, mColor2, color, TargetImage, X, Y );
       }
       else if ( ( mode == TextCharMode.COMMODORE_HIRES )
       ||        ( mode == TextCharMode.MEGA65_HIRES )
+      ||        ( mode == TextCharMode.COMMODORE_TED_HIRES )
       ||        ( mode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
       {
         DisplayHiResChar( Char.Tile, palette, bgColor, color, TargetImage, X, Y );

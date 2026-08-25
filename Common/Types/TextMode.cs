@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 
 namespace RetroDevStudio
@@ -77,7 +77,16 @@ namespace RetroDevStudio
     [Description( "NES 32x30" )]
     NES,
     [Description( "Commodore VIC20 8x16" )]
-    COMMODORE_VIC20_8_X_16
+    COMMODORE_VIC20_8_X_16,
+    [Description( "Commodore TED 40x25 HiRes" )]
+    [CharsetLayout( Types.CharlistLayout.PETSCII_EDITOR )]
+    COMMODORE_TED_40_X_25_HIRES,
+    [Description( "Commodore TED 40x25 Multicolor" )]
+    [CharsetLayout( Types.CharlistLayout.PETSCII_EDITOR )]
+    COMMODORE_TED_40_X_25_MULTICOLOR,
+    [Description( "Commodore TED 40x25 ECM" )]
+    [CharsetLayout( Types.CharlistLayout.PETSCII_EDITOR )]
+    COMMODORE_TED_40_X_25_ECM
   }
 
 }

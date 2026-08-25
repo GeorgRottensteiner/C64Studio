@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
@@ -209,6 +209,8 @@ namespace RetroDevStudio
           return Core.Settings.Palettes[PaletteType.COMMANDER_X16][0];
         case MachineType.NES:
           return Core.Settings.Palettes[PaletteType.NES][0];
+        case MachineType.PLUS4:
+          return Core.Settings.Palettes[PaletteType.COMMODORE_TED][0];
         default:
           Debug.Log( $"Unsupported machine {Machine}" );
           return Core.Settings.Palettes[PaletteType.C64][0];

@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.CheckSummer;
+using RetroDevStudio.CheckSummer;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
@@ -188,6 +188,9 @@ namespace RetroDevStudio
         case TextCharMode.MEGA65_ECM:
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
+        case TextCharMode.COMMODORE_TED_HIRES:
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+        case TextCharMode.COMMODORE_TED_ECM:
           return 256;
         default:
           Debug.Log( "NumberOfColorsInCharacter unsupported Mode " + Mode );
@@ -209,6 +212,9 @@ namespace RetroDevStudio
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.X16_HIRES:
         case TextCharMode.COMMODORE_128_VDC_HIRES:
+        case TextCharMode.COMMODORE_TED_HIRES:
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+        case TextCharMode.COMMODORE_TED_ECM:
           return 8;
         case TextCharMode.NES:
         case TextCharMode.VIC20_8X16:
@@ -296,6 +302,12 @@ namespace RetroDevStudio
           return TextCharMode.VIC20;
         case TextMode.COMMODORE_VIC20_8_X_16:
           return TextCharMode.VIC20_8X16;
+        case TextMode.COMMODORE_TED_40_X_25_HIRES:
+          return TextCharMode.COMMODORE_TED_HIRES;
+        case TextMode.COMMODORE_TED_40_X_25_MULTICOLOR:
+          return TextCharMode.COMMODORE_TED_MULTICOLOR;
+        case TextMode.COMMODORE_TED_40_X_25_ECM:
+          return TextCharMode.COMMODORE_TED_ECM;
         case TextMode.MEGA65_80_X_25_NCM:
         case TextMode.MEGA65_40_X_25_NCM:
           return TextCharMode.MEGA65_NCM;
@@ -332,6 +344,9 @@ namespace RetroDevStudio
         case TextCharMode.X16_HIRES:
         case TextCharMode.COMMODORE_128_VDC_HIRES:
         case TextCharMode.NES:
+        case TextCharMode.COMMODORE_TED_HIRES:
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+        case TextCharMode.COMMODORE_TED_ECM:
           return 256;
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_NCM:
@@ -371,6 +386,9 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
+        case GraphicTileMode.COMMODORE_TED_HIRES:
+        case GraphicTileMode.COMMODORE_TED_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_TED_ECM:
         case GraphicTileMode.NES:
           return false;
         case GraphicTileMode.MEGA65_NCM_CHARACTERS :
@@ -395,6 +413,7 @@ namespace RetroDevStudio
         case PaletteType.C64:
         case PaletteType.VIC20:
         case PaletteType.C128_VDC:
+        case PaletteType.COMMODORE_TED:
           return false;
         case PaletteType.MEGA65:
         case PaletteType.COMMANDER_X16:
@@ -591,6 +610,12 @@ namespace RetroDevStudio
     {
       switch ( Mode )
       {
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+          return GraphicTileMode.COMMODORE_TED_MULTICOLOR;
+        case TextCharMode.COMMODORE_TED_HIRES:
+          return GraphicTileMode.COMMODORE_TED_HIRES;
+        case TextCharMode.COMMODORE_TED_ECM:
+          return GraphicTileMode.COMMODORE_TED_ECM;
         case TextCharMode.COMMODORE_ECM:
         case TextCharMode.MEGA65_ECM:
           return GraphicTileMode.COMMODORE_ECM;
@@ -846,9 +871,12 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
-        case GraphicTileMode.NES:
         case GraphicTileMode.COMMODORE_HIRES_8X16:
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16:
+        case GraphicTileMode.COMMODORE_TED_HIRES:
+        case GraphicTileMode.COMMODORE_TED_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_TED_ECM:
+        case GraphicTileMode.NES:
           return 8;
         default:
           Debug.Log( "Lookup.CharacterWidthInPixel - unsupported mode " + Mode );
@@ -869,6 +897,9 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
+        case GraphicTileMode.COMMODORE_TED_HIRES:
+        case GraphicTileMode.COMMODORE_TED_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_TED_ECM:
         case GraphicTileMode.NES:
           return 8;
         case GraphicTileMode.COMMODORE_HIRES_8X16:
@@ -930,6 +961,9 @@ namespace RetroDevStudio
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.COMMODORE_40_X_25_HIRES:
         case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+        case TextMode.COMMODORE_TED_40_X_25_HIRES:
+        case TextMode.COMMODORE_TED_40_X_25_MULTICOLOR:
+        case TextMode.COMMODORE_TED_40_X_25_ECM:
         case TextMode.MEGA65_40_X_25_NCM:
         case TextMode.MEGA65_40_X_25_ECM:
         case TextMode.MEGA65_40_X_25_FCM:
@@ -974,6 +1008,9 @@ namespace RetroDevStudio
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.COMMODORE_40_X_25_HIRES:
         case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+        case TextMode.COMMODORE_TED_40_X_25_HIRES:
+        case TextMode.COMMODORE_TED_40_X_25_MULTICOLOR:
+        case TextMode.COMMODORE_TED_40_X_25_ECM:
         case TextMode.MEGA65_40_X_25_NCM:
         case TextMode.MEGA65_40_X_25_ECM:
         case TextMode.MEGA65_40_X_25_FCM:

@@ -72,6 +72,7 @@ namespace RetroDevStudio.Formats
       {
         var chunkPath = new GR.IO.FileChunk( FileChunkConstants.PATH );
         var chunkPathInfo = new GR.IO.FileChunk( FileChunkConstants.PATH_INFO );
+        chunkPathInfo.AppendString( path.Name );
         chunkPath.Append( chunkPathInfo.ToBuffer() );
 
         var chunkSteps = new GR.IO.FileChunk( FileChunkConstants.PATH_STEPS );
@@ -84,6 +85,8 @@ namespace RetroDevStudio.Formats
           chunkSteps.Append( chunkStep.ToBuffer() );
         }
         chunkPath.Append( chunkSteps.ToBuffer() );
+
+        chunkProject.Append( chunkPath.ToBuffer() );
       }
       projectFile.Append( chunkProject.ToBuffer() );
 
@@ -133,14 +136,7 @@ namespace RetroDevStudio.Formats
                       {
                         var    subChunkReaderInfo = subChunkInfo.MemoryReader();
 
-                        if ( subChunkInfo.Type == FileChunkConstants.PATH_INFO )
-                        {
-                          var path = new Path();
-
-                          path.Name = subChunkReaderInfo.ReadString();
-
-                          Paths.Add( path );
-                        }
+                        // nothing yet
                       }
                     }
                     break;
@@ -148,21 +144,17 @@ namespace RetroDevStudio.Formats
                     {
                       var subChunkPath = new GR.IO.FileChunk();
 
+                      Path    newPath = new Path();
+                      Paths.Add( newPath );
+
                       while ( subChunkPath.ReadFromStream( subChunkReader ) )
                       {
-                        var    subChunkReaderPath = subChunkPath.MemoryReader();
-                        var    newPath = new Path();
+                        var     subChunkReaderPath = subChunkPath.MemoryReader();
 
                         switch ( subChunkPath.Type )
                         {
                           case FileChunkConstants.PATH_INFO:
-                            {
-                              newPath = new Path();
-
-                              newPath.Name = subChunkReaderPath.ReadString();
-
-                              Paths.Add( newPath );
-                            }
+                            newPath.Name = subChunkReaderPath.ReadString();
                             break;
                           case FileChunkConstants.PATH_STEPS:
                             {

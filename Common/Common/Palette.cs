@@ -1,4 +1,4 @@
-﻿using GR.IO;
+using GR.IO;
 using GR.Memory;
 using System;
 
@@ -32,7 +32,8 @@ namespace GR.Image
         NumColors = 16;
       }
       else if ( ( NumColors == 32 )
-      ||        ( NumColors == 64 ) )
+      ||        ( NumColors == 64 )
+      ||        ( NumColors == 128 ) )
       {
         // fine
       }

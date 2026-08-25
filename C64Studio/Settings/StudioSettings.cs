@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
@@ -390,6 +390,7 @@ namespace RetroDevStudio
       Palettes.Add( PaletteType.MEGA65, new List<Palette>() { ConstantData.DefaultPaletteMega65_256() } );
       Palettes.Add( PaletteType.COMMANDER_X16, new List<Palette>() { ConstantData.DefaultPaletteCommanderX16() } );
       Palettes.Add( PaletteType.NES, new List<Palette>() { ConstantData.DefaultPaletteNES() } );
+      Palettes.Add( PaletteType.COMMODORE_TED, new List<Palette>() { ConstantData.DefaultPaletteTED() } );
     }
 
 
@@ -1672,6 +1673,9 @@ namespace RetroDevStudio
             break;
         }
       }
+
+      Palettes.Remove( PaletteType.COMMODORE_TED );
+      Palettes.Add( PaletteType.COMMODORE_TED, new List<Palette>() { ConstantData.DefaultPaletteTED() } );
       return true;
     }
 

@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Converter;
+using RetroDevStudio.Converter;
 using GR.Generic;
 using GR.Memory;
 using System;
@@ -69,6 +69,7 @@ namespace RetroDevStudio.Types
         case GraphicTileMode.COMMODORE_HIRES_8X16:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
+        case GraphicTileMode.COMMODORE_TED_HIRES:
           {
             int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
             int   byteValue = Data.ByteAt( bytePos );
@@ -89,6 +90,7 @@ namespace RetroDevStudio.Types
           break;
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16:
+        case GraphicTileMode.COMMODORE_TED_MULTICOLOR:
           {
             int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
 
@@ -281,6 +283,7 @@ namespace RetroDevStudio.Types
         case GraphicTileMode.COMMODORE_HIRES_8X16:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
+        case GraphicTileMode.COMMODORE_TED_HIRES:
           {
             if ( ( Data.ByteAt( Y * ( ( Width + 7 ) / 8 ) + X / 8 ) & ( 1 << ( 7 - ( X % 8 ) ) ) ) != 0 )
             {
@@ -290,6 +293,7 @@ namespace RetroDevStudio.Types
           }
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16:
+        case GraphicTileMode.COMMODORE_TED_MULTICOLOR:
           {
             // multi color
             int innerX = ( X % 8 ) / 2;

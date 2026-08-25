@@ -568,7 +568,7 @@ namespace RetroDevStudio
       AddToolWindow( ToolWindowType.MAP_EDITOR, m_MapEditor, DockState.Document, mapEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.PALETTE_EDITOR, m_PaletteEditor, DockState.Document, paletteEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.SFX_EDITOR, m_SFXEditor, DockState.Document, sfxEditorToolStripMenuItem, false, false );
-      AddToolWindow( ToolWindowType.PATH_EDITOR, m_PathEditor, DockState.DockLeft, pathEditorToolStripMenuItem, false, false );
+      AddToolWindow( ToolWindowType.PATH_EDITOR, m_PathEditor, DockState.Document, pathEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.PETSCII_TABLE, m_PetSCIITable, DockState.Float, petSCIITableToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.CALCULATOR, m_Calculator, DockState.DockRight, calculatorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.HELP, m_Help, DockState.Document, helpToolStripMenuItem, false, false );

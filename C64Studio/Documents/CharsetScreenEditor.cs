@@ -2978,6 +2978,11 @@ namespace RetroDevStudio.Documents
         case TextCharMode.MEGA65_FCM_16BIT:
           _colorPickerDlg = null;
           break;
+        case TextCharMode.COMMODORE_TED_HIRES:
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+        case TextCharMode.COMMODORE_TED_ECM:
+          _colorPickerDlg = new ColorPickerCharsCommodoreTED( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          break;
         default:
           _colorPickerDlg = new ColorPickerCharsCommodore( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
