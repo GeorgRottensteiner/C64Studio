@@ -577,7 +577,7 @@ namespace RetroDevStudio.Controls
       btnExportToFile.Size = new System.Drawing.Size( 106, 23 );
       btnExportToFile.TabIndex = 28;
       btnExportToFile.Text = "as binary file";
-      btnExportToFile.Click +=  btnExportToData_Click ;
+      btnExportToFile.Click +=  btnExportToFile_Click ;
       // 
       // btnExportToData
       // 
@@ -592,7 +592,7 @@ namespace RetroDevStudio.Controls
       btnExportToData.Size = new System.Drawing.Size( 106, 23 );
       btnExportToData.TabIndex = 21;
       btnExportToData.Text = "as assembly source";
-      btnExportToData.Click +=  btnExportToFile_Click ;
+      btnExportToData.Click +=  btnExportToData_Click ;
       // 
       // PaletteEditorControl
       // 
