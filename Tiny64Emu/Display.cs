@@ -75,6 +75,11 @@ namespace Tiny64
 
 		public unsafe void SetPixel( int X, int Y, byte Color )
 		{
+			// defensive bounds check - palette holds 17 entries, clamp invalid colors to black
+			if ( Color >= 17 )
+			{
+				Color = 0;
+			}
 			_bitmapPtr[X + Y * 504] = _ColorValues[Color];
 		}
 

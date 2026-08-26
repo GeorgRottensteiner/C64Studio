@@ -547,6 +547,12 @@ namespace Tiny64
       }
       else
       {
+        // VIC-II color registers only use the lower 4 bits of a written value
+        if ( ( register == Register.BORDER_COLOR )
+        ||   ( register == Register.BACKGROUND_COLOR ) )
+        {
+          Value &= 0x0f;
+        }
         Registers[Address] = Value;
         switch ( register )
         {
