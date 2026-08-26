@@ -568,7 +568,8 @@ namespace Tiny64
         switch ( Range8000To9FFF )
         {
           case MemorySource.CART_LO:
-            return CartLO[Address - 0x1000];
+            // Fix: index base must be 0x8000 so $8000-$9FFF maps to CartLO[0..0x1FFF]
+            return CartLO[Address - 0x8000];
           case MemorySource.RAM:
             return RAM[Address];
         }
