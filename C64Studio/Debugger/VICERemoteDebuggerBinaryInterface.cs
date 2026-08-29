@@ -9,6 +9,11 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Tiny64;
 
+// The transmission of any command causes the emulator to stop, similar to the regular monitor.
+//    This causes the server to respond with a list of register values (MON_RESPONSE_REGISTER_INFO)
+//    followed by MON_RESPONSE_STOPPED
+//    followed by the response for the command
+
 namespace RetroDevStudio
 {
   public class VICERemoteDebuggerBinaryInterface : DebuggerBase, IDebugger

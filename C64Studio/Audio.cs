@@ -1,4 +1,4 @@
-﻿using GR.Image;
+using GR.Image;
 using GR.Memory;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Types;
@@ -51,7 +51,7 @@ namespace RetroDevStudio.Audio
           }
           if ( machine == MachineType.ANY )
           {
-            Debug.Log( $"Unsupported sample machine type {sysFolderName}" );
+            Debug.Log( $"Unsupported SFX machine type {sysFolderName}" );
             continue;
           }
         }

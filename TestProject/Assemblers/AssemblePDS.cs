@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestProject
@@ -129,7 +129,7 @@ TOGGLETAB EQU 5
 
       var assembly = TestAssemblePDS( source );
 
-      Assert.AreEqual( "00D0A802", assembly.ToString() );
+      Assert.AreEqual( "00D0A902A902A902A902A902", assembly.ToString() );
     }
 
 

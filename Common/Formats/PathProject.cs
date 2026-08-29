@@ -4,6 +4,7 @@ using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Linq;
 
 
@@ -38,6 +39,43 @@ namespace RetroDevStudio.Formats
     {
       public StepType Type = StepType.NO_MOVEMENT;
       public int      Duration = 0;
+
+
+
+      public void AdvancePosition( ref int curX, ref int curY )
+      {
+        switch ( Type )
+        {
+          case StepType.EAST:
+            curX += Duration;
+            break;
+          case StepType.WEST:
+            curX -= Duration;
+            break;
+          case StepType.NORTH:
+            curY -= Duration;
+            break;
+          case StepType.SOUTH:
+            curY += Duration;
+            break;
+          case StepType.SOUTH_WEST:
+            curX -= Duration;
+            curY += Duration;
+            break;
+          case StepType.SOUTH_EAST:
+            curX += Duration;
+            curY += Duration;
+            break;
+          case StepType.NORTH_WEST:
+            curX -= Duration;
+            curY -= Duration;
+            break;
+          case StepType.NORTH_EAST:
+            curX += Duration;
+            curY -= Duration;
+            break;
+        }
+      }
     }
 
     public class Path
@@ -46,12 +84,34 @@ namespace RetroDevStudio.Formats
       public List<Step> Steps = new List<Step>();
     }
 
+    public class ValueDescriptor
+    {
+      // false = StepType, true = Duration
+      public StepType   Step = StepType.NO_MOVEMENT;
+
+      // default 0, may be 1 or more (split value as more than one byte)
+      public int        AddressOffsetStep = 0;
+      public int        AddressOffsetDuration = 0;
+      public byte       ValueStep = 0;
+
+      // how to apply the value in the final byte
+      public byte       RelevantBitsStep        = 0xff;
+      public int        ShiftBitsLeftDuration   = 0;
+      public int        ShiftBitsRightDuration  = 0;
+      public uint       RelevantBitsDuration    = 0xff;
+    }
+
+
+
     public List<Path> Paths = new List<Path>();
+    public List<ValueDescriptor> ValueDescriptors = new List<ValueDescriptor>();
+
 
 
     public void Clear()
     {
       Paths.Clear();
+      ValueDescriptors.Clear();
     }
 
 
@@ -67,6 +127,23 @@ namespace RetroDevStudio.Formats
 
       var chunkInfo = new GR.IO.FileChunk( FileChunkConstants.PATH_PROJECT_INFO );
       chunkProject.Append( chunkInfo.ToBuffer() );
+
+      foreach ( var valueDesc in ValueDescriptors )
+      {
+        var chunkVD = new GR.IO.FileChunk( FileChunkConstants.PATH_PROJECT_VALUE_DESCRIPTOR );
+        chunkVD.AppendI32( (int)valueDesc.Step );
+
+        chunkVD.AppendU8( valueDesc.ValueStep );
+        chunkVD.AppendI32( valueDesc.AddressOffsetStep );
+        chunkVD.AppendU8( valueDesc.RelevantBitsStep );
+
+        chunkVD.AppendI32( valueDesc.AddressOffsetDuration );
+        chunkVD.AppendU32( valueDesc.RelevantBitsDuration );
+        chunkVD.AppendI32( valueDesc.ShiftBitsLeftDuration );
+        chunkVD.AppendI32( valueDesc.ShiftBitsRightDuration );
+        
+        chunkProject.Append( chunkVD.ToBuffer() );
+      }
 
       foreach ( var path in Paths )
       {
@@ -140,6 +217,32 @@ namespace RetroDevStudio.Formats
                       }
                     }
                     break;
+                  case FileChunkConstants.PATH_PROJECT_VALUE_DESCRIPTOR:
+                    {
+                      var subChunkInfo = new GR.IO.FileChunk();
+
+                      while ( subChunkInfo.ReadFromStream( subChunkReader ) )
+                      {
+                        var    subChunkReaderVD = subChunkInfo.MemoryReader();
+
+                        // nothing yet
+                        var vd = new ValueDescriptor
+                        {
+                          Step = (StepType)subChunkReaderVD.ReadInt32(),
+                          ValueStep = subChunkReaderVD.ReadUInt8(),
+                          AddressOffsetStep = subChunkReaderVD.ReadInt32(),
+                          RelevantBitsStep = subChunkReaderVD.ReadUInt8(),
+
+                          AddressOffsetDuration = subChunkReaderVD.ReadInt32(),
+                          RelevantBitsDuration = subChunkReaderVD.ReadUInt32(),
+                          ShiftBitsLeftDuration = subChunkReaderVD.ReadInt32(),
+                          ShiftBitsRightDuration = subChunkReaderVD.ReadInt32()
+                        };
+
+                        ValueDescriptors.Add( vd );
+                      }
+                    }
+                    break;
                   case FileChunkConstants.PATH:
                     {
                       var subChunkPath = new GR.IO.FileChunk();
@@ -188,7 +291,130 @@ namespace RetroDevStudio.Formats
             return false;
         }
       }
+      FillDefaultDescriptors();
       return true;
+    }
+
+
+
+    public void SetDefaultDescriptors()
+    {
+      ValueDescriptors.Clear();
+      FillDefaultDescriptors();
+    }
+
+
+
+    public void FillDefaultDescriptors()
+    {
+      if ( !ValueDescriptors.Any( vd => vd.Step == StepType.NO_MOVEMENT ) )
+      {
+        ValueDescriptors.Add( new PathProject.ValueDescriptor() 
+          {
+            AddressOffsetStep     = 0,
+            Step                  = StepType.NO_MOVEMENT,
+            ValueStep             = 0,
+            RelevantBitsStep      = 0x0f,
+            AddressOffsetDuration = 1,
+            RelevantBitsDuration  = 0xff
+          } );
+      }
+      if ( !ValueDescriptors.Any( vd => vd.Step == StepType.NORTH ) )
+      {
+        ValueDescriptors.Add( new PathProject.ValueDescriptor() 
+        {
+          AddressOffsetStep     = 0,
+          Step                  = StepType.NORTH,
+          ValueStep             = 1,
+          RelevantBitsStep      = 0x0f,
+          AddressOffsetDuration = 1,
+          RelevantBitsDuration  = 0xff
+        } );
+      }
+      if ( !ValueDescriptors.Any( vd => vd.Step == StepType.NORTH_EAST ) )
+      {
+        ValueDescriptors.Add( new PathProject.ValueDescriptor() 
+        {
+          AddressOffsetStep     = 0,
+          Step                  = StepType.NORTH_EAST,
+          ValueStep             = 2,
+          RelevantBitsStep      = 0x0f,
+          AddressOffsetDuration = 1,
+          RelevantBitsDuration  = 0xff
+        } );
+      }
+      if ( !ValueDescriptors.Any( vd => vd.Step == StepType.EAST ) )
+      {
+        ValueDescriptors.Add( new PathProject.ValueDescriptor() 
+        {
+          AddressOffsetStep     = 0,
+          Step                  = StepType.EAST,
+          ValueStep             = 3,
+          RelevantBitsStep      = 0x0f,
+          AddressOffsetDuration = 1,
+          RelevantBitsDuration  = 0xff
+        } );
+      }
+      if ( !ValueDescriptors.Any( vd => vd.Step == StepType.SOUTH_EAST ) )
+      {
+        ValueDescriptors.Add( new PathProject.ValueDescriptor() 
+        {
+          AddressOffsetStep     = 0,
+          Step                  = StepType.SOUTH_EAST,
+          ValueStep             = 4,
+          RelevantBitsStep      = 0x0f,
+          AddressOffsetDuration = 1,
+          RelevantBitsDuration  = 0xff
+        } );
+      }
+      if ( !ValueDescriptors.Any( vd => vd.Step == StepType.SOUTH ) )
+      {
+        ValueDescriptors.Add( new PathProject.ValueDescriptor() 
+        {
+          AddressOffsetStep     = 0,
+          Step                  = StepType.SOUTH,
+          ValueStep             = 5,
+          RelevantBitsStep      = 0x0f,
+          AddressOffsetDuration = 1,
+          RelevantBitsDuration  = 0xff
+        } );
+      }
+      if ( !ValueDescriptors.Any( vd => vd.Step == StepType.SOUTH_WEST ) )
+      {
+        ValueDescriptors.Add( new PathProject.ValueDescriptor() 
+        {
+          AddressOffsetStep     = 0,
+          Step                  = StepType.SOUTH_WEST,
+          ValueStep             = 6,
+          RelevantBitsStep      = 0x0f,
+          AddressOffsetDuration = 1,
+          RelevantBitsDuration  = 0xff
+        } );
+      }
+      if ( !ValueDescriptors.Any( vd => vd.Step == StepType.WEST ) )
+      {
+        ValueDescriptors.Add( new PathProject.ValueDescriptor() 
+        {
+          AddressOffsetStep     = 0,
+          Step                  = StepType.WEST,
+          ValueStep             = 7,
+          RelevantBitsStep      = 0x0f,
+          AddressOffsetDuration = 1,
+          RelevantBitsDuration  = 0xff
+        } );
+      }
+      if ( !ValueDescriptors.Any( vd => vd.Step == StepType.NORTH_WEST ) )
+      {
+        ValueDescriptors.Add( new PathProject.ValueDescriptor() 
+        {
+          AddressOffsetStep     = 0,
+          Step                  = StepType.NORTH_WEST,
+          ValueStep             = 8,
+          RelevantBitsStep      = 0x0f,
+          AddressOffsetDuration = 1,
+          RelevantBitsDuration  = 0xff
+        } );
+      }
     }
 
 

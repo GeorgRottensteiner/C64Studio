@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+namespace RetroDevStudio
 {
   public class FileChunkConstants
   {
@@ -69,6 +69,7 @@
     public const ushort    PATH_INFO                      = 0x1423;
     public const ushort    PATH_STEPS                     = 0x1424;
     public const ushort    PATH_STEP                      = 0x1425;
+    public const ushort    PATH_PROJECT_VALUE_DESCRIPTOR  = 0x1426;
 
     public const ushort    MULTICOLOR_DATA                = 0x1500;
     public const ushort    CHARSET_DATA                   = 0x1501;   // multicolor-data und binary data

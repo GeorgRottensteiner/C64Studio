@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -44,7 +44,7 @@ namespace RetroDevStudio.Controls
     private bool      _DoNotFireSelectedIndexChanged = false;
     private bool      _UpdateLocked = false;
     private bool      _RedrawRequired = false;
-    private bool      _AllowDragReordering = true;
+    private bool      _AllowReordering = true;
 
 
 
@@ -184,16 +184,18 @@ namespace RetroDevStudio.Controls
 
 
 
-    public bool AllowDragReordering
+    public bool AllowReordering
     {
       get
       {
-        return _AllowDragReordering;
+        return _AllowReordering;
       }
       set
       {
-        _AllowDragReordering = value;
+        _AllowReordering = value;
         listItems.AllowDrag = value;
+        btnMoveDown.Visible = value;
+        btnMoveUp.Visible = value;
       }
     }
 

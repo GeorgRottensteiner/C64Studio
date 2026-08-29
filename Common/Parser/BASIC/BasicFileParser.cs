@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -5313,6 +5313,22 @@ namespace RetroDevStudio.Parser.BASIC
       while ( posInLine < BasicText.Length )
       {
         char    curChar = BasicText[posInLine];
+        if ( ( posInLine == 0 )
+        &&   ( curChar == '#' ) )
+        {
+          // rest of line is a comment!
+          while ( curChar != '\n' )
+          {
+            sb.Append( curChar );
+            ++posInLine;
+            if ( posInLine >= BasicText.Length )
+            {
+              break;
+            }
+            curChar = BasicText[posInLine];
+          }
+          continue;
+        }
         if ( insideMacro )
         {
           if ( curChar == '\n' )

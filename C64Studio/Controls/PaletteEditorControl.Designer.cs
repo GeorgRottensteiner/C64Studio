@@ -165,7 +165,7 @@ namespace RetroDevStudio.Controls
       // 
       paletteList.AddButtonEnabled = true;
       paletteList.AllowClone = true;
-      paletteList.AllowDragReordering = true;
+      paletteList.AllowReordering = true;
       paletteList.DeleteButtonEnabled = false;
       paletteList.HasOwnerDrawColumn = true;
       paletteList.HighlightColor = System.Drawing.SystemColors.HotTrack;
