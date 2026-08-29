@@ -4940,7 +4940,8 @@ namespace RetroDevStudio.Parser.BASIC
               lineInfo.LineNumber = GR.Convert.ToI32( token.Content );
             }
             if ( ( lineInfo.LineNumber >= FirstLineNumber )
-            &&   ( lineInfo.LineNumber <= LastLineNumber ) )
+            &&   ( lineInfo.LineNumber <= LastLineNumber )
+            &&   ( lineNumberReference.ContainsKey( lineInfo.LineNumber ) ) )
             {
               sb.Append( lineNumberReference[lineInfo.LineNumber] );
             }
@@ -4987,7 +4988,8 @@ namespace RetroDevStudio.Parser.BASIC
                       ++i;
                     }
                     if ( ( refNo >= FirstLineNumber )
-                    &&   ( refNo <= LastLineNumber ) )
+                    &&   ( refNo <= LastLineNumber )
+                    &&   ( lineNumberReference.ContainsKey( refNo ) ) )
                     {
                       sb.Append( lineNumberReference[refNo] );
                     }
@@ -5028,7 +5030,8 @@ namespace RetroDevStudio.Parser.BASIC
                     ++i;
                   }
                   if ( ( refNo >= FirstLineNumber )
-                  &&   ( refNo <= LastLineNumber ) )
+                  &&   ( refNo <= LastLineNumber )
+                  &&   ( lineNumberReference.ContainsKey( refNo ) ) )
                   {
                     sb.Append( lineNumberReference[refNo] );
                   }
