@@ -565,8 +565,16 @@ namespace RetroDevStudio.Dialogs
         // not a word boundary, continue searching
         if ( !isWholeWord )
         {
-          startPos = pos + 1;
-          if ( startPos >= SearchSource.Length )
+          if ( Upwards )
+          {
+            startPos = pos + SearchString.Length - 2;
+          }
+          else
+          {
+            startPos = pos + 1;
+          }
+          if ( ( startPos < 0 )
+          ||   ( startPos >= SearchSource.Length ) )
           {
             return new SearchLocation();
           }
