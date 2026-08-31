@@ -273,9 +273,10 @@ namespace RetroDevStudio
             && ( m_ViceVersion >= WinViceVersion.V_2_4 ) )
             {
               // Vice 2.4 sometimes does NOT send an ending line break
+              // take the buffered data as a complete final line instead of dropping it
+              stringData = Encoding.ASCII.GetString( m_ReceivedDataBin.Data(), 0, (int)m_ReceivedDataBin.Length );
+              linePos = stringData.Length;
               m_ReceivedDataBin.Clear();
-              ProcessResponse();
-              break;
             }
             else
             {
