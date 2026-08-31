@@ -12153,7 +12153,7 @@ namespace RetroDevStudio.Parser
                 }
               }
 
-              if ( ( charPos < Start + Length )
+              if ( ( charPos + 1 < Start + Length )
               &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
               &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[charPos + 1] ) != -1 ) )
               {
