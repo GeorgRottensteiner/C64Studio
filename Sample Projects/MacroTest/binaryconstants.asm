@@ -4,5 +4,6 @@ COLLISION_FILL        = %00010000; $01
   COLLISION_DEATH       = %11110000; $0f
 
   * = $c000
+
   HURZ
   rts

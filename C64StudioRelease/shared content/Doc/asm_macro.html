@@ -210,7 +210,7 @@
   <a name="binary"></a><a name="bin"></a><a name="bi"></a>
   <H2>!BINARY, !BIN, !BI &lt;file name&gt;[,&lt;size&gt;,[&lt;skip&gt;,[&lt;expression&gt;,&lt;expression&gt;,...]]]</H2>
   <div id="mybody">
-    This pseudo op inserts a file as binary data.<br />
+    This pseudo op inserts a file as binary data. The file name may also be a text label<br />
     <br />
     &lt;size&gt; sets the number of bytes that are read from the file. If it is not set the whole file is included.<br />
     <br />
@@ -232,6 +232,10 @@
 
       ;import all but the first 2 bytes of music.prg, and halves every second byte
       !binary "music.prg",,2,[,i>>2]
+
+      ;imports a file named "FILE1.bin"
+      COUNTER = 01
+      !binary "FILE" + COUNTER + ".bin"
     </div>
     <br />
     <br />

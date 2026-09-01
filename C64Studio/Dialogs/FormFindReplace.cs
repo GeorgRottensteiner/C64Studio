@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Documents;
 using RetroDevStudio.Properties;
 using RetroDevStudio.Types;
 using System;

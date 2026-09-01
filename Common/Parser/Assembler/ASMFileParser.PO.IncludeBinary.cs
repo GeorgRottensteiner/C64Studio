@@ -1,4 +1,4 @@
-﻿using GR.Memory;
+using GR.Memory;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Types;
@@ -31,16 +31,16 @@ namespace RetroDevStudio.Parser
         ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, true, out List<List<TokenInfo>> paramList );
 
         if ( ( paramList.Count > maxParams )
-        ||   ( paramList.Count < 1 )
-        ||   ( paramList[0].Count != 1 ) )
+        ||   ( paramList.Count < 1 ) )
         {
+
           if ( OpType == MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM )
           {
-            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.PseudoOpType.INCLUDE_BINARY ) + " <Filename>[,<Skip>]" );
+            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + lineTokenInfos[0].Content + " <Filename>[,<Skip>]" );
           }
           else
           {
-            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.PseudoOpType.INCLUDE_BINARY ) + " <Filename>[,<Size>[,<Skip>[,[Modification Expression]]]" );
+            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + lineTokenInfos[0].Content + " <Filename>[,<Size>[,<Skip>[,[Modification Expression]]]" );
           }
           return ParseLineResult.RETURN_NULL;
         }
@@ -78,14 +78,22 @@ namespace RetroDevStudio.Parser
 
       if ( m_AssemblerSettings.IncludeExpectsStringLiteral )
       {
-        if ( ( !paramsFile[0].Content.StartsWith( "\"" ) )
-        ||   ( !paramsFile[0].Content.EndsWith( "\"" ) )
-        ||   ( paramsFile[0].Length <= 2 ) )
+        string  content = paramsFile[0].Content;
+        if ( paramsFile.Count > 1 )
         {
-          AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Expected proper file name between apostrophes" );
-          return ParseLineResult.RETURN_NULL;
+          subFilename = DeQuote( EvaluateAsText( lineIndex, paramsFile, 0, paramsFile.Count, _ParseContext.CurrentTextMapping ) );
         }
-        subFilename = DeQuote( paramsFile[0].Content );
+        else
+        {
+          if ( ( !content.StartsWith( "\"" ) )
+          ||   ( !content.EndsWith( "\"" ) )
+          ||   ( content.Length <= 2 ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Expected proper file name between apostrophes" );
+            return ParseLineResult.RETURN_NULL;
+          }
+          subFilename = DeQuote( content );
+        }
       }
       else
       {
