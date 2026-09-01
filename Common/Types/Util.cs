@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
@@ -415,8 +415,8 @@ namespace RetroDevStudio
           {
             WrapCharCount = 20;
           }
-          // length of line number plus token
-          numBytesInLine = StartLine.ToString().Length + 4;
+          // length of line number plus token (plus 1 for the implicit space between line number and data statement)
+          numBytesInLine = StartLine.ToString().Length + 4 + 1;
 
           while ( ( numBytesInLine < WrapCharCount )
           &&      ( numByteValuesInLine < WrapByteCount )

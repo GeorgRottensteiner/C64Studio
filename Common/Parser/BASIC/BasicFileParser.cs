@@ -1499,8 +1499,7 @@ namespace RetroDevStudio.Parser.BASIC
 
       var textToPaste = BasicFileParser.ReplaceAllMacrosBySymbols( Line, _ParseContext.KeyboardMachineType, out bool hadError );
       string collapsedText = CollapseTokens( textToPaste, Settings.BASICDialect, !Settings.UseC64Font );
-      if ( collapsedText.Length + endOfDigitPos + 1 > Settings.BASICDialect.SafeLineLength )
-      //if ( tempData.Length + endOfDigitPos + 1 > Settings.BASICDialect.SafeLineLength )
+      if ( collapsedText.Length + 1 > Settings.BASICDialect.SafeLineLength )
       {
         AddWarning( LineIndex, Types.ErrorCode.W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY, "Line " + LastLineNumber + " is too long for manual entry", 0, info.Line.Length );
       }
