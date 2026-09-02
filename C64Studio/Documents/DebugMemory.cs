@@ -466,6 +466,14 @@ namespace RetroDevStudio.Documents
     {
       int Offset = Request.Parameter1;
 
+      if ( ( Offset < 0 )
+      ||   ( Offset + (int)Data.Length > hexView.ByteProvider.Length ) )
+      {
+        // discard the whole update, providers would throw on out of range indices
+        Debug.Log( "UpdateMemory: discarding out of range update, offset " + Offset + ", length " + Data.Length + ", limit " + hexView.ByteProvider.Length );
+        return;
+      }
+
       for ( int i = 0; i < Data.Length; ++i )
       {
         byte    ramByte = Data.ByteAt( i );
