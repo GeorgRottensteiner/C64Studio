@@ -262,13 +262,23 @@ namespace RetroDevStudio.Formats
 
 
 
+    // Semantically identical to IsSectorAllocated (true = sector in use);
+    // the BAM1/BAM2 routing is handled centrally by the override below.
     private bool IsSectorMarkedAsUsedInBAM( int Track, int Sector )
     {
+      return IsSectorAllocated( Track, Sector );
+    }
+
+
+
+    public override bool IsSectorAllocated( int Track, int Sector )
+    {
       _LastError = "";
+
       if ( ( Track < 1 )
       ||   ( Track > Tracks.Count ) )
       {
-        _LastError = "track index out of bounds";
+        _LastError = "Track index out of bounds";
         return false;
       }
       Track track = Tracks[Track - 1];
@@ -276,21 +286,26 @@ namespace RetroDevStudio.Formats
       if ( ( Sector < 0 )
       ||   ( Sector >= track.Sectors.Count ) )
       {
-        _LastError = "sector index out of bounds";
+        _LastError = "Sector index out of bounds";
         return false;
       }
-      // BUG: BAM2 (Tracks >= 35) wird hier nicht berücksichtigt – es wird immer
-      // TRACK_BAM und der unveränderte Track-Offset verwendet. Für Tracks >= 35
-      // werden somit falsche BAM-Bits gelesen (vgl. AllocSector/FreeSector).
+      // D71 uses two BAMs: BAM1 (track 18) holds tracks 1-35, BAM2 (track 53)
+      // holds tracks 36-70 (matching CreateBAM/AllocSector/FreeSector routing).
       Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
+      int     trackIndex = Track;
+
+      if ( Track >= 36 )
+      {
+        bam = Tracks[TRACK_BAM_2 - 1].Sectors[SECTOR_BAM];
+        trackIndex -= 35;
+      }
 
       byte mask = (byte)( 1 << ( Sector & 7 ) );
-
-      if ( ( bam.Data.ByteAt( Track * 4 + Sector / 8 + 1 ) & mask ) == 0 )
+      if ( ( bam.Data.ByteAt( trackIndex * 4 + Sector / 8 + 1 ) & mask ) != 0 )
       {
-        return true;
+        return false;
       }
-      return false;
+      return true;
     }
 
 
@@ -320,7 +335,7 @@ namespace RetroDevStudio.Formats
       Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
       int     trackIndex = Track;
 
-      if ( Track >= 35 )
+      if ( Track >= 36 )
       {
         bam = Tracks[TRACK_BAM_2 - 1].Sectors[SECTOR_BAM];
         trackIndex -= 35;
@@ -363,7 +378,7 @@ namespace RetroDevStudio.Formats
       Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
       int     trackIndex = Track;
 
-      if ( Track >= 35 )
+      if ( Track >= 36 )
       {
         bam = Tracks[TRACK_BAM_2 - 1].Sectors[SECTOR_BAM];
         trackIndex -= 35;
