@@ -1207,7 +1207,10 @@ namespace RetroDevStudio.Documents
 
     void RemoveElement( ProjectElement Element )
     {
-      foreach ( var childNode in Element.Node.Nodes )
+      // iterate over a copy - the recursion removes nodes from this collection
+      var nodesToRemove = new List<DecentForms.TreeView.TreeNode>();
+      nodesToRemove.AddRange( Element.Node.Nodes );
+      foreach ( var childNode in nodesToRemove )
       {
         ProjectElement childElement = ElementFromNode( childNode );
         if ( childElement != null )
