@@ -1,4 +1,4 @@
-﻿using GR.Image;
+using GR.Image;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -868,6 +868,8 @@ namespace DecentForms
     private void ItemModified( ListBoxItem Item )
     {
       _CachedMaxItemWidth = -1;
+      RecalcMaxItemWidth();
+      UpdateScrollbarState();
       Invalidate( GetItemRect( Item.Index ) );
     }
 

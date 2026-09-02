@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Formats;
 using RetroDevStudio.Documents;
 
 
@@ -23,6 +23,10 @@ namespace RetroDevStudio.Controls
       comboImportFromDefault.Items.Add( "C64 Lowercase" );
       comboImportFromDefault.Items.Add( "VIC20 Uppercase" );
       comboImportFromDefault.Items.Add( "VIC20 Lowercase" );
+      comboImportFromDefault.Items.Add( "C16/+4 Uppercase" );
+      comboImportFromDefault.Items.Add( "C16/+4 Lowercase" );
+      comboImportFromDefault.Items.Add( "PET Uppercase" );
+      comboImportFromDefault.Items.Add( "PET Lowercase" );
       comboImportFromDefault.Items.Add( "Commander X16 Uppercase" );
       comboImportFromDefault.Items.Add( "Commander X16 Lowercase" );
       comboImportFromDefault.Items.Add( "Commander X16 ISO-8859-15" );
@@ -63,22 +67,38 @@ namespace RetroDevStudio.Controls
             importInfo.Charset.Characters[i].Tile.CustomColor = 1;
             break;
           case 4:
-            ConstantData.UpperCaseCharsetCommanderX16.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
+            ConstantData.UpperCaseCharsetPlus4.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
             importInfo.Charset.Characters[i].Tile.CustomColor = 1;
             break;
           case 5:
-            ConstantData.UpperCaseCharsetCommanderX16.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
+            ConstantData.LowerCaseCharsetPlus4.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
             importInfo.Charset.Characters[i].Tile.CustomColor = 1;
             break;
           case 6:
-            ConstantData.ISO8859CommanderX16.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
+            ConstantData.UpperCaseCharsetPET.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
             importInfo.Charset.Characters[i].Tile.CustomColor = 1;
             break;
           case 7:
-            ConstantData.UpperCaseCharsetMega65FCM.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
+            ConstantData.LowerCaseCharsetPET.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
             importInfo.Charset.Characters[i].Tile.CustomColor = 1;
             break;
           case 8:
+            ConstantData.UpperCaseCharsetCommanderX16.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
+            importInfo.Charset.Characters[i].Tile.CustomColor = 1;
+            break;
+          case 9:
+            ConstantData.UpperCaseCharsetCommanderX16.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
+            importInfo.Charset.Characters[i].Tile.CustomColor = 1;
+            break;
+          case 10:
+            ConstantData.ISO8859CommanderX16.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
+            importInfo.Charset.Characters[i].Tile.CustomColor = 1;
+            break;
+          case 11:
+            ConstantData.UpperCaseCharsetMega65FCM.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
+            importInfo.Charset.Characters[i].Tile.CustomColor = 1;
+            break;
+          case 12:
             ConstantData.LowerCaseCharsetMega65FCM.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
             importInfo.Charset.Characters[i].Tile.CustomColor = 1;
             break;

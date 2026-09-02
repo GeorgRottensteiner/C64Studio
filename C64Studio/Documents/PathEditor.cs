@@ -43,12 +43,15 @@ namespace RetroDevStudio.Documents
       listMappings.BeginUpdate();
 
       listMappings.Items.Clear();
+
+      int totalNumberOfBytes = DetermineTotalNumberOfBytes();
+
       foreach ( var mapping in _project.ValueDescriptors )
       {
         var item = new ArrangedItemEntry();
 
         // TODO - duration info
-        item.Text = StepMappingToText( mapping );
+        item.Text = GenerateStepMappingToText( mapping, totalNumberOfBytes );
         item.Tag = mapping;
         listMappings.Items.Add( item );
       }
@@ -58,9 +61,57 @@ namespace RetroDevStudio.Documents
 
 
 
-    private string StepMappingToText( PathProject.ValueDescriptor mapping )
+    private string GenerateStepMappingToText( PathProject.ValueDescriptor mapping, int totalNumberOfBytes )
     {
-      return $"{mapping.Step} byte {mapping.AddressOffsetStep}";
+      string    fullBits = new string( '*', totalNumberOfBytes * 8 );
+
+      int bitCount = CountBits( mapping.RelevantBitsStep, out int highestBit, out int lowestBit );
+      for ( int i = 0; i < bitCount; ++i )
+      {
+        int bitIndex = mapping.AddressOffsetStep * 8 + i + 7 - highestBit;
+        fullBits = fullBits.Substring( 0, bitIndex ) + "S" + fullBits.Substring( bitIndex + 1 );
+      }
+
+      bitCount = CountBits( mapping.RelevantBitsDuration, out highestBit, out lowestBit );
+      for ( int i = 0; i < bitCount; ++i )
+      {
+        int bitIndex = mapping.AddressOffsetDuration * 8 + i + 7 - highestBit;
+        fullBits = fullBits.Substring( 0, bitIndex ) + "D" + fullBits.Substring( bitIndex + 1 );
+      }
+
+      string finalString = "";
+      for ( int i = 0; i < totalNumberOfBytes; ++i )
+      {
+        finalString += fullBits.Substring( i * 8, 8 );
+        if ( i + 1 < totalNumberOfBytes )
+        {
+          finalString += " ";
+        }
+      }
+
+      return $"{mapping.Step} byte {mapping.AddressOffsetStep}: {finalString}";
+    }
+
+
+
+    private int CountBits( uint relevantBitsStep, out int highestBit, out int lowestBit )
+    {
+      int count = 0;
+      lowestBit = int.MaxValue;
+      highestBit = int.MinValue;
+      for ( int i = 0; i < 32; ++i )
+      {
+        if ( ( relevantBitsStep & ( 1 << i ) ) != 0 )
+        {
+          if ( lowestBit == int.MaxValue )
+          {
+            lowestBit = i;
+          }
+          count++;
+          highestBit = i;
+        }
+      }
+      return count;
     }
 
 
@@ -418,7 +469,7 @@ namespace RetroDevStudio.Documents
         }
       }
       pictureEditor.Invalidate();
-    } 
+    }
 
 
 
@@ -447,7 +498,7 @@ namespace RetroDevStudio.Documents
         return;
       }
       if ( ( listPaths.SelectedItem == null )
-      ||   ( listPathSteps.SelectedItem == null ) )
+      || ( listPathSteps.SelectedItem == null ) )
       {
         return;
       }
@@ -468,7 +519,7 @@ namespace RetroDevStudio.Documents
       }
 
       if ( ( listPaths.SelectedItem == null )
-      ||   ( listPathSteps.SelectedItem == null ) )
+      || ( listPathSteps.SelectedItem == null ) )
       {
         return;
       }
@@ -477,7 +528,10 @@ namespace RetroDevStudio.Documents
       if ( step.Duration != newValue )
       {
         step.Duration = newValue;
-        listPathSteps.SelectedItem.Text = GR.EnumHelper.GetDescription( step.Type ) + ": " + step.Duration;
+
+        var path = (PathProject.Path)listPaths.SelectedItem.Tag;
+        int totalNumberOfBytes = DetermineTotalNumberOfBytes();
+        listPathSteps.SelectedItem.Text = GenerateStepDescription( step, totalNumberOfBytes );
         SetModified();
         RedrawPathPreview();
       }
@@ -493,7 +547,7 @@ namespace RetroDevStudio.Documents
       }
 
       if ( ( listPaths.SelectedItem == null )
-      ||   ( listPathSteps.SelectedItem == null ) )
+      || ( listPathSteps.SelectedItem == null ) )
       {
         return;
       }
@@ -501,11 +555,40 @@ namespace RetroDevStudio.Documents
       var step = (PathProject.Step)listPathSteps.SelectedItem.Tag;
       if ( step.Type != (StepType)comboStepTypes.SelectedIndex )
       {
+        int totalNumberOfBytes = DetermineTotalNumberOfBytes();
         step.Type = (StepType)comboStepTypes.SelectedIndex;
-        listPathSteps.SelectedItem.Text = GR.EnumHelper.GetDescription( step.Type ) + ": " + step.Duration;
+        listPathSteps.SelectedItem.Text = GenerateStepDescription( step, totalNumberOfBytes );
         SetModified();
         RedrawPathPreview();
       }
+    }
+
+
+
+    private int DetermineTotalNumberOfBytes()
+    {
+      int numBytes = 0;
+
+      foreach ( var vd in _project.ValueDescriptors )
+      {
+        if ( vd.AddressOffsetStep > numBytes )
+        {
+          numBytes = vd.AddressOffsetStep + 1;
+        }
+        int durationSize = (int)( vd.RelevantBitsDuration + 255 ) / 256;
+        if ( vd.AddressOffsetDuration + durationSize > numBytes )
+        {
+          numBytes = vd.AddressOffsetDuration + durationSize;
+        }
+      }
+      return numBytes;
+    }
+
+
+
+    private string GenerateStepDescription( Step step, int totalNumberOfBytes )
+    {
+      return GR.EnumHelper.GetDescription( step.Type ) + ": " + step.Duration;
     }
 
 
@@ -524,6 +607,157 @@ namespace RetroDevStudio.Documents
       }
       clonedItem.Tag = clonedPath;
       return clonedItem;
+    }
+
+
+
+    private void listMappings_SelectedIndexChanged( DecentForms.ControlBase Sender )
+    {
+      if ( listMappings.SelectedItem == null )
+      {
+        groupStepValues.Enabled = false;
+        groupDurationValues.Enabled = false;
+        return;
+      }
+      groupStepValues.Enabled = true;
+      groupDurationValues.Enabled = true;
+
+      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
+
+      editMappingStepOffset.Text = mapping.AddressOffsetStep.ToString();
+      editMappingStepValue.Text = mapping.ValueStep.ToString();
+      editMappingStepMask.Text = mapping.RelevantBitsStep.ToString( "X2" );
+
+      editMappingDurationOffset.Text = mapping.AddressOffsetDuration.ToString();
+      editMappingDurationShiftLeft.Text = mapping.ShiftBitsLeftDuration.ToString();
+      editMappingDurationShiftRight.Text = mapping.ShiftBitsRightDuration.ToString();
+      editMappingDurationMask.Text = mapping.RelevantBitsDuration.ToString( "X2" );
+    }
+
+
+
+    private void editMappingStepOffset_TextChanged( object sender, EventArgs e )
+    {
+      if ( listMappings.SelectedItem == null )
+      {
+        return;
+      }
+      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
+      var newValue = GR.Convert.ToI32( editMappingStepOffset.Text );
+      if ( mapping.AddressOffsetStep != newValue )
+      {
+        mapping.AddressOffsetStep = newValue;
+        SetModified();
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+      }
+    }
+
+
+
+    private void editMappingStepValue_TextChanged( object sender, EventArgs e )
+    {
+      if ( listMappings.SelectedItem == null )
+      {
+        return;
+      }
+      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
+      var newValue = GR.Convert.ToU8( editMappingStepValue.Text );
+      if ( mapping.ValueStep != newValue )
+      {
+        mapping.ValueStep = newValue;
+        SetModified();
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+      }
+    }
+
+
+
+    private void editMappingStepMask_TextChanged( object sender, EventArgs e )
+    {
+      if ( listMappings.SelectedItem == null )
+      {
+        return;
+      }
+      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
+      var newValue = GR.Convert.ToU8( editMappingStepMask.Text, 16 );
+      if ( mapping.RelevantBitsStep != newValue )
+      {
+        mapping.RelevantBitsStep = newValue;
+        SetModified();
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+      }
+    }
+
+
+
+    private void editMappingDurationOffset_TextChanged( object sender, EventArgs e )
+    {
+      if ( listMappings.SelectedItem == null )
+      {
+        return;
+      }
+      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
+      var newValue = GR.Convert.ToI32( editMappingDurationOffset.Text );
+      if ( mapping.AddressOffsetDuration != newValue )
+      {
+        mapping.AddressOffsetDuration = newValue;
+        SetModified();
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+      }
+    }
+
+
+
+    private void editMappingDurationShiftLeft_TextChanged( object sender, EventArgs e )
+    {
+      if ( listMappings.SelectedItem == null )
+      {
+        return;
+      }
+      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
+      var newValue = GR.Convert.ToI32( editMappingDurationShiftLeft.Text );
+      if ( mapping.ShiftBitsLeftDuration != newValue )
+      {
+        mapping.ShiftBitsLeftDuration = newValue;
+        SetModified();
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+      }
+    }
+
+
+
+    private void editMappingDurationShiftRight_TextChanged( object sender, EventArgs e )
+    {
+      if ( listMappings.SelectedItem == null )
+      {
+        return;
+      }
+      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
+      var newValue = GR.Convert.ToI32( editMappingDurationShiftRight.Text );
+      if ( mapping.ShiftBitsRightDuration != newValue )
+      {
+        mapping.ShiftBitsRightDuration = newValue;
+        SetModified();
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+      }
+    }
+
+
+
+    private void editMappingDurationMask_TextChanged( object sender, EventArgs e )
+    {
+      if ( listMappings.SelectedItem == null )
+      {
+        return;
+      }
+      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
+      var newValue = GR.Convert.ToU32( editMappingDurationMask.Text, 16 );
+      if ( mapping.RelevantBitsDuration != newValue )
+      {
+        mapping.RelevantBitsDuration = newValue;
+        SetModified();
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+      }
     }
 
 

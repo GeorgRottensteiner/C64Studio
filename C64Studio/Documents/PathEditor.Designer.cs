@@ -44,36 +44,32 @@ namespace RetroDevStudio.Documents
       comboStepTypes = new System.Windows.Forms.ComboBox();
       pictureEditor = new GR.Forms.FastPictureBox();
       tabValueMapping = new System.Windows.Forms.TabPage();
-      label4 = new System.Windows.Forms.Label();
-      tabExport = new System.Windows.Forms.TabPage();
-      label7 = new System.Windows.Forms.Label();
-      textBox1 = new System.Windows.Forms.TextBox();
-      label5 = new System.Windows.Forms.Label();
-      textBox2 = new System.Windows.Forms.TextBox();
-      label8 = new System.Windows.Forms.Label();
-      textBox3 = new System.Windows.Forms.TextBox();
-      label9 = new System.Windows.Forms.Label();
-      textBox4 = new System.Windows.Forms.TextBox();
-      label10 = new System.Windows.Forms.Label();
-      textBox5 = new System.Windows.Forms.TextBox();
-      groupBox1 = new System.Windows.Forms.GroupBox();
-      groupBox2 = new System.Windows.Forms.GroupBox();
-      textBox6 = new System.Windows.Forms.TextBox();
-      textBox7 = new System.Windows.Forms.TextBox();
+      listMappings = new DecentForms.ListBox();
+      groupDurationValues = new System.Windows.Forms.GroupBox();
+      editMappingDurationOffset = new System.Windows.Forms.TextBox();
+      editMappingDurationMask = new System.Windows.Forms.TextBox();
       label11 = new System.Windows.Forms.Label();
-      textBox8 = new System.Windows.Forms.TextBox();
+      editMappingDurationShiftRight = new System.Windows.Forms.TextBox();
       label13 = new System.Windows.Forms.Label();
       label14 = new System.Windows.Forms.Label();
-      textBox9 = new System.Windows.Forms.TextBox();
+      editMappingDurationShiftLeft = new System.Windows.Forms.TextBox();
       label15 = new System.Windows.Forms.Label();
-      listMappings = new DecentForms.ListBox();
+      groupStepValues = new System.Windows.Forms.GroupBox();
+      editMappingStepOffset = new System.Windows.Forms.TextBox();
+      editMappingStepMask = new System.Windows.Forms.TextBox();
+      label7 = new System.Windows.Forms.Label();
+      label5 = new System.Windows.Forms.Label();
+      label10 = new System.Windows.Forms.Label();
+      editMappingStepValue = new System.Windows.Forms.TextBox();
+      label4 = new System.Windows.Forms.Label();
+      tabExport = new System.Windows.Forms.TabPage();
       ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).BeginInit();
       tabPathEditor.SuspendLayout();
       tabEditor.SuspendLayout();
       ( (System.ComponentModel.ISupportInitialize)pictureEditor ).BeginInit();
       tabValueMapping.SuspendLayout();
-      groupBox1.SuspendLayout();
-      groupBox2.SuspendLayout();
+      groupDurationValues.SuspendLayout();
+      groupStepValues.SuspendLayout();
       SuspendLayout();
       // 
       // tabPathEditor
@@ -266,8 +262,8 @@ namespace RetroDevStudio.Documents
       // tabValueMapping
       // 
       tabValueMapping.Controls.Add( listMappings );
-      tabValueMapping.Controls.Add( groupBox2 );
-      tabValueMapping.Controls.Add( groupBox1 );
+      tabValueMapping.Controls.Add( groupDurationValues );
+      tabValueMapping.Controls.Add( groupStepValues );
       tabValueMapping.Controls.Add( label4 );
       tabValueMapping.Location = new System.Drawing.Point( 4, 22 );
       tabValueMapping.Name = "tabValueMapping";
@@ -276,6 +272,178 @@ namespace RetroDevStudio.Documents
       tabValueMapping.TabIndex = 2;
       tabValueMapping.Text = "ValueMapping";
       tabValueMapping.UseVisualStyleBackColor = true;
+      // 
+      // listMappings
+      // 
+      listMappings.AllowDrag = false;
+      listMappings.BorderStyle = DecentForms.BorderStyle.SUNKEN;
+      listMappings.DisplayAntiAliased = true;
+      listMappings.HasCheckBoxes = false;
+      listMappings.ItemHeight = 15;
+      listMappings.Location = new System.Drawing.Point( 8, 24 );
+      listMappings.Name = "listMappings";
+      listMappings.ScrollAlwaysVisible = false;
+      listMappings.SelectionMode = DecentForms.SelectionMode.NONE;
+      listMappings.Size = new System.Drawing.Size( 270, 472 );
+      listMappings.TabIndex = 32;
+      listMappings.SelectedIndexChanged +=  listMappings_SelectedIndexChanged ;
+      // 
+      // groupDurationValues
+      // 
+      groupDurationValues.Controls.Add( editMappingDurationOffset );
+      groupDurationValues.Controls.Add( editMappingDurationMask );
+      groupDurationValues.Controls.Add( label11 );
+      groupDurationValues.Controls.Add( editMappingDurationShiftRight );
+      groupDurationValues.Controls.Add( label13 );
+      groupDurationValues.Controls.Add( label14 );
+      groupDurationValues.Controls.Add( editMappingDurationShiftLeft );
+      groupDurationValues.Controls.Add( label15 );
+      groupDurationValues.Location = new System.Drawing.Point( 284, 134 );
+      groupDurationValues.Name = "groupDurationValues";
+      groupDurationValues.Size = new System.Drawing.Size( 253, 131 );
+      groupDurationValues.TabIndex = 31;
+      groupDurationValues.TabStop = false;
+      groupDurationValues.Text = "Duration";
+      // 
+      // editMappingDurationOffset
+      // 
+      editMappingDurationOffset.Location = new System.Drawing.Point( 114, 19 );
+      editMappingDurationOffset.MaxLength = 2;
+      editMappingDurationOffset.Name = "editMappingDurationOffset";
+      editMappingDurationOffset.Size = new System.Drawing.Size( 121, 20 );
+      editMappingDurationOffset.TabIndex = 30;
+      editMappingDurationOffset.TextChanged +=  editMappingDurationOffset_TextChanged ;
+      // 
+      // editMappingDurationMask
+      // 
+      editMappingDurationMask.Location = new System.Drawing.Point( 114, 97 );
+      editMappingDurationMask.MaxLength = 4;
+      editMappingDurationMask.Name = "editMappingDurationMask";
+      editMappingDurationMask.Size = new System.Drawing.Size( 121, 20 );
+      editMappingDurationMask.TabIndex = 30;
+      editMappingDurationMask.TextChanged +=  editMappingDurationMask_TextChanged ;
+      // 
+      // label11
+      // 
+      label11.AutoSize = true;
+      label11.Location = new System.Drawing.Point( 6, 22 );
+      label11.Name = "label11";
+      label11.Size = new System.Drawing.Size( 79, 13 );
+      label11.TabIndex = 27;
+      label11.Text = "Address Offset:";
+      // 
+      // editMappingDurationShiftRight
+      // 
+      editMappingDurationShiftRight.Location = new System.Drawing.Point( 114, 71 );
+      editMappingDurationShiftRight.MaxLength = 2;
+      editMappingDurationShiftRight.Name = "editMappingDurationShiftRight";
+      editMappingDurationShiftRight.Size = new System.Drawing.Size( 121, 20 );
+      editMappingDurationShiftRight.TabIndex = 30;
+      editMappingDurationShiftRight.TextChanged +=  editMappingDurationShiftRight_TextChanged ;
+      // 
+      // label13
+      // 
+      label13.AutoSize = true;
+      label13.Location = new System.Drawing.Point( 6, 100 );
+      label13.Name = "label13";
+      label13.Size = new System.Drawing.Size( 97, 13 );
+      label13.TabIndex = 27;
+      label13.Text = "Relevant Bit Mask:";
+      // 
+      // label14
+      // 
+      label14.AutoSize = true;
+      label14.Location = new System.Drawing.Point( 6, 48 );
+      label14.Name = "label14";
+      label14.Size = new System.Drawing.Size( 72, 13 );
+      label14.TabIndex = 27;
+      label14.Text = "Shift Bits Left:";
+      // 
+      // editMappingDurationShiftLeft
+      // 
+      editMappingDurationShiftLeft.Location = new System.Drawing.Point( 114, 45 );
+      editMappingDurationShiftLeft.MaxLength = 2;
+      editMappingDurationShiftLeft.Name = "editMappingDurationShiftLeft";
+      editMappingDurationShiftLeft.Size = new System.Drawing.Size( 121, 20 );
+      editMappingDurationShiftLeft.TabIndex = 30;
+      editMappingDurationShiftLeft.TextChanged +=  editMappingDurationShiftLeft_TextChanged ;
+      // 
+      // label15
+      // 
+      label15.AutoSize = true;
+      label15.Location = new System.Drawing.Point( 6, 74 );
+      label15.Name = "label15";
+      label15.Size = new System.Drawing.Size( 79, 13 );
+      label15.TabIndex = 27;
+      label15.Text = "Shift Bits Right:";
+      // 
+      // groupStepValues
+      // 
+      groupStepValues.Controls.Add( editMappingStepOffset );
+      groupStepValues.Controls.Add( editMappingStepMask );
+      groupStepValues.Controls.Add( label7 );
+      groupStepValues.Controls.Add( label5 );
+      groupStepValues.Controls.Add( label10 );
+      groupStepValues.Controls.Add( editMappingStepValue );
+      groupStepValues.Location = new System.Drawing.Point( 284, 24 );
+      groupStepValues.Name = "groupStepValues";
+      groupStepValues.Size = new System.Drawing.Size( 253, 104 );
+      groupStepValues.TabIndex = 31;
+      groupStepValues.TabStop = false;
+      groupStepValues.Text = "Step";
+      // 
+      // editMappingStepOffset
+      // 
+      editMappingStepOffset.Location = new System.Drawing.Point( 114, 19 );
+      editMappingStepOffset.MaxLength = 2;
+      editMappingStepOffset.Name = "editMappingStepOffset";
+      editMappingStepOffset.Size = new System.Drawing.Size( 121, 20 );
+      editMappingStepOffset.TabIndex = 30;
+      editMappingStepOffset.TextChanged +=  editMappingStepOffset_TextChanged ;
+      // 
+      // editMappingStepMask
+      // 
+      editMappingStepMask.Location = new System.Drawing.Point( 114, 71 );
+      editMappingStepMask.MaxLength = 2;
+      editMappingStepMask.Name = "editMappingStepMask";
+      editMappingStepMask.Size = new System.Drawing.Size( 121, 20 );
+      editMappingStepMask.TabIndex = 30;
+      editMappingStepMask.TextChanged +=  editMappingStepMask_TextChanged ;
+      // 
+      // label7
+      // 
+      label7.AutoSize = true;
+      label7.Location = new System.Drawing.Point( 6, 22 );
+      label7.Name = "label7";
+      label7.Size = new System.Drawing.Size( 79, 13 );
+      label7.TabIndex = 27;
+      label7.Text = "Address Offset:";
+      // 
+      // label5
+      // 
+      label5.AutoSize = true;
+      label5.Location = new System.Drawing.Point( 6, 48 );
+      label5.Name = "label5";
+      label5.Size = new System.Drawing.Size( 37, 13 );
+      label5.TabIndex = 27;
+      label5.Text = "Value:";
+      // 
+      // label10
+      // 
+      label10.AutoSize = true;
+      label10.Location = new System.Drawing.Point( 6, 74 );
+      label10.Name = "label10";
+      label10.Size = new System.Drawing.Size( 97, 13 );
+      label10.TabIndex = 27;
+      label10.Text = "Relevant Bit Mask:";
+      // 
+      // editMappingStepValue
+      // 
+      editMappingStepValue.Location = new System.Drawing.Point( 114, 45 );
+      editMappingStepValue.Name = "editMappingStepValue";
+      editMappingStepValue.Size = new System.Drawing.Size( 121, 20 );
+      editMappingStepValue.TabIndex = 30;
+      editMappingStepValue.TextChanged +=  editMappingStepValue_TextChanged ;
       // 
       // label4
       // 
@@ -296,193 +464,6 @@ namespace RetroDevStudio.Documents
       tabExport.Text = "Export";
       tabExport.UseVisualStyleBackColor = true;
       // 
-      // label7
-      // 
-      label7.AutoSize = true;
-      label7.Location = new System.Drawing.Point( 6, 22 );
-      label7.Name = "label7";
-      label7.Size = new System.Drawing.Size( 79, 13 );
-      label7.TabIndex = 27;
-      label7.Text = "Address Offset:";
-      // 
-      // textBox1
-      // 
-      textBox1.Location = new System.Drawing.Point( 114, 19 );
-      textBox1.Name = "textBox1";
-      textBox1.Size = new System.Drawing.Size( 121, 20 );
-      textBox1.TabIndex = 30;
-      // 
-      // label5
-      // 
-      label5.AutoSize = true;
-      label5.Location = new System.Drawing.Point( 6, 48 );
-      label5.Name = "label5";
-      label5.Size = new System.Drawing.Size( 37, 13 );
-      label5.TabIndex = 27;
-      label5.Text = "Value:";
-      // 
-      // textBox2
-      // 
-      textBox2.Location = new System.Drawing.Point( 114, 45 );
-      textBox2.Name = "textBox2";
-      textBox2.Size = new System.Drawing.Size( 121, 20 );
-      textBox2.TabIndex = 30;
-      // 
-      // label8
-      // 
-      label8.AutoSize = true;
-      label8.Location = new System.Drawing.Point( 6, 74 );
-      label8.Name = "label8";
-      label8.Size = new System.Drawing.Size( 72, 13 );
-      label8.TabIndex = 27;
-      label8.Text = "Shift Bits Left:";
-      // 
-      // textBox3
-      // 
-      textBox3.Location = new System.Drawing.Point( 114, 71 );
-      textBox3.Name = "textBox3";
-      textBox3.Size = new System.Drawing.Size( 121, 20 );
-      textBox3.TabIndex = 30;
-      // 
-      // label9
-      // 
-      label9.AutoSize = true;
-      label9.Location = new System.Drawing.Point( 6, 100 );
-      label9.Name = "label9";
-      label9.Size = new System.Drawing.Size( 79, 13 );
-      label9.TabIndex = 27;
-      label9.Text = "Shift Bits Right:";
-      // 
-      // textBox4
-      // 
-      textBox4.Location = new System.Drawing.Point( 114, 97 );
-      textBox4.Name = "textBox4";
-      textBox4.Size = new System.Drawing.Size( 121, 20 );
-      textBox4.TabIndex = 30;
-      // 
-      // label10
-      // 
-      label10.AutoSize = true;
-      label10.Location = new System.Drawing.Point( 6, 126 );
-      label10.Name = "label10";
-      label10.Size = new System.Drawing.Size( 73, 13 );
-      label10.TabIndex = 27;
-      label10.Text = "Relevant Bits:";
-      // 
-      // textBox5
-      // 
-      textBox5.Location = new System.Drawing.Point( 114, 123 );
-      textBox5.Name = "textBox5";
-      textBox5.Size = new System.Drawing.Size( 121, 20 );
-      textBox5.TabIndex = 30;
-      // 
-      // groupBox1
-      // 
-      groupBox1.Controls.Add( textBox1 );
-      groupBox1.Controls.Add( textBox5 );
-      groupBox1.Controls.Add( label7 );
-      groupBox1.Controls.Add( textBox4 );
-      groupBox1.Controls.Add( label5 );
-      groupBox1.Controls.Add( label10 );
-      groupBox1.Controls.Add( label8 );
-      groupBox1.Controls.Add( textBox3 );
-      groupBox1.Controls.Add( textBox2 );
-      groupBox1.Controls.Add( label9 );
-      groupBox1.Location = new System.Drawing.Point( 217, 24 );
-      groupBox1.Name = "groupBox1";
-      groupBox1.Size = new System.Drawing.Size( 253, 159 );
-      groupBox1.TabIndex = 31;
-      groupBox1.TabStop = false;
-      groupBox1.Text = "Step";
-      // 
-      // groupBox2
-      // 
-      groupBox2.Controls.Add( textBox6 );
-      groupBox2.Controls.Add( textBox7 );
-      groupBox2.Controls.Add( label11 );
-      groupBox2.Controls.Add( textBox8 );
-      groupBox2.Controls.Add( label13 );
-      groupBox2.Controls.Add( label14 );
-      groupBox2.Controls.Add( textBox9 );
-      groupBox2.Controls.Add( label15 );
-      groupBox2.Location = new System.Drawing.Point( 217, 189 );
-      groupBox2.Name = "groupBox2";
-      groupBox2.Size = new System.Drawing.Size( 253, 131 );
-      groupBox2.TabIndex = 31;
-      groupBox2.TabStop = false;
-      groupBox2.Text = "Duration";
-      // 
-      // textBox6
-      // 
-      textBox6.Location = new System.Drawing.Point( 114, 19 );
-      textBox6.Name = "textBox6";
-      textBox6.Size = new System.Drawing.Size( 121, 20 );
-      textBox6.TabIndex = 30;
-      // 
-      // textBox7
-      // 
-      textBox7.Location = new System.Drawing.Point( 114, 97 );
-      textBox7.Name = "textBox7";
-      textBox7.Size = new System.Drawing.Size( 121, 20 );
-      textBox7.TabIndex = 30;
-      // 
-      // label11
-      // 
-      label11.AutoSize = true;
-      label11.Location = new System.Drawing.Point( 6, 22 );
-      label11.Name = "label11";
-      label11.Size = new System.Drawing.Size( 79, 13 );
-      label11.TabIndex = 27;
-      label11.Text = "Address Offset:";
-      // 
-      // textBox8
-      // 
-      textBox8.Location = new System.Drawing.Point( 114, 71 );
-      textBox8.Name = "textBox8";
-      textBox8.Size = new System.Drawing.Size( 121, 20 );
-      textBox8.TabIndex = 30;
-      // 
-      // label13
-      // 
-      label13.AutoSize = true;
-      label13.Location = new System.Drawing.Point( 6, 100 );
-      label13.Name = "label13";
-      label13.Size = new System.Drawing.Size( 73, 13 );
-      label13.TabIndex = 27;
-      label13.Text = "Relevant Bits:";
-      // 
-      // label14
-      // 
-      label14.AutoSize = true;
-      label14.Location = new System.Drawing.Point( 6, 48 );
-      label14.Name = "label14";
-      label14.Size = new System.Drawing.Size( 72, 13 );
-      label14.TabIndex = 27;
-      label14.Text = "Shift Bits Left:";
-      // 
-      // textBox9
-      // 
-      textBox9.Location = new System.Drawing.Point( 114, 45 );
-      textBox9.Name = "textBox9";
-      textBox9.Size = new System.Drawing.Size( 121, 20 );
-      textBox9.TabIndex = 30;
-      // 
-      // label15
-      // 
-      label15.AutoSize = true;
-      label15.Location = new System.Drawing.Point( 6, 74 );
-      label15.Name = "label15";
-      label15.Size = new System.Drawing.Size( 79, 13 );
-      label15.TabIndex = 27;
-      label15.Text = "Shift Bits Right:";
-      // 
-      // listMappings
-      // 
-      listMappings.Location = new System.Drawing.Point( 8, 24 );
-      listMappings.Name = "listMappings";
-      listMappings.Size = new System.Drawing.Size( 203, 472 );
-      listMappings.TabIndex = 32;
-      // 
       // PathEditor
       // 
       AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -499,10 +480,10 @@ namespace RetroDevStudio.Documents
       ( (System.ComponentModel.ISupportInitialize)pictureEditor ).EndInit();
       tabValueMapping.ResumeLayout( false );
       tabValueMapping.PerformLayout();
-      groupBox1.ResumeLayout( false );
-      groupBox1.PerformLayout();
-      groupBox2.ResumeLayout( false );
-      groupBox2.PerformLayout();
+      groupDurationValues.ResumeLayout( false );
+      groupDurationValues.PerformLayout();
+      groupStepValues.ResumeLayout( false );
+      groupStepValues.PerformLayout();
       ResumeLayout( false );
 
     }
@@ -526,25 +507,21 @@ namespace RetroDevStudio.Documents
     private GR.Forms.FastPictureBox pictureEditor;
     private System.Windows.Forms.TabPage tabValueMapping;
     private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.TextBox textBox1;
+    private System.Windows.Forms.TextBox editMappingStepOffset;
     private System.Windows.Forms.Label label7;
-    private System.Windows.Forms.TextBox textBox2;
+    private System.Windows.Forms.TextBox editMappingStepValue;
     private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.TextBox textBox4;
-    private System.Windows.Forms.TextBox textBox3;
-    private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.TextBox textBox5;
+    private System.Windows.Forms.GroupBox groupStepValues;
+    private System.Windows.Forms.TextBox editMappingStepMask;
     private System.Windows.Forms.Label label10;
-    private System.Windows.Forms.GroupBox groupBox2;
-    private System.Windows.Forms.TextBox textBox6;
-    private System.Windows.Forms.TextBox textBox7;
+    private System.Windows.Forms.GroupBox groupDurationValues;
+    private System.Windows.Forms.TextBox editMappingDurationOffset;
+    private System.Windows.Forms.TextBox editMappingDurationMask;
     private System.Windows.Forms.Label label11;
-    private System.Windows.Forms.TextBox textBox8;
+    private System.Windows.Forms.TextBox editMappingDurationShiftRight;
     private System.Windows.Forms.Label label13;
     private System.Windows.Forms.Label label14;
-    private System.Windows.Forms.TextBox textBox9;
+    private System.Windows.Forms.TextBox editMappingDurationShiftLeft;
     private System.Windows.Forms.Label label15;
     private DecentForms.ListBox listMappings;
   }
