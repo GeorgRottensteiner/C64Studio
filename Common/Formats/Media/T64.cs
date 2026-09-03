@@ -322,7 +322,7 @@ namespace RetroDevStudio.Formats
         {
           break;
         }
-        TapeInfo.UserDescription += (char)data.ByteAt( i );
+        TapeInfo.UserDescription += (char)data.ByteAt( 40 + i );
       }
       int entryPos = 64;
       for ( int i = 0; i < TapeInfo.NumberEntries; ++i )
