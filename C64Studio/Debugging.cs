@@ -792,6 +792,14 @@ namespace RetroDevStudio
         memoryView = Core.Debugging.MemoryRAM;
       }
 
+      if ( ( Offset < 0 )
+      ||   ( Offset + (int)Data.Length > memoryView.Flags.Length ) )
+      {
+        // discard the whole update to keep Flags/RAM and the memory views consistent
+        Debug.Log( "UpdateMemory: discarding out of range update, offset " + Offset + ", length " + Data.Length + ", limit " + memoryView.Flags.Length );
+        return;
+      }
+
       for ( int i = 0; i < Data.Length; ++i )
       {
         byte    ramByte = Data.ByteAt( i );
