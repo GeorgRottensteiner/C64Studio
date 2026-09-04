@@ -979,7 +979,8 @@ namespace RetroDevStudio.Formats
           MapHeight = reader.ReadUInt16();
 
           MapData = new GR.Memory.ByteBuffer( (uint)( MapWidth * MapHeight ) );
-          if ( !tileSysEnabled )
+          if ( ( !tileSysEnabled )
+          ||   ( TileColorMode == ColorMode.PER_CHAR ) )
           {
             // map has color data
             MapColorData = new GR.Memory.ByteBuffer( (uint)( MapWidth * MapHeight ) );
