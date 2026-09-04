@@ -3009,7 +3009,7 @@ namespace GR.Image
           {
             for ( int j = 0; j < Width; ++j )
             {
-              SetPixelData( i, j, Value );
+              SetPixelData( X + j, Y + i, Value );
             }
           }
           break;
@@ -3146,7 +3146,7 @@ namespace GR.Image
           {
             for ( int j = 0; j < Width; ++j )
             {
-              SetPixelData( i, j, Value );
+              SetPixelData( X + j, Y + i, Value );
             }
           }
           break;
