@@ -159,40 +159,46 @@ namespace RetroDevStudio.Controls
         e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Window, e.Bounds );
       }
 
-      var format = new StringFormat
-        {
-          FormatFlags = StringFormatFlags.NoWrap,
-          Trimming = StringTrimming.EllipsisCharacter
-        };
-
-      var info = new SCROLLINFO();
-      info.fMask  = (uint)ScrollInfoMask.SIF_ALL;
-      info.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf( info );
-      GetScrollInfo( this.Handle, (int)ScrollBarConstants.SB_HORZ, ref info );
-      int x = -info.nTrackPos;
-      for ( int i = 0; i < Columns.Count; ++i )
+      // Disposed deterministically to avoid leaking GDI+ handles on every repaint
+      using ( var format = new StringFormat() )
       {
-        Font  fontToUse = Font;
+        format.FormatFlags = StringFormatFlags.NoWrap;
+        format.Trimming    = StringTrimming.EllipsisCharacter;
 
-        if ( i < ItemFonts.Count )
+        var info = new SCROLLINFO();
+        info.fMask  = (uint)ScrollInfoMask.SIF_ALL;
+        info.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf( info );
+        GetScrollInfo( this.Handle, (int)ScrollBarConstants.SB_HORZ, ref info );
+        int x = -info.nTrackPos;
+        for ( int i = 0; i < Columns.Count; ++i )
         {
-          fontToUse = ItemFonts[i];
-        }
+          Font  fontToUse = Font;
 
-        var subItemBounds = Items[e.Index].SubItems[i].Bounds;
-        subItemBounds.X = x;
-        subItemBounds.Width = Columns[i].Width;
-        x += subItemBounds.Width;
-        e.Graphics.Clip = new Region( subItemBounds );
-        if ( Items[e.Index].Selected )
-        {
-          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.HighlightText, subItemBounds, format );
+          if ( i < ItemFonts.Count )
+          {
+            fontToUse = ItemFonts[i];
+          }
+
+          var subItemBounds = Items[e.Index].SubItems[i].Bounds;
+          subItemBounds.X = x;
+          subItemBounds.Width = Columns[i].Width;
+          x += subItemBounds.Width;
+
+          // Graphics.Clip does not take ownership of the region, dispose it here
+          using ( var clipRegion = new Region( subItemBounds ) )
+          {
+            e.Graphics.Clip = clipRegion;
+            if ( Items[e.Index].Selected )
+            {
+              e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.HighlightText, subItemBounds, format );
+            }
+            else
+            {
+              e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.WindowText, subItemBounds, format );
+            }
+          }
         }
-        else
-        {
-          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.WindowText, subItemBounds, format );
-        }
-      }      
+      }
 
       if ( ( e.State & DrawItemState.Focus ) != 0 )
       {
