@@ -622,6 +622,31 @@ namespace RetroDevStudio.Types.ASM
         }
       }
 
+      // shift/drop references like InsertLines does, to keep them in sync with the removed lines
+      foreach ( var label in Labels )
+      {
+        if ( label.Value.References.Any( r => r.Key >= GlobalLineIndex ) )
+        {
+          var newSet = new MultiMap<int, SymbolReference>();
+          foreach ( var reference in label.Value.References )
+          {
+            if ( reference.Key >= GlobalLineIndex + LineCount )
+            {
+              newSet.Add( reference.Key - LineCount, reference.Value );
+            }
+            else if ( reference.Key >= GlobalLineIndex )
+            {
+              // reference pointed at a removed line - drop it
+            }
+            else
+            {
+              newSet.Add( reference.Key, reference.Value );
+            }
+          }
+          label.Value.References = newSet;
+        }
+      }
+
       List<LineInfo>    linesToMove = new List<ASM.LineInfo>();
       List<LineInfo>    linesToRemove = new List<ASM.LineInfo>();
       foreach ( var line in LineInfo )
