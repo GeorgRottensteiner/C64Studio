@@ -668,20 +668,26 @@ namespace GR
         {
           return false;
         }
-        if ( m_Data.Length <= NumberOfBytesToTruncate )
+        if ( NumberOfBytesToTruncate >= m_UsedBytes )
         {
-          m_Data = null;
+          // truncating at or beyond the logical length leaves an empty, still usable buffer (like Truncate)
+          Clear();
+          return true;
+        }
+        if ( NumberOfBytesToTruncate <= 0 )
+        {
           return true;
         }
 
-        byte[] bTemp = new byte[m_Data.Length - NumberOfBytesToTruncate];
+        // operate on the logical length (m_UsedBytes), not on the array capacity (m_Data.Length)
+        byte[] bTemp = new byte[(int)m_UsedBytes - NumberOfBytesToTruncate];
             
-        for ( int i = NumberOfBytesToTruncate; i < m_Data.Length; ++i )
+        for ( int i = NumberOfBytesToTruncate; i < (int)m_UsedBytes; ++i )
         {
-          bTemp.SetValue( m_Data[i], i - NumberOfBytesToTruncate );
+          bTemp[i - NumberOfBytesToTruncate] = m_Data[i];
         }
         m_Data      = bTemp;
-        m_UsedBytes = (UInt32)m_Data.Length;
+        m_UsedBytes = (UInt32)bTemp.Length;
 
         return true;
       }
