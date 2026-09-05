@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -3004,7 +3004,7 @@ namespace GR.Image
           }
           break;
         default:
-          // defaul to safe but slow
+          // default to safe but slow
           for ( int i = 0; i < Height; ++i )
           {
             for ( int j = 0; j < Width; ++j )
@@ -3141,7 +3141,7 @@ namespace GR.Image
           }
           break;
         default:
-          // defaul to safe but slow
+          // default to safe but slow
           for ( int i = 0; i < Height; ++i )
           {
             for ( int j = 0; j < Width; ++j )

@@ -1,6 +1,7 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using System.Text;
 
 
@@ -159,7 +160,7 @@ namespace RetroDevStudio.Formats
       &&   ( version != 7 )
       &&   ( version != 8 ) )
       {
-        Debug.Log( "Currently only version 4, 5, 6 or 7 of Charpad project files is supported. Sorry!\r\nUnsupported version " + version );
+        Debug.Log( "Currently only version 4, 5, 6, 7 or 8 of Charpad project files is supported. Sorry!\r\nUnsupported version " + version );
         return false;
       }
 
@@ -548,6 +549,12 @@ namespace RetroDevStudio.Formats
       bool  tileSysEnabled = ( ( flags & 0x01 ) != 0 );
 
 
+      bool hadTileDataBlock = false;
+      bool hadTileColorsBlock = false;
+      bool hadTileTagsBlock = false;
+      bool hadTileNamesBlock = false;
+
+
       ushort charDataBlockID      = 0xdab0;
       ushort charAttributeBlockID = 0xdab1;
       ushort mapDataBlockID       = 0xdab2;
@@ -582,45 +589,135 @@ namespace RetroDevStudio.Formats
       {
         ushort  blockID = reader.ReadUInt16NetworkOrder();
 
-        if ( blockID == mapDataBlockID )
+        if ( ( ( blockID & 0xfff0 ) == 0xdab0 )
+        &&   ( blockID >= mapDataBlockID ) )
         {
           if ( tileSysEnabled )
           {
-            // Tile data block
-
-            // TILECNT: Tile count minus one(16 - bit, LSBF).
-            NumTiles = reader.ReadUInt16() + 1;
-
-            // TILEWID: Tile width( byte).
-            TileWidth = reader.ReadUInt8();
-            // TILEHEI: Tile height( byte).
-            TileHeight = reader.ReadUInt8();
-
-            // TILEDAT: Tile data, 16 bits per tile cell( LSBF) for TILEWID* TILEHEI cells * TILECNT items, cells are in LRTB order.
-            for ( int i = 0; i < NumTiles; ++i )
+            if ( !hadTileDataBlock )
             {
-              Tile tile = new Tile();
+              hadTileDataBlock = true;
 
-              tile.CharData.Resize( (uint)( TileWidth * TileHeight * 2 ) );
-              tile.ColorData.Resize( (uint)( TileWidth * TileHeight ) );
+              // BLKMARK : Block marker (0xDA, 0xBn).
+              // TILECNT : Tile count minus one (16-bit, LSBF).
+              // TILEWID: Tile width (byte).
+              // TILEHEI: Tile height (byte).
+              // TILEDAT : Tile data, 16 bits per tile cell (LSBF) for TILEWID * TILEHEI cells * TILECNT items, cells are in LRTB order.
+              // Tile data block
 
-              Tiles.Add( tile );
-            }
-            if ( NumChars < 256 )
-            {
-              // add all chars for safety reasons
-              for ( int i = NumChars; i < 256; ++i )
+              // TILECNT: Tile count minus one(16 - bit, LSBF).
+              NumTiles = reader.ReadUInt16() + 1;
+
+              // TILEWID: Tile width( byte).
+              TileWidth = reader.ReadUInt8();
+              // TILEHEI: Tile height( byte).
+              TileHeight = reader.ReadUInt8();
+
+              // TILEDAT: Tile data, 16 bits per tile cell( LSBF) for TILEWID* TILEHEI cells * TILECNT items, cells are in LRTB order.
+              for ( int i = 0; i < NumTiles; ++i )
               {
-                SingleChar    newChar = new SingleChar();
-                newChar.Data = new GR.Memory.ByteBuffer( 8 );
-                Characters.Add( newChar );
+                Tile tile = new Tile();
+
+                tile.CharData.Resize( (uint)( TileWidth * TileHeight * 2 ) );
+                tile.ColorData.Resize( (uint)( TileWidth * TileHeight ) );
+
+                Tiles.Add( tile );
               }
-            }
-            for ( int i = 0; i < NumTiles; ++i )
-            {
-              for ( int j = 0; j < TileWidth * TileHeight; ++j )
+              if ( NumChars < 256 )
               {
-                Tiles[i].CharData.SetU16At( j * 2, reader.ReadUInt16() );
+                // add all chars for safety reasons
+                for ( int i = NumChars; i < 256; ++i )
+                {
+                  SingleChar    newChar = new SingleChar();
+                  newChar.Data = new GR.Memory.ByteBuffer( 8 );
+                  Characters.Add( newChar );
+                }
+              }
+              for ( int i = 0; i < NumTiles; ++i )
+              {
+                for ( int j = 0; j < TileWidth * TileHeight; ++j )
+                {
+                  Tiles[i].CharData.SetU16At( j * 2, reader.ReadUInt16() );
+                  if ( TileColorMode == ColorMode.GLOBAL )
+                  {
+                    Tiles[i].ColorData.SetU8At( j, (byte)CustomColor );
+                  }
+                  else
+                  {
+                    if ( TileColorMode == ColorMode.PER_CHAR )
+                    {
+                      Tiles[i].ColorData.SetU8At( j, (byte)Characters[Tiles[i].CharData.UInt16At( j * 2 )].Color );
+                    }
+                  }
+                }
+              }
+              continue;
+            }
+            if ( ( !hadTileColorsBlock )
+            &&   ( tileSysEnabled )
+            &&   ( TileColorMode == ColorMode.PER_TILE ) )
+            {
+              hadTileColorsBlock = true;
+
+              // BLKMARK   : Block marker (0xDA, 0xBn).
+              // TILECOLRS : Tile colour data, one byte per tile for TILECNT tiles, low nybble = colour, high nybble is unused.
+              
+              for ( int i = 0; i < NumTiles; ++i )
+              {
+                ushort  tileColor = reader.ReadUInt8();
+
+                for ( int j = 0; j < TileWidth * TileHeight; ++j )
+                {
+                  Tiles[i].ColorData.SetU8At( j, (byte)tileColor );
+                }
+              }
+              continue;
+            }
+            if ( ( !hadTileTagsBlock )
+            &&   ( tileSysEnabled ) )
+            {
+              hadTileTagsBlock = true;
+
+              // BLKMARK  : Block marker (0xDA, 0xBn).
+              // TILETAGS : Tile tag values, one byte per tile for TILECNT items.
+              for ( int i = 0; i < NumTiles; ++i )
+              {
+                reader.ReadUInt8();
+              }
+              continue;
+            }
+            if ( ( !hadTileNamesBlock )
+            &&   ( tileSysEnabled ) )
+            {
+              hadTileNamesBlock = true;
+
+              // BLKMARK  : Block marker (0xDA, 0xBn).
+              // TILENAMES : Tile name strings (ASCII format, 0 to 32 chars max, zero terminated) for TILECNT items.
+              for ( int i = 0; i < NumTiles; ++i )
+              {
+                int numBytes = 0;
+                while ( ( numBytes < 32 )
+                     && ( reader.ReadUInt8() != 0 ) )
+                {
+                  ++numBytes;
+                }
+              }
+              continue;
+            }
+            // BLKMARK : Block marker (0xDA, 0xBn). 
+            // MAPWID  : Map Width (16-bit, LSBF).
+            // MAPHEI  : Map height (16-bit, LSBF). 
+            // MAPDAT  : Map data, 16 bits per cell (LSBF) for MAPWID * MAPHEI cells, cells are in LRTB order.
+            MapWidth = reader.ReadUInt16();
+            MapHeight = reader.ReadUInt16();
+
+            MapData = new GR.Memory.ByteBuffer( (uint)( MapWidth * MapHeight ) );
+
+            for ( int i = 0; i < MapHeight; ++i )
+            {
+              for ( int j = 0; j < MapWidth; ++j )
+              {
+                MapData.SetU8At( i * MapWidth + j, (byte)reader.ReadUInt16() );
               }
             }
           }
@@ -691,8 +788,13 @@ namespace RetroDevStudio.Formats
               Characters[charIndex].Color = (byte)( reader.ReadUInt8() & 0x0f );
               if ( !tileSysEnabled )
               {
+                // char color is used for the fake tile color as well
                 Tiles[charIndex].ColorData.SetU8At( 0, (byte)Characters[charIndex].Color );
               }
+            }
+            else
+            {
+              reader.ReadUInt8();
             }
           }
         }

@@ -1,4 +1,4 @@
-﻿using Be.Windows.Forms;
+using Be.Windows.Forms;
 using GR.Collections;
 using GR.Forms;
 using GR.Image;
@@ -3019,13 +3019,13 @@ namespace RetroDevStudio.Documents
       comboTileMulticolor2.SelectedIndex = m_Project.Charset.Colors.MultiColor2;
       comboTileBGColor4.SelectedIndex = m_Project.Charset.Colors.BGColor4;
 
+      RecalcTileUsageTotal();
       if ( ( comboMaps.SelectedIndex == -1 )
       &&   ( comboMaps.Items.Count > 0 ) )
       {
         comboMaps.SelectedIndex = 0;
       }
 
-      RecalcTileUsageTotal();
       RedrawMap();
       SetModified();
       return true;
