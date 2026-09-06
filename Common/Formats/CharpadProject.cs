@@ -158,9 +158,10 @@ namespace RetroDevStudio.Formats
       &&   ( version != 5 )
       &&   ( version != 6 )
       &&   ( version != 7 )
-      &&   ( version != 8 ) )
+      &&   ( version != 8 )
+      &&   ( version != 82 ) )
       {
-        Debug.Log( "Currently only version 4, 5, 6, 7 or 8 of Charpad project files is supported. Sorry!\r\nUnsupported version " + version );
+        Debug.Log( "Currently only version 4, 5, 6, 7, 8 or 8.2 of Charpad project files is supported. Sorry!\r\nUnsupported version " + version );
         return false;
       }
 
@@ -176,8 +177,9 @@ namespace RetroDevStudio.Formats
         case 7:
           return LoadVersion7( Data );
         case 8:
+        case 82:
         default:
-          return LoadVersion8( Data );
+          return LoadVersion8( Data, version );
       }
     }
 
@@ -805,9 +807,17 @@ namespace RetroDevStudio.Formats
 
 
 
-    private bool LoadVersion8( GR.Memory.ByteBuffer Data )
+    private bool LoadVersion8( GR.Memory.ByteBuffer Data, int version )
     {
       DisplayModeFile = (DisplayMode)Data.ByteAt( 4 );
+
+      // we only support charsets, not bitmaps
+      if ( ( DisplayModeFile == DisplayMode.BITMAP_HIRES )
+      ||   ( DisplayModeFile == DisplayMode.BITMAP_MC ) )
+      {
+        return false;
+      }
+
       TileColorMode = (ColorMode)Data.ByteAt( 5 );
 
       byte  flags = Data.ByteAt( 6 );
@@ -823,6 +833,10 @@ namespace RetroDevStudio.Formats
 
       bool  tileSysEnabled = ( ( flags & 0x01 ) != 0 );
 
+      if ( TileColorMode == ColorMode.GLOBAL )
+      {
+        CustomColor = BaseCellColorColorMatrix;
+      }
 
       ushort charDataBlockID      = 0xdab0;
       ushort charAttributeBlockID = 0xdab1;
@@ -929,6 +943,10 @@ namespace RetroDevStudio.Formats
                 Tiles[charIndex].ColorData.SetU8At( 0, (byte)Characters[charIndex].Color );
               }
             }
+            else
+            {
+              reader.ReadUInt8();
+            }
           }
         }
         else if ( blockID == charSetColorBlockID )
@@ -1005,6 +1023,17 @@ namespace RetroDevStudio.Formats
             for ( int j = 0; j < TileWidth * TileHeight; ++j )
             {
               Tiles[i].CharData.SetU16At( j * 2, reader.ReadUInt16() );
+              if ( TileColorMode == ColorMode.GLOBAL )
+              {
+                Tiles[i].ColorData.SetU8At( j, (byte)BaseCellColorColorMatrix );
+              }
+              else
+              {
+                if ( TileColorMode == ColorMode.PER_CHAR )
+                {
+                  Tiles[i].ColorData.SetU8At( j, (byte)Characters[Tiles[i].CharData.UInt16At( j * 2 )].Color );
+                }
+              }
             }
           }
         }
@@ -1029,7 +1058,11 @@ namespace RetroDevStudio.Formats
             if ( DisplayModeFile != DisplayMode.BITMAP_HIRES )
             {
               // tile generic color 
-              reader.ReadUInt8();
+              ushort  tileColor = reader.ReadUInt8();
+              for ( int j = 0; j < TileWidth * TileHeight; ++j )
+              {
+                Tiles[i].ColorData.SetU8At( j, (byte)tileColor );
+              }
             }
             if ( ( DisplayModeFile == DisplayMode.BITMAP_MC )
             ||   ( DisplayModeFile == DisplayMode.BITMAP_HIRES ) )

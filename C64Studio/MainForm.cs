@@ -822,7 +822,7 @@ namespace RetroDevStudio
       else if ( StudioCore.Settings.AutoOpenLastSolution )
       {
         if ( ( !StudioCore.Settings.LastSolutionWasEmpty )
-        && ( StudioCore.Settings.MRUProjects.Count > 0 ) )
+        &&   ( StudioCore.Settings.MRUProjects.Count > 0 ) )
         {
           var idleRequest = new IdleRequest();
           idleRequest.OpenLastSolution = StudioCore.Settings.MRUProjects[0];
@@ -2053,10 +2053,12 @@ namespace RetroDevStudio
       }
       else
       {
-        var newDoc = OpenFile( sender.ToString() );
+        string  fileToOpen = sender.ToString();
+        var newDoc = OpenFile( fileToOpen );
         if ( newDoc == null )
         {
           StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUFiles, sender.ToString(), this );
+          StudioCore.MessageBox( $"File {fileToOpen} could not be opened.\r\n\r\nEither the format is not supported or the file is corrupted.", "Could not open file" );
         }
         else
         {
@@ -6390,7 +6392,11 @@ namespace RetroDevStudio
       {
         foreach ( string file in fileList )
         {
-          OpenFile( file );
+          var doc = OpenFile( file );
+          if ( doc == null )
+          {
+            StudioCore.MessageBox( $"File {file} could not be opened.\r\n\r\nEither the format is not supported or the file is corrupted.", "Could not open file" );
+          }
         }
       }
     }
@@ -6530,7 +6536,7 @@ namespace RetroDevStudio
 
       Project  project;
       if ( ( StudioCore.Navigating.Solution != null )
-      && ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
+      &&   ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
@@ -6539,7 +6545,7 @@ namespace RetroDevStudio
       // file already opened?
       var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
       if ( ( docInfo != null )
-      && ( docInfo.BaseDoc != null ) )
+      &&   ( docInfo.BaseDoc != null ) )
       {
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         docInfo.BaseDoc.Show();
@@ -6608,7 +6614,10 @@ namespace RetroDevStudio
         openDirectFile = false;
         document = new MapEditor( StudioCore );
         document.ShowHint = DockState.Document;
-        ( (MapEditor)document ).OpenCharpadFile( Filename );
+        if ( !( (MapEditor)document ).OpenCharpadFile( Filename ) )
+        {
+          return null;
+        }
       }
       else if ( extension == ".SPD" )
       {
@@ -6655,7 +6664,7 @@ namespace RetroDevStudio
           editor.ImportIFFPicture( GR.IO.File.ReadAllBytes( Filename ) );
         }
         else if ( ( extension == ".KLA" )
-        || ( extension == ".KOA" ) )
+        ||        ( extension == ".KOA" ) )
         {
           var editor = (GraphicScreenEditor)document;
 
