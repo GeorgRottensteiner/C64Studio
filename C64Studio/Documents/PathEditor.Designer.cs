@@ -63,6 +63,10 @@ namespace RetroDevStudio.Documents
       editMappingStepValue = new System.Windows.Forms.TextBox();
       label4 = new System.Windows.Forms.Label();
       tabExport = new System.Windows.Forms.TabPage();
+      btnExport = new DecentForms.Button();
+      comboExportMethod = new System.Windows.Forms.ComboBox();
+      label8 = new System.Windows.Forms.Label();
+      editDataExport = new System.Windows.Forms.TextBox();
       ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).BeginInit();
       tabPathEditor.SuspendLayout();
       tabEditor.SuspendLayout();
@@ -70,6 +74,7 @@ namespace RetroDevStudio.Documents
       tabValueMapping.SuspendLayout();
       groupDurationValues.SuspendLayout();
       groupStepValues.SuspendLayout();
+      tabExport.SuspendLayout();
       SuspendLayout();
       // 
       // tabPathEditor
@@ -456,6 +461,10 @@ namespace RetroDevStudio.Documents
       // 
       // tabExport
       // 
+      tabExport.Controls.Add( editDataExport );
+      tabExport.Controls.Add( btnExport );
+      tabExport.Controls.Add( comboExportMethod );
+      tabExport.Controls.Add( label8 );
       tabExport.Location = new System.Drawing.Point( 4, 22 );
       tabExport.Name = "tabExport";
       tabExport.Padding = new System.Windows.Forms.Padding( 3 );
@@ -463,6 +472,50 @@ namespace RetroDevStudio.Documents
       tabExport.TabIndex = 1;
       tabExport.Text = "Export";
       tabExport.UseVisualStyleBackColor = true;
+      // 
+      // btnExport
+      // 
+      btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnExport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnExport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnExport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnExport.DisplayAntiAliased = true;
+      btnExport.Image = null;
+      btnExport.Location = new System.Drawing.Point( 369, 6 );
+      btnExport.Name = "btnExport";
+      btnExport.Size = new System.Drawing.Size( 75, 21 );
+      btnExport.TabIndex = 33;
+      btnExport.Text = "Export";
+      btnExport.Click +=  btnExport_Click ;
+      // 
+      // comboExportMethod
+      // 
+      comboExportMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboExportMethod.FormattingEnabled = true;
+      comboExportMethod.Location = new System.Drawing.Point( 89, 6 );
+      comboExportMethod.Name = "comboExportMethod";
+      comboExportMethod.Size = new System.Drawing.Size( 274, 21 );
+      comboExportMethod.TabIndex = 32;
+      // 
+      // label8
+      // 
+      label8.AutoSize = true;
+      label8.Location = new System.Drawing.Point( 7, 9 );
+      label8.Name = "label8";
+      label8.Size = new System.Drawing.Size( 79, 13 );
+      label8.TabIndex = 34;
+      label8.Text = "Export Method:";
+      // 
+      // editDataExport
+      // 
+      editDataExport.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      editDataExport.Location = new System.Drawing.Point( 8, 33 );
+      editDataExport.Multiline = true;
+      editDataExport.Name = "editDataExport";
+      editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      editDataExport.Size = new System.Drawing.Size( 750, 467 );
+      editDataExport.TabIndex = 35;
+      editDataExport.WordWrap = false;
       // 
       // PathEditor
       // 
@@ -484,6 +537,8 @@ namespace RetroDevStudio.Documents
       groupDurationValues.PerformLayout();
       groupStepValues.ResumeLayout( false );
       groupStepValues.PerformLayout();
+      tabExport.ResumeLayout( false );
+      tabExport.PerformLayout();
       ResumeLayout( false );
 
     }
@@ -524,5 +579,9 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.TextBox editMappingDurationShiftLeft;
     private System.Windows.Forms.Label label15;
     private DecentForms.ListBox listMappings;
+    private DecentForms.Button btnExport;
+    private System.Windows.Forms.ComboBox comboExportMethod;
+    private System.Windows.Forms.Label label8;
+    private System.Windows.Forms.TextBox editDataExport;
   }
 }

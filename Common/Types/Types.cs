@@ -408,7 +408,7 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_CHARSET_PROJECT = "Charset Project|*.charsetproject|";
     public static string FILEFILTER_CHARSET = "Charset Project or File|*.charsetproject;*.chr|";
     public static string FILEFILTER_CHARSET_CHARPAD = "Charpad Project|*.ctm|";
-    public static string FILEFILTER_MAP_SUPPORTED_FILES = "Supported Files|*.bin;*.map;*.mapproject;*.ctm;*.charsetproject|Map Data|*.bin;*.map|Map Project|*.mapproject|Charpad Project|*.ctm|Charset Project|*.charsetproject|";
+    public static string FILEFILTER_MAP_SUPPORTED_FILES = "Supported Files|*.bin;*.map;*.mapproject;*.ctm;*.charsetproject|Map Data|*.bin;*.map|Map Project|*.mapproject|Charpad Project|*.ctm|Charset Project|*.charsetproject|Path Project|*.pathproject|";
     public static string FILEFILTER_MARQS_PETSCII = "Marq's PETSCII Editor File|*.c|";
     public static string FILEFILTER_CHARSCREEN_SUPPORTED_FILES = "Supported Files|*.ctm;*.c|";
     public static string FILEFILTER_CHARSET_SCREEN = "Charset Screen Project|*.charscreen|";
@@ -436,6 +436,7 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_VALUE_TABLE_PROJECT = "Value Table Project Files|*.valuetableproject|";
     public static string FILEFILTER_VALUE_TABLE_DATA = "Value Table Data Files|*.dat|";
     public static string FILEFILTER_TEXT_FILE = "Text Files|*.txt;*.cfg;*.bat;*.ps1|";
+    public static string FILEFILTER_PATH_PROJECT = "Path Project Files|*.pathproject|";
   }
 
   public enum PhysicalKey

@@ -44,7 +44,7 @@ namespace RetroDevStudio.Documents
 
       listMappings.Items.Clear();
 
-      int totalNumberOfBytes = DetermineTotalNumberOfBytes();
+      int totalNumberOfBytes = _project.DetermineTotalNumberOfBytes();
 
       foreach ( var mapping in _project.ValueDescriptors )
       {
@@ -141,6 +141,10 @@ namespace RetroDevStudio.Documents
         comboStepTypes.Items.Add( new GR.Generic.Tupel<PathProject.StepType, string>( step, GR.EnumHelper.GetDescription( step ) ) );
       }
       comboStepTypes.SelectedIndex = 0;
+
+      comboExportMethod.Items.Add( "As assembly" );
+      comboExportMethod.Items.Add( "As binary file" );
+      comboExportMethod.SelectedIndex = 0;
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }
@@ -530,7 +534,7 @@ namespace RetroDevStudio.Documents
         step.Duration = newValue;
 
         var path = (PathProject.Path)listPaths.SelectedItem.Tag;
-        int totalNumberOfBytes = DetermineTotalNumberOfBytes();
+        int totalNumberOfBytes = _project.DetermineTotalNumberOfBytes();
         listPathSteps.SelectedItem.Text = GenerateStepDescription( step, totalNumberOfBytes );
         SetModified();
         RedrawPathPreview();
@@ -555,33 +559,12 @@ namespace RetroDevStudio.Documents
       var step = (PathProject.Step)listPathSteps.SelectedItem.Tag;
       if ( step.Type != (StepType)comboStepTypes.SelectedIndex )
       {
-        int totalNumberOfBytes = DetermineTotalNumberOfBytes();
+        int totalNumberOfBytes = _project.DetermineTotalNumberOfBytes();
         step.Type = (StepType)comboStepTypes.SelectedIndex;
         listPathSteps.SelectedItem.Text = GenerateStepDescription( step, totalNumberOfBytes );
         SetModified();
         RedrawPathPreview();
       }
-    }
-
-
-
-    private int DetermineTotalNumberOfBytes()
-    {
-      int numBytes = 0;
-
-      foreach ( var vd in _project.ValueDescriptors )
-      {
-        if ( vd.AddressOffsetStep > numBytes )
-        {
-          numBytes = vd.AddressOffsetStep + 1;
-        }
-        int durationSize = (int)( vd.RelevantBitsDuration + 255 ) / 256;
-        if ( vd.AddressOffsetDuration + durationSize > numBytes )
-        {
-          numBytes = vd.AddressOffsetDuration + durationSize;
-        }
-      }
-      return numBytes;
     }
 
 
@@ -648,7 +631,7 @@ namespace RetroDevStudio.Documents
       {
         mapping.AddressOffsetStep = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
       }
     }
 
@@ -666,7 +649,7 @@ namespace RetroDevStudio.Documents
       {
         mapping.ValueStep = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
       }
     }
 
@@ -684,7 +667,7 @@ namespace RetroDevStudio.Documents
       {
         mapping.RelevantBitsStep = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
       }
     }
 
@@ -702,7 +685,7 @@ namespace RetroDevStudio.Documents
       {
         mapping.AddressOffsetDuration = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
       }
     }
 
@@ -720,7 +703,7 @@ namespace RetroDevStudio.Documents
       {
         mapping.ShiftBitsLeftDuration = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
       }
     }
 
@@ -738,7 +721,7 @@ namespace RetroDevStudio.Documents
       {
         mapping.ShiftBitsRightDuration = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
       }
     }
 
@@ -756,7 +739,22 @@ namespace RetroDevStudio.Documents
       {
         mapping.RelevantBitsDuration = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, DetermineTotalNumberOfBytes() );
+        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
+      }
+    }
+
+
+
+    private void btnExport_Click( DecentForms.ControlBase Sender )
+    {
+      switch ( comboExportMethod.SelectedIndex )
+      {
+        case 0:
+          editDataExport.Text = _project.ExportAsAssembly();
+          break;
+        case 1:
+          editDataExport.Text = _project.ExportAsAssembly();
+          break;
       }
     }
 

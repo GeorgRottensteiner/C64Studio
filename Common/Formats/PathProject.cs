@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 
 
@@ -415,6 +416,76 @@ namespace RetroDevStudio.Formats
           RelevantBitsDuration  = 0xff
         } );
       }
+    }
+
+
+
+    public int DetermineTotalNumberOfBytes()
+    {
+      int numBytes = 0;
+
+      foreach ( var vd in ValueDescriptors )
+      {
+        if ( vd.AddressOffsetStep > numBytes )
+        {
+          numBytes = vd.AddressOffsetStep + 1;
+        }
+        int durationSize = (int)( vd.RelevantBitsDuration + 255 ) / 256;
+        if ( vd.AddressOffsetDuration + durationSize > numBytes )
+        {
+          numBytes = vd.AddressOffsetDuration + durationSize;
+        }
+      }
+      return numBytes;
+    }
+
+
+
+    public string ExportAsAssembly()
+    {
+      var sb2 = new StringBuilder();
+      int totalNumberOfBytesPerStep = DetermineTotalNumberOfBytes();
+
+      foreach ( var path in Paths )
+      {
+        var data = new ByteBuffer( (uint)( totalNumberOfBytesPerStep * path.Steps.Count ) );
+        int currentStepDataOffset = 0;
+
+        var sb = new StringBuilder();
+        sb.AppendLine( path.Name );
+
+        foreach ( var step in path.Steps )
+        {
+          foreach ( var mapping in ValueDescriptors )
+          {
+            if ( mapping.Step == step.Type )
+            {
+              data.SetU8At( currentStepDataOffset + mapping.AddressOffsetStep, mapping.ValueStep );
+            }
+            if ( mapping.AddressOffsetDuration >= 0 )
+            {
+              int durationValue = step.Duration;
+              if ( mapping.ShiftBitsLeftDuration > 0 )
+              {
+                durationValue <<= mapping.ShiftBitsLeftDuration;
+              }
+              if ( mapping.ShiftBitsRightDuration > 0 )
+              {
+                durationValue >>= mapping.ShiftBitsRightDuration;
+              }
+              int durationSize = (int)( mapping.RelevantBitsDuration + 255 ) / 256;
+              for ( int i = 0; i < durationSize; ++i )
+              {
+                data.SetU8At( currentStepDataOffset + mapping.AddressOffsetDuration + i, (byte)( ( durationValue >> ( i * 8 ) ) & 0xff ) );
+              }
+            }
+          }
+          currentStepDataOffset += totalNumberOfBytesPerStep;
+        }
+        sb.AppendLine( Util.ToASMData( data, true, 16, "!byte" ) );
+        sb2.Append( sb.ToString() );
+      }
+      return sb2.ToString();
     }
 
 
