@@ -241,7 +241,11 @@ namespace RetroDevStudio.Documents
         {
           for ( int j = 0; j < screen.Height; ++j )
           {
-            ++_CharUsageTotal[screen.CharacterAt( i, j )];
+            int charIndex = screen.CharacterAt( i, j );
+            if ( charIndex < _CharUsageTotal.Count )
+            {
+              ++_CharUsageTotal[charIndex];
+            }
           }
         }
       }
@@ -261,7 +265,11 @@ namespace RetroDevStudio.Documents
       {
         for ( int j = 0; j < curScreen.Height; ++j )
         {
-          ++_CharUsageInCurrentScreen[curScreen.CharacterAt( i, j )];
+          int charIndex = curScreen.CharacterAt( i, j );
+          if ( charIndex < _CharUsageInCurrentScreen.Count )
+          {
+            ++_CharUsageInCurrentScreen[charIndex];
+          }
         }
       }
     }
@@ -858,11 +866,14 @@ namespace RetroDevStudio.Documents
       sb2.Append( m_CurrentColor );
       sb2.AppendLine();
 
+      int usageInCurrentScreen = ( m_CurrentChar < _CharUsageInCurrentScreen.Count ) ? _CharUsageInCurrentScreen[m_CurrentChar] : 0;
+      int usageTotal = ( m_CurrentChar < _CharUsageTotal.Count ) ? _CharUsageTotal[m_CurrentChar] : 0;
+
       sb.Append( "Used in Screen " );
-      sb.AppendLine( _CharUsageInCurrentScreen[m_CurrentChar].ToString() );
+      sb.AppendLine( usageInCurrentScreen.ToString() );
 
       sb2.Append( "Used Total " );
-      sb2.AppendLine( _CharUsageTotal[m_CurrentChar].ToString() );
+      sb2.AppendLine( usageTotal.ToString() );
 
       sb.Append( "Sprite Pos X $" );
       int spritePosX = charX * m_CharacterWidth + 24;
