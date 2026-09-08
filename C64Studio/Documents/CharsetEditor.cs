@@ -372,7 +372,12 @@ namespace RetroDevStudio.Documents
           // range
           for ( int i = 0; i < m_Charset.ExportNumCharacters; ++i )
           {
-            listIndices.Add( m_Charset.ExportStartCharacter + i );
+            int charIndex = m_Charset.ExportStartCharacter + i;
+            if ( ( charIndex >= 0 )
+            &&   ( charIndex < m_Charset.Characters.Count ) )
+            {
+              listIndices.Add( charIndex );
+            }
           }
           break;
       }
