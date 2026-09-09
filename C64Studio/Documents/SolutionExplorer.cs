@@ -74,7 +74,7 @@ namespace RetroDevStudio.Documents
               bool        nodeFound = false;
 
               if ( ( parts.Length == 2 )
-              &&   ( parts[0] == "Project" ) )
+              && ( parts[0] == "Project" ) )
               {
                 var project = Core.Navigating.Solution.GetProjectByName( parts[1] );
                 if ( project != null )
@@ -84,7 +84,7 @@ namespace RetroDevStudio.Documents
                 }
               }
               else if ( ( parts.Length == 3 )
-              &&        ( parts[0] == "Element" ) )
+              && ( parts[0] == "Element" ) )
               {
                 var project = Core.Navigating.Solution.GetProjectByName( parts[1] );
                 if ( project != null )
@@ -161,7 +161,7 @@ namespace RetroDevStudio.Documents
     {
       ProjectElement nodeElement = ElementFromNode( node );
       if ( ( nodeElement != null )
-      &&   ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+      && ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
       {
         return true;
       }
@@ -192,7 +192,7 @@ namespace RetroDevStudio.Documents
 
           ProjectElement nodeElement = ElementFromNode( e.Node );
           if ( ( nodeElement != null )
-          &&   ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+          && ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
           {
             isProjectOrFolder = true;
             isFolder = true;
@@ -285,6 +285,10 @@ namespace RetroDevStudio.Documents
             System.Windows.Forms.ToolStripMenuItem subItemNewMap = new System.Windows.Forms.ToolStripMenuItem( "Map" );
             subItemNewMap.Click += new EventHandler( projectAddMap_Click );
             subItem.DropDownItems.Add( subItemNewMap );
+
+            System.Windows.Forms.ToolStripMenuItem subItemNewPath = new System.Windows.Forms.ToolStripMenuItem( "Path Editor" );
+            subItemNewPath.Click += new EventHandler( projectAddPathFile_Click );
+            subItem.DropDownItems.Add( subItemNewPath );
 
             System.Windows.Forms.ToolStripMenuItem subItemNewValueTable = new System.Windows.Forms.ToolStripMenuItem( "Value Table" );
             subItemNewValueTable.Click += new EventHandler( projectAddValueTable_Click );
@@ -819,8 +823,8 @@ namespace RetroDevStudio.Documents
       if ( element != null )
       {
         while ( ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT )
-        &&      ( element.DocumentInfo.Type != ProjectElement.ElementType.SOLUTION )
-        &&      ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
+        && ( element.DocumentInfo.Type != ProjectElement.ElementType.SOLUTION )
+        && ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
         {
           Node = Node.Parent;
           element = ElementFromNode( Node );
@@ -1670,7 +1674,7 @@ namespace RetroDevStudio.Documents
         e.SuppressKeyPress = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.C )
-      &&        ( e.Control ) )
+      && ( e.Control ) )
       {
         if ( treeProject.SelectedNode != null )
         {
@@ -1680,7 +1684,7 @@ namespace RetroDevStudio.Documents
         e.SuppressKeyPress = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.V )
-      &&        ( e.Control ) )
+      && ( e.Control ) )
       {
         if ( !m_PasteKeyDown )
         {
@@ -1778,7 +1782,7 @@ namespace RetroDevStudio.Documents
     private void treeProject_DragDrop( object sender, System.Windows.Forms.DragEventArgs e )
     {
       if ( ( e.Data.GetDataPresent( "DecentForms.TreeView+TreeNode", false ) )
-      &&   ( !string.IsNullOrEmpty( NodeMap ) ) )
+      && ( !string.IsNullOrEmpty( NodeMap ) ) )
       {
         DecentForms.TreeView.TreeNode MovingNode = (DecentForms.TreeView.TreeNode)e.Data.GetData( "DecentForms.TreeView+TreeNode" );
         string[] NodeIndexes = NodeMap.Split( '|' );
@@ -1813,7 +1817,7 @@ namespace RetroDevStudio.Documents
               draggedProject.Elements.Clear();
               var node = draggedProject.Node.Nodes[0];
               while ( ( node != null )
-              &&      ( ProjectFromNode( node ) == draggedProject ) )
+              && ( ProjectFromNode( node ) == draggedProject ) )
               {
                 draggedProject.Elements.Add( ElementFromNode( node ) );
                 node = DecentForms.TreeView.GetNextNode( node );
@@ -1880,7 +1884,7 @@ namespace RetroDevStudio.Documents
     public ProjectElement ElementFromNode( DecentForms.TreeView.TreeNode Node )
     {
       if ( ( Node == null )
-      ||   ( Node.Level == 0 ) )
+      || ( Node.Level == 0 ) )
       {
         return null;
       }
@@ -1899,7 +1903,7 @@ namespace RetroDevStudio.Documents
       {
         // dragging a project
         if ( ( dragTarget == null )
-        ||   ( dragTarget.Level != 0 ) )
+        || ( dragTarget.Level != 0 ) )
         {
           return false;
         }
@@ -1927,7 +1931,7 @@ namespace RetroDevStudio.Documents
       }
       ProjectElement    element = ElementFromNode( NodeParent );
       if ( ( element == null )
-      ||   ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+      || ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
       {
         // either project or folder
         return true;
@@ -1947,7 +1951,7 @@ namespace RetroDevStudio.Documents
       DecentForms.TreeView.TreeNode draggedNode = (DecentForms.TreeView.TreeNode)e.Data.GetData( "DecentForms.TreeView+TreeNode" );
 
       if ( ( !CanNodeBeInProject( NodeOver, draggedNode ) )
-      ||   ( draggedNode == NodeOver ) )
+      || ( draggedNode == NodeOver ) )
       {
         e.Effect = DragDropEffects.None;
         return;
@@ -1958,18 +1962,18 @@ namespace RetroDevStudio.Documents
       // and either the nodeover is not the same thing as nodemoving UNLESS nodeover happens
       // to be the last node in the branch (so we can allow drag & drop below a parent branch)
       if ( ( NodeOver != null )
-      &&   ( ( NodeOver != draggedNode )
-      ||     ( ( NodeOver.Parent != null )
-      &&       ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) ) ) )
+      && ( ( NodeOver != draggedNode )
+      || ( ( NodeOver.Parent != null )
+      && ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) ) ) )
       {
         int OffsetY = treeProject.PointToClient( Cursor.Position ).Y - NodeOver.Bounds.Top;
 
         if ( ( OffsetY < ( NodeOver.Bounds.Height / 2 ) )
-        &&   ( NodeOver == treeProject.Nodes[0] ) )
+        && ( NodeOver == treeProject.Nodes[0] ) )
         {
           // not above the first node!
           if ( ( draggedNode.Level != 0 )
-          ||   ( NodeOver == draggedNode ) )
+          || ( NodeOver == draggedNode ) )
           {
             e.Effect = DragDropEffects.None;
             return;
@@ -2032,7 +2036,7 @@ namespace RetroDevStudio.Documents
             // If the node the mouse is over is the last node of the branch we should allow
             // the ability to drop the "nodemoving" node BELOW the parent node
             if ( ( NodeOver.Parent != null )
-            &&   ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) )
+            && ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) )
             {
               int XPos = treeProject.PointToClient( Cursor.Position ).X;
               if ( XPos < NodeOver.Bounds.Left )
@@ -2635,7 +2639,7 @@ namespace RetroDevStudio.Documents
         return 0;
       }
       if ( ( State == FileState.ModifiedInIndex )
-      ||   ( State == FileState.ModifiedInWorkdir ) )
+      || ( State == FileState.ModifiedInWorkdir ) )
       {
         return 2;
       }
@@ -2847,7 +2851,7 @@ namespace RetroDevStudio.Documents
       while ( curNode != null )
       {
         if ( ( !IsFolderNode( curNode ) )
-        ||   ( sortMode == 0 ) )
+        || ( sortMode == 0 ) )
         {
           nodesAtLevel.Add( curNode.Text, curNode );
         }
@@ -2898,6 +2902,13 @@ namespace RetroDevStudio.Documents
     private void keepFoldersGroupedOnTopToolStripMenuItem_Click( object sender, EventArgs e )
     {
       SortItems( 1 );
+    }
+
+
+
+    private void projectAddPathFile_Click( object sender, EventArgs e )
+    {
+      AddNewFile( ProjectElement.ElementType.PATH_EDITOR, "Path Editor", treeProject.SelectedNode );
     }
 
 

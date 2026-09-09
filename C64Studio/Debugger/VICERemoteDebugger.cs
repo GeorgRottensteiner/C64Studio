@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Types;
+using RetroDevStudio.Types;
 using GR.Memory;
 using RetroDevStudio;
 using System;
@@ -72,20 +72,6 @@ namespace RetroDevStudio
 
     public bool ConnectToEmulator( bool IsCartridge, string externalImageToOpen )
     {
-      /*
-      Register
-      PC program count
-      AC a
-      XR x
-      YR y
-      SP stack pointer
-      00?
-      01?
-      NV-BDIZC (Status)
-      LIN
-      CYC
-       */
-
       if ( State != DebuggerState.NOT_CONNECTED )
       {
         return false;
@@ -179,8 +165,8 @@ namespace RetroDevStudio
             {
               // received all data
               // define MON_ERR_OK            0
-              // #define MON_ERR_CMD_TOO_SHORT 0x80  /* command length is not enough for this command */
-              // #define MON_ERR_INVALID_PARAMETER 0x81  /* command has invalid parameters */
+              // #define MON_ERR_CMD_TOO_SHORT 0x80
+              // #define MON_ERR_INVALID_PARAMETER 0x81
               // byte 0: STX (0x02)
               // byte 1: answer length low
               // byte 2: answer length (bits 8-15)
@@ -198,18 +184,6 @@ namespace RetroDevStudio
               }
               else
               {
-                /*
-                if ( m_Request.Parameter1 != m_Request.AdjustedStartAddress )
-                {
-                  Debug.Log( "Shifted start address" );
-                }
-                if ( ( answerLength != m_Request.Parameter2 - m_Request.Parameter1 + 1 )
-                &&   ( m_Request.Parameter2 != -1 ) )
-                {
-                  Debug.Log( "warped size" );
-                }
-                Debug.Log( "Received " + answerLength + " bytes beginning at " + m_Request.Parameter1.ToString( "x" ) );
-                  */
                 for ( int i = 0; i < answerLength; ++i )
                 {
                   m_MemoryValues[m_Request.Parameter1 + i] = m_ReceivedDataBin.ByteAt( i + 6 );
@@ -223,12 +197,6 @@ namespace RetroDevStudio
 
                 m_ResponseLines.Clear();
                 m_ReceivedDataBin.TruncateFront( 6 + (int)answerLength );
-                /*
-                if ( !receivedData.Empty() )
-                {
-                  string stringData = Encoding.ASCII.GetString( receivedData.Data(), 0, (int)receivedData.Length );
-                  m_ReceivedData = stringData;
-                }*/
               }
               m_Request = new RequestData( DebugRequestType.NONE );
               StartNextRequestIfAvailable();
@@ -238,15 +206,6 @@ namespace RetroDevStudio
               // not complete yet
               break;
             }
-            /*
-            byte 0: STX (0x02)
-            byte 1: answer length low
-            byte 2: answer length (bits 8-15)
-            byte 3: answer length (bits 16-23)
-            byte 4: answer length (bits 24-31, that is, high)
-            byte 5: error code
-            byte 6 - (answer length+6): the binary answer
-              */
           }
         }
         else
@@ -258,19 +217,11 @@ namespace RetroDevStudio
             linePos = m_ReceivedDataBin.Find( 0x02 );
           }
 
-          //string stringData = Encoding.ASCII.GetString( m_ReceivedDataBin.Data(), 0, (int)m_ReceivedDataBin.Length );
-
-          //Debug.Log( "Received " + receivedData.ToString() + " bytes (" + receivedData.ToString() + "), " + receivedData.ToAsciiString() );
-
-          //receivedData.TruncateFront( (int)receivedData.Length );
-
-          //int linePos = m_ReceivedData.IndexOf( '\n' );
-
           string    stringData = "";
           if ( linePos == -1 )
           {
             if ( ( m_ReceivedDataBin.Length == 10 )
-            && ( m_ViceVersion >= WinViceVersion.V_2_4 ) )
+            &&   ( m_ViceVersion >= WinViceVersion.V_2_4 ) )
             {
               // Vice 2.4 sometimes does NOT send an ending line break
               m_ReceivedDataBin.Clear();
@@ -312,8 +263,6 @@ namespace RetroDevStudio
                 }
               }
 
-              //Debug.Log( "Line:" + line );
-              //Debug.Log( "Receive data left " + m_ReceivedData );
               m_ResponseLines.Add( line );
             }
             if ( !processed )
@@ -325,9 +274,7 @@ namespace RetroDevStudio
           {
             while ( linePos != -1 )
             {
-              //Debug.Log( "Cut at " + ( linePos + 1 ).ToString() );
               string line = stringData.Substring( 0, linePos );
-              //stringData = stringData.Substring( linePos + 1 );
 
               linePos = stringData.IndexOf( '\n' );
               if ( linePos == -1 )
@@ -340,8 +287,6 @@ namespace RetroDevStudio
                 }
               }
 
-              //Debug.Log( "Line:" + line );
-              //Debug.Log( "Receive data left " + m_ReceivedData );
               m_ResponseLines.Add( line );
 
               ProcessResponse();
@@ -351,7 +296,6 @@ namespace RetroDevStudio
         }
       }
       while ( m_ReceivedDataBin.Length > 0 );
-      //m_ReceivedData = receivedData;
     }
 
 
@@ -365,7 +309,6 @@ namespace RetroDevStudio
         if ( recv == 0 )
         {
           // we were closed
-          //Debug.Log( "Other side closed" );
           DebugEvent( new DebugEventData()
           {
             Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
@@ -376,7 +319,6 @@ namespace RetroDevStudio
         }
 
         OnDataReceived( data, 0, recv );
-        //Debug.Log( "Set up following BeginReceive" );
         if ( client != null )
         {
           client.BeginReceive( data, 0, size, System.Net.Sockets.SocketFlags.None, new AsyncCallback( ReceiveData ), client );
@@ -392,11 +334,6 @@ namespace RetroDevStudio
         {
           Core.AddToOutputLine( "ReceiveData Exception:" + se.ToString() );
           Core.AddToOutputLine( "Connection to VICE was closed" );
-          /*
-          DebugEvent( new DebugEventData()
-          {
-            Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
-          } );*/
           m_Request.Type = DebugRequestType.NONE;
           DisconnectFromEmulator();
 
@@ -478,7 +415,6 @@ namespace RetroDevStudio
         catch ( System.Net.Sockets.SocketException )
         {
           // who cares
-          //m_MainForm.AddToOutput( "Exception in Disconnect: " + se.ToString() );
         }
         m_State = DebuggerState.NOT_CONNECTED;
         client = null;
@@ -527,9 +463,7 @@ namespace RetroDevStudio
 
         while ( m_BytesToSend > 0 )
         {
-          //Debug.Log( "Trying to send " + m_BytesToSend + " bytes" );
           int bytesSent = client.Send( m_DataToSend, totalBytesSent, m_BytesToSend, System.Net.Sockets.SocketFlags.None );
-          //Debug.Log( "Sent " + bytesSent + " bytes" );
           if ( bytesSent == 0 )
           {
             InterfaceLog( "Could not send " + m_BytesToSend + " bytes" );
@@ -538,8 +472,6 @@ namespace RetroDevStudio
           m_BytesToSend -= bytesSent;
           totalBytesSent += bytesSent;
         }
-        // async send
-        //client.BeginSend( m_DataToSend, 0, m_DataToSend.Length, System.Net.Sockets.SocketFlags.None, new AsyncCallback( SendData ), client );
       }
       catch ( Exception ex )
       {
@@ -590,7 +522,6 @@ namespace RetroDevStudio
           m_BytesToSend -= bytesSent;
           totalBytesSent += bytesSent;
         }
-        //client.BeginSend( m_DataToSend, 0, m_DataToSend.Length, System.Net.Sockets.SocketFlags.None, new AsyncCallback( SendData ), client );
       }
       catch ( System.IO.IOException ex )
       {

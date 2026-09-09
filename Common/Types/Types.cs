@@ -408,7 +408,7 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_CHARSET_PROJECT = "Charset Project|*.charsetproject|";
     public static string FILEFILTER_CHARSET = "Charset Project or File|*.charsetproject;*.chr|";
     public static string FILEFILTER_CHARSET_CHARPAD = "Charpad Project|*.ctm|";
-    public static string FILEFILTER_MAP_SUPPORTED_FILES = "Supported Files|*.bin;*.map;*.mapproject;*.ctm;*.charsetproject|Map Data|*.bin;*.map|Map Project|*.mapproject|Charpad Project|*.ctm|Charset Project|*.charsetproject|Path Project|*.pathproject|";
+    public static string FILEFILTER_MAP_SUPPORTED_FILES = "Supported Files|*.bin;*.map;*.mapproject;*.ctm;*.charsetproject|Map Data|*.bin;*.map|Map Project|*.mapproject|Charpad Project|*.ctm|Charset Project|*.charsetproject|";
     public static string FILEFILTER_MARQS_PETSCII = "Marq's PETSCII Editor File|*.c|";
     public static string FILEFILTER_CHARSCREEN_SUPPORTED_FILES = "Supported Files|*.ctm;*.c|";
     public static string FILEFILTER_CHARSET_SCREEN = "Charset Screen Project|*.charscreen|";
@@ -425,7 +425,7 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_PROJECT = "C64 Studio Project Files|*.c64|";
     public static string FILEFILTER_SOLUTION = "C64 Studio Solution Files|*.s64|";
     public static string FILEFILTER_SOLUTION_OR_PROJECTS = "C64 Studio Solution or Project Files|*.s64;*.c64|";
-    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.b;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.map;*.disassembly;*.prg;*.t64;*.d64;*.d71;*.d81;*.dsk;*.adf;*.tzx;*.sfxproject;*.txt;*.cfg;*.bat;*.ps1|";
+    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.b;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.map;*.disassembly;*.prg;*.t64;*.d64;*.d71;*.d81;*.dsk;*.adf;*.tzx;*.sfxproject;*.txt;*.cfg;*.bat;*.ps1;*.pathproject|";
     public static string FILEFILTER_SOURCE_FILES = "Source Files|*.asm;*.bas;*.a;*.b|";
     public static string FILEFILTER_SFX_PROJECT = "SFX Project Files|*.sfxproject|";
     public static string FILEFILTER_BINARY_FILES = "Binary Files|*.bin|";

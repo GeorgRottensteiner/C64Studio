@@ -1,10 +1,11 @@
+using GR.Memory;
+using RetroDevStudio.Formats;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
 using System.Linq;
-using GR.Memory;
-using RetroDevStudio.Types;
-using RetroDevStudio.Formats;
+using System.Text;
 
 namespace RetroDevStudio
 {
@@ -758,6 +759,35 @@ namespace RetroDevStudio
 
 
 
-  }
+    public static string StringToLabel( string Label )
+    {
+      StringBuilder   sb = new StringBuilder();
 
+      // remove diacritics
+      string normalizedString = Label.Normalize( NormalizationForm.FormD );
+
+      foreach ( var c in normalizedString )
+      {
+        if ( CharUnicodeInfo.GetUnicodeCategory( c ) == UnicodeCategory.NonSpacingMark )
+        {
+          continue;
+        }
+        if ( ( !char.IsDigit( c ) )
+        &&   ( !char.IsLetter( c ) )
+        &&   ( c != '_' ) )
+        {
+          sb.Append( '_' );
+        }
+        else
+        {
+          sb.Append( c );
+        }
+      }
+      return sb.ToString();
+    }
+
+
+
+  }
 }
+

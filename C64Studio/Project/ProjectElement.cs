@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Documents;
 using RetroDevStudio.Types;
 using System.Collections.Generic;
 
@@ -25,7 +25,8 @@ namespace RetroDevStudio
       BINARY_FILE,
       MEDIA_MANAGER,
       VALUE_TABLE,
-      TEXT_FILE
+      TEXT_FILE,
+      PATH_EDITOR
     };
 
     public enum BuildTypes

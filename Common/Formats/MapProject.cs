@@ -1,4 +1,4 @@
-﻿using GR.Collections;
+using GR.Collections;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
@@ -476,7 +476,7 @@ namespace RetroDevStudio.Formats
         tileDataW.AppendU8( (byte)tile.Chars.Width );
         tileDataH.AppendU8( (byte)tile.Chars.Height );
 
-        string    normalizedLabel = NormalizeAsLabel( tile.Name ).ToUpper();
+        string    normalizedLabel = Util.StringToLabel( tile.Name ).ToUpper();
         if ( usedLabels.ContainsKey( normalizedLabel ) )
         {
           int   subIndex = usedLabels[normalizedLabel] + 1;
@@ -551,7 +551,7 @@ namespace RetroDevStudio.Formats
       int tileIndex = 0;
       foreach ( Formats.MapProject.Tile tile in Tiles )
       {
-        string    normalizedLabel = NormalizeAsLabel( tile.Name ).ToLower();
+        string    normalizedLabel = Util.StringToLabel( tile.Name ).ToLower();
         if ( string.IsNullOrEmpty( tile.Name ) )
         {
           normalizedLabel = "tile_" + tileIndex;
@@ -760,13 +760,13 @@ namespace RetroDevStudio.Formats
 
       var usedLabels = new Dictionary<string, int>();
 
-      string  prefix = NormalizeAsLabel( LabelPrefix );
+      string  prefix = Util.StringToLabel( LabelPrefix );
       for ( int i = 0; i < Tiles.Count; ++i )
       {
         sb.Append( prefix );
         sb.Append( "TILE_NAME_" );
 
-        string    normalizedLabel = NormalizeAsLabel( Tiles[i].Name ).ToUpper();
+        string    normalizedLabel = Util.StringToLabel( Tiles[i].Name ).ToUpper();
         if ( usedLabels.ContainsKey( normalizedLabel ) )
         {
           int   subIndex = usedLabels[normalizedLabel] + 1;
@@ -865,7 +865,7 @@ namespace RetroDevStudio.Formats
       {
         sbMaps.Append( DataByteDirective );
         sbMaps.Append( ' ' );
-        sbMaps.AppendLine( "<" + LabelPrefix + "MAP_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
+        sbMaps.AppendLine( "<" + LabelPrefix + "MAP_" + Util.StringToLabel( Maps[i].Name.ToUpper() ) );
       }
       sbMaps.AppendLine();
       sbMaps.Append( LabelPrefix );
@@ -874,7 +874,7 @@ namespace RetroDevStudio.Formats
       {
         sbMaps.Append( DataByteDirective );
         sbMaps.Append( ' ' );
-        sbMaps.AppendLine( ">" + LabelPrefix + "MAP_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
+        sbMaps.AppendLine( ">" + LabelPrefix + "MAP_" + Util.StringToLabel( Maps[i].Name.ToUpper() ) );
       }
       sbMaps.AppendLine();
 
@@ -886,7 +886,7 @@ namespace RetroDevStudio.Formats
         {
           sbMaps.Append( DataByteDirective );
           sbMaps.Append( ' ' );
-          sbMaps.AppendLine( "<" + LabelPrefix + "MAP_EXTRA_DATA_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
+          sbMaps.AppendLine( "<" + LabelPrefix + "MAP_EXTRA_DATA_" + Util.StringToLabel( Maps[i].Name.ToUpper() ) );
         }
         sbMaps.Append( LabelPrefix );
         sbMaps.AppendLine( "MAP_EXTRA_DATA_LIST_HI" );
@@ -894,7 +894,7 @@ namespace RetroDevStudio.Formats
         {
           sbMaps.Append( DataByteDirective );
           sbMaps.Append( ' ' );
-          sbMaps.AppendLine( ">" + LabelPrefix + "MAP_EXTRA_DATA_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
+          sbMaps.AppendLine( ">" + LabelPrefix + "MAP_EXTRA_DATA_" + Util.StringToLabel( Maps[i].Name.ToUpper() ) );
         }
         sbMaps.AppendLine();
       }
@@ -906,7 +906,7 @@ namespace RetroDevStudio.Formats
 
         sbMaps.AppendLine();
         sbMaps.Append( LabelPrefix );
-        sbMaps.AppendLine( "MAP_" + NormalizeAsLabel( map.Name.ToUpper() ) );
+        sbMaps.AppendLine( "MAP_" + Util.StringToLabel( map.Name.ToUpper() ) );
 
         GR.Memory.ByteBuffer mapDataBuffer = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.Tiles.Height ) );
 
@@ -937,7 +937,7 @@ namespace RetroDevStudio.Formats
         {
           sbMaps.AppendLine( ";extra data" );
           sbMaps.Append( LabelPrefix );
-          sbMaps.AppendLine( "MAP_EXTRA_DATA_" + NormalizeAsLabel( map.Name.ToUpper() ) );
+          sbMaps.AppendLine( "MAP_EXTRA_DATA_" + Util.StringToLabel( map.Name.ToUpper() ) );
 
           // clean extra data
           GR.Memory.ByteBuffer    extraData = new GR.Memory.ByteBuffer();
@@ -994,40 +994,11 @@ namespace RetroDevStudio.Formats
             }
           }
         }
-        sbMaps.AppendLine( Util.ToCArray( mapDataBuffer, WrapData, WrapByteCount, LabelPrefix + "MAP_" + NormalizeAsLabel( map.Name.ToUpper() ), exportHex ) );
+        sbMaps.AppendLine( Util.ToCArray( mapDataBuffer, WrapData, WrapByteCount, LabelPrefix + "MAP_" + Util.StringToLabel( map.Name.ToUpper() ), exportHex ) );
       }
 
       MapData = sbMaps.ToString();
       return true;
-    }
-
-
-
-    private string NormalizeAsLabel( string Label )
-    {
-      StringBuilder   sb = new StringBuilder();
-
-      // remove diacritics
-      string normalizedString = Label.Normalize( NormalizationForm.FormD );
-
-      foreach ( var c in normalizedString )
-      {
-        if ( CharUnicodeInfo.GetUnicodeCategory( c ) == UnicodeCategory.NonSpacingMark )
-        {
-          continue;
-        }
-        if ( ( !char.IsDigit( c ) )
-        &&   ( !char.IsLetter( c ) )
-        &&   ( c != '_' ) )
-        {
-          sb.Append( '_' );
-        }
-        else
-        {
-          sb.Append( c );
-        }
-      }
-      return sb.ToString();
     }
 
 
@@ -1058,7 +1029,7 @@ namespace RetroDevStudio.Formats
         {
           sbMaps.Append( DataByteDirective );
           sbMaps.Append( ' ' );
-          sbMaps.AppendLine( "<" + LabelPrefix + "MAP_EXTRA_DATA_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
+          sbMaps.AppendLine( "<" + LabelPrefix + "MAP_EXTRA_DATA_" + Util.StringToLabel( Maps[i].Name.ToUpper() ) );
         }
         sbMaps.Append( LabelPrefix );
         sbMaps.AppendLine( "MAP_EXTRA_DATA_LIST_HI" );
@@ -1066,7 +1037,7 @@ namespace RetroDevStudio.Formats
         {
           sbMaps.Append( DataByteDirective );
           sbMaps.Append( ' ' );
-          sbMaps.AppendLine( ">" + LabelPrefix + "MAP_EXTRA_DATA_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
+          sbMaps.AppendLine( ">" + LabelPrefix + "MAP_EXTRA_DATA_" + Util.StringToLabel( Maps[i].Name.ToUpper() ) );
         }
         sbMaps.AppendLine();
       }
@@ -1081,7 +1052,7 @@ namespace RetroDevStudio.Formats
         {
           sbMaps.AppendLine( ";extra data" );
           sbMaps.Append( LabelPrefix );
-          sbMaps.AppendLine( "MAP_EXTRA_DATA_" + NormalizeAsLabel( map.Name.ToUpper() ) );
+          sbMaps.AppendLine( "MAP_EXTRA_DATA_" + Util.StringToLabel( map.Name.ToUpper() ) );
 
           // clean extra data
           GR.Memory.ByteBuffer    extraData = new GR.Memory.ByteBuffer();

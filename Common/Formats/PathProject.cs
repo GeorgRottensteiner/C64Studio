@@ -1,3 +1,4 @@
+using GR.Generic;
 using GR.Memory;
 using RetroDevStudio;
 using RetroDevStudio.Types;
@@ -100,12 +101,32 @@ namespace RetroDevStudio.Formats
       public int        ShiftBitsLeftDuration   = 0;
       public int        ShiftBitsRightDuration  = 0;
       public uint       RelevantBitsDuration    = 0xff;
+
+      public ValueDescriptor()
+      {
+      }
+
+      public ValueDescriptor( ValueDescriptor other )
+      {
+        Step = other.Step;
+        AddressOffsetStep = other.AddressOffsetStep;
+        AddressOffsetDuration = other.AddressOffsetDuration;
+        ValueStep = other.ValueStep;
+        RelevantBitsStep = other.RelevantBitsStep;
+        ShiftBitsLeftDuration = other.ShiftBitsLeftDuration;
+        ShiftBitsRightDuration = other.ShiftBitsRightDuration;
+        RelevantBitsDuration = other.RelevantBitsDuration;
+      }
     }
 
 
 
     public List<Path> Paths = new List<Path>();
     public List<ValueDescriptor> ValueDescriptors = new List<ValueDescriptor>();
+
+    // default 0, may be 1 or more (split value as more than one byte)
+    public int        AddressOffsetLastFlag   = 0;
+    public byte       ValueLastFlag           = 0x80;
 
 
 
@@ -127,6 +148,8 @@ namespace RetroDevStudio.Formats
       var chunkProject = new GR.IO.FileChunk( FileChunkConstants.PATH_PROJECT );
 
       var chunkInfo = new GR.IO.FileChunk( FileChunkConstants.PATH_PROJECT_INFO );
+      chunkInfo.AppendI32( AddressOffsetLastFlag );
+      chunkInfo.AppendU8( ValueLastFlag );
       chunkProject.Append( chunkInfo.ToBuffer() );
 
       foreach ( var valueDesc in ValueDescriptors )
@@ -210,38 +233,29 @@ namespace RetroDevStudio.Formats
                     {
                       var subChunkInfo = new GR.IO.FileChunk();
 
-                      while ( subChunkInfo.ReadFromStream( subChunkReader ) )
-                      {
-                        var    subChunkReaderInfo = subChunkInfo.MemoryReader();
+                      var    subChunkReaderInfo = subChunkInfo.MemoryReader();
 
-                        // nothing yet
-                      }
+                      AddressOffsetLastFlag = subChunkReader.ReadInt32();
+                      ValueLastFlag         = subChunkReader.ReadUInt8();
                     }
                     break;
                   case FileChunkConstants.PATH_PROJECT_VALUE_DESCRIPTOR:
                     {
-                      var subChunkInfo = new GR.IO.FileChunk();
-
-                      while ( subChunkInfo.ReadFromStream( subChunkReader ) )
+                      // nothing yet
+                      var vd = new ValueDescriptor
                       {
-                        var    subChunkReaderVD = subChunkInfo.MemoryReader();
+                        Step = (StepType)subChunkReader.ReadInt32(),
+                        ValueStep = subChunkReader.ReadUInt8(),
+                        AddressOffsetStep = subChunkReader.ReadInt32(),
+                        RelevantBitsStep = subChunkReader.ReadUInt8(),
 
-                        // nothing yet
-                        var vd = new ValueDescriptor
-                        {
-                          Step = (StepType)subChunkReaderVD.ReadInt32(),
-                          ValueStep = subChunkReaderVD.ReadUInt8(),
-                          AddressOffsetStep = subChunkReaderVD.ReadInt32(),
-                          RelevantBitsStep = subChunkReaderVD.ReadUInt8(),
+                        AddressOffsetDuration = subChunkReader.ReadInt32(),
+                        RelevantBitsDuration = subChunkReader.ReadUInt32(),
+                        ShiftBitsLeftDuration = subChunkReader.ReadInt32(),
+                        ShiftBitsRightDuration = subChunkReader.ReadInt32()
+                      };
 
-                          AddressOffsetDuration = subChunkReaderVD.ReadInt32(),
-                          RelevantBitsDuration = subChunkReaderVD.ReadUInt32(),
-                          ShiftBitsLeftDuration = subChunkReaderVD.ReadInt32(),
-                          ShiftBitsRightDuration = subChunkReaderVD.ReadInt32()
-                        };
-
-                        ValueDescriptors.Add( vd );
-                      }
+                      ValueDescriptors.Add( vd );
                     }
                     break;
                   case FileChunkConstants.PATH:
@@ -302,6 +316,9 @@ namespace RetroDevStudio.Formats
     {
       ValueDescriptors.Clear();
       FillDefaultDescriptors();
+
+      AddressOffsetLastFlag = 0;
+      ValueLastFlag         = 0x80;
     }
 
 
@@ -422,7 +439,7 @@ namespace RetroDevStudio.Formats
 
     public int DetermineTotalNumberOfBytes()
     {
-      int numBytes = 0;
+      int numBytes = AddressOffsetLastFlag + 1;
 
       foreach ( var vd in ValueDescriptors )
       {
@@ -454,6 +471,7 @@ namespace RetroDevStudio.Formats
         var sb = new StringBuilder();
         sb.AppendLine( path.Name );
 
+        int stepIndex = 0;
         foreach ( var step in path.Steps )
         {
           foreach ( var mapping in ValueDescriptors )
@@ -479,13 +497,72 @@ namespace RetroDevStudio.Formats
                 data.SetU8At( currentStepDataOffset + mapping.AddressOffsetDuration + i, (byte)( ( durationValue >> ( i * 8 ) ) & 0xff ) );
               }
             }
+            if ( stepIndex +1 == path.Steps.Count )
+            {
+              data.SetU8At( currentStepDataOffset + AddressOffsetLastFlag, (byte)( ValueLastFlag | data.ByteAt( currentStepDataOffset + AddressOffsetLastFlag ) ) );
+            }
           }
           currentStepDataOffset += totalNumberOfBytesPerStep;
+          ++stepIndex;
         }
         sb.AppendLine( Util.ToASMData( data, true, 16, "!byte" ) );
         sb2.Append( sb.ToString() );
       }
       return sb2.ToString();
+    }
+
+
+
+    public List<Tupel<string, ByteBuffer>> ExportData()
+    {
+      var result = new List<Tupel<string, ByteBuffer>>();
+
+      int totalNumberOfBytesPerStep = DetermineTotalNumberOfBytes();
+
+      foreach ( var path in Paths )
+      {
+        var entry = new Tupel<string, ByteBuffer>( path.Name, new ByteBuffer( (uint)( totalNumberOfBytesPerStep * path.Steps.Count ) ) );
+        result.Add( entry );
+
+        var data = entry.second;
+        int currentStepDataOffset = 0;
+
+        int stepIndex = 0;
+        foreach ( var step in path.Steps )
+        {
+          foreach ( var mapping in ValueDescriptors )
+          {
+            if ( mapping.Step == step.Type )
+            {
+              data.SetU8At( currentStepDataOffset + mapping.AddressOffsetStep, mapping.ValueStep );
+            }
+            if ( mapping.AddressOffsetDuration >= 0 )
+            {
+              int durationValue = step.Duration;
+              if ( mapping.ShiftBitsLeftDuration > 0 )
+              {
+                durationValue <<= mapping.ShiftBitsLeftDuration;
+              }
+              if ( mapping.ShiftBitsRightDuration > 0 )
+              {
+                durationValue >>= mapping.ShiftBitsRightDuration;
+              }
+              int durationSize = (int)( mapping.RelevantBitsDuration + 255 ) / 256;
+              for ( int i = 0; i < durationSize; ++i )
+              {
+                data.SetU8At( currentStepDataOffset + mapping.AddressOffsetDuration + i, (byte)( ( durationValue >> ( i * 8 ) ) & 0xff ) );
+              }
+            }
+            if ( stepIndex + 1 == path.Steps.Count )
+            {
+              data.SetU8At( currentStepDataOffset + AddressOffsetLastFlag, (byte)( ValueLastFlag | data.ByteAt( currentStepDataOffset + AddressOffsetLastFlag ) ) );
+            }
+          }
+          currentStepDataOffset += totalNumberOfBytesPerStep;
+          ++stepIndex;
+        }
+      }
+      return result;
     }
 
 

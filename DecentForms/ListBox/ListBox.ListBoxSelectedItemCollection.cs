@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -184,11 +184,12 @@ namespace DecentForms
       {
         if ( _Items.Count > 0 )
         {
-          var oldItems = _Items;
-          while ( _Items.Count > 0 )
+          var oldItems = new List<ListBoxItem>( _Items );
+          foreach ( var item in oldItems )
           {
-            _Items[0].Selected = false;
+            item.Selected = false;
           }
+          _Items.Clear();
           _Owner.ItemsModified();
         }
       }

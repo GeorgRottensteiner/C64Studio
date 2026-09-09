@@ -126,6 +126,15 @@
     <Compile Update="Controls\ExportMapForms\ExportMapAsCArray.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ExportPathForms\ExportPathAsFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportPathForms\ExportPathAsAssembly.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportPathForms\ExportPathFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ExportSpriteForms\ExportSpriteAsCArray.cs">
       <SubType>UserControl</SubType>
     </Compile>

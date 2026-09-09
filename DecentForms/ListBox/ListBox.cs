@@ -710,10 +710,7 @@ namespace DecentForms
         return;
       }
 
-      if ( ( ( DragTargetUpperHalf )
-      &&     ( DragTargetItemIndex == _draggedItemIndex ) )
-      ||   ( ( !DragTargetUpperHalf )
-      &&     ( DragTargetItemIndex == _draggedItemIndex + 1 ) ) )
+      if ( DragTargetItemIndex == _draggedItemIndex )
       {
         // no change
       }
@@ -723,6 +720,10 @@ namespace DecentForms
         if ( !DragTargetUpperHalf )
         {
           ++targetIndex;
+        }
+        if ( targetIndex == -1 )
+        {
+          return;
         }
 
         var item = Items[_draggedItemIndex];

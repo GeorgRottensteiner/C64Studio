@@ -24,6 +24,8 @@ namespace RetroDevStudio.Documents
 
     private bool                      _updatingParams = false;
 
+    private ExportPathFormBase        _ExportForm = null;
+
 
 
     public PathEditor()
@@ -31,9 +33,38 @@ namespace RetroDevStudio.Documents
       InitializeComponent();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
+    }
+
+
+
+    public PathEditor( StudioCore core )
+    {
+      Core = core;
+      InitializeComponent();
+
+      DocumentInfo.Type = ProjectElement.ElementType.PATH_EDITOR;
+      DocumentInfo.UndoManager.MainForm = Core.MainForm;
+
+      _updatingParams = true;
+      foreach ( PathProject.StepType step in Enum.GetValues( typeof( PathProject.StepType ) ) )
+      {
+        comboStepTypes.Items.Add( new GR.Generic.Tupel<PathProject.StepType, string>( step, GR.EnumHelper.GetDescription( step ) ) );
+        comboMappingStepType.Items.Add( new GR.Generic.Tupel<PathProject.StepType, string>( step, GR.EnumHelper.GetDescription( step ) ) );
+      }
+      comboStepTypes.SelectedIndex = 0;
+      comboMappingStepType.SelectedIndex = 0;
+
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportPathAsAssembly ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as binary file", typeof( ExportPathAsFile ) ) );
+
+      comboExportMethod.SelectedIndex = 0;
 
       SetDefaultDescriptors();
       FillMappings();
+
+      _updatingParams = false;
+
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }
 
 
@@ -50,7 +81,6 @@ namespace RetroDevStudio.Documents
       {
         var item = new ArrangedItemEntry();
 
-        // TODO - duration info
         item.Text = GenerateStepMappingToText( mapping, totalNumberOfBytes );
         item.Tag = mapping;
         listMappings.Items.Add( item );
@@ -77,6 +107,13 @@ namespace RetroDevStudio.Documents
       {
         int bitIndex = mapping.AddressOffsetDuration * 8 + i + 7 - highestBit;
         fullBits = fullBits.Substring( 0, bitIndex ) + "D" + fullBits.Substring( bitIndex + 1 );
+      }
+
+      bitCount = CountBits( _project.ValueLastFlag, out highestBit, out lowestBit );
+      for ( int i = 0; i < bitCount; ++i )
+      {
+        int bitIndex = _project.AddressOffsetLastFlag * 8 + i + 7 - highestBit;
+        fullBits = fullBits.Substring( 0, bitIndex ) + "L" + fullBits.Substring( bitIndex + 1 );
       }
 
       string finalString = "";
@@ -131,26 +168,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    public PathEditor( StudioCore core )
-    {
-      Core = core;
-      InitializeComponent();
-
-      foreach ( PathProject.StepType step in Enum.GetValues( typeof( PathProject.StepType ) ) )
-      {
-        comboStepTypes.Items.Add( new GR.Generic.Tupel<PathProject.StepType, string>( step, GR.EnumHelper.GetDescription( step ) ) );
-      }
-      comboStepTypes.SelectedIndex = 0;
-
-      comboExportMethod.Items.Add( "As assembly" );
-      comboExportMethod.Items.Add( "As binary file" );
-      comboExportMethod.SelectedIndex = 0;
-
-      GR.Image.DPIHandler.ResizeControlsForDPI( this );
-    }
-
-
-
     protected override bool PerformSave( string FullPath )
     {
       return GR.IO.File.WriteAllBytes( FullPath, _project.SaveToBuffer() );
@@ -194,6 +211,8 @@ namespace RetroDevStudio.Documents
 
       FillPathList();
       FillMappings();
+      editMappingLastStepAddressOffset.Text = _project.AddressOffsetLastFlag.ToString( "X2" );
+      editMappingLastStepValue.Text         = _project.ValueLastFlag.ToString( "X2" );
       return true;
     }
 
@@ -301,6 +320,10 @@ namespace RetroDevStudio.Documents
 
         Item.Tag = newPath;
         Item.Text = newPath.Name;
+      }
+      else
+      {
+        _project.Paths.Add( (PathProject.Path)Item.Tag );
       }
 
       SetModified();
@@ -594,9 +617,9 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listMappings_SelectedIndexChanged( DecentForms.ControlBase Sender )
+    private void listMappings_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
     {
-      if ( listMappings.SelectedItem == null )
+      if ( Item == null )
       {
         groupStepValues.Enabled = false;
         groupDurationValues.Enabled = false;
@@ -605,10 +628,10 @@ namespace RetroDevStudio.Documents
       groupStepValues.Enabled = true;
       groupDurationValues.Enabled = true;
 
-      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
+      var mapping = (PathProject.ValueDescriptor)Item.Tag;
 
       editMappingStepOffset.Text = mapping.AddressOffsetStep.ToString();
-      editMappingStepValue.Text = mapping.ValueStep.ToString();
+      editMappingStepValue.Text = mapping.ValueStep.ToString( "X2" );
       editMappingStepMask.Text = mapping.RelevantBitsStep.ToString( "X2" );
 
       editMappingDurationOffset.Text = mapping.AddressOffsetDuration.ToString();
@@ -747,14 +770,132 @@ namespace RetroDevStudio.Documents
 
     private void btnExport_Click( DecentForms.ControlBase Sender )
     {
-      switch ( comboExportMethod.SelectedIndex )
+      var exportInfo = new ExportPathInfo()
       {
-        case 0:
-          editDataExport.Text = _project.ExportAsAssembly();
-          break;
-        case 1:
-          editDataExport.Text = _project.ExportAsAssembly();
-          break;
+        DataPerPath = _project.ExportData()
+      };
+
+      _ExportForm.HandleExport( exportInfo, DocumentInfo );
+    }
+
+
+
+    private void comboExportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( _ExportForm != null )
+      {
+        _ExportForm.Dispose();
+        _ExportForm = null;
+      }
+
+      var item = (GR.Generic.Tupel<string, Type>)comboExportMethod.SelectedItem;
+      if ( ( item == null )
+      || ( item.second == null ) )
+      {
+        return;
+      }
+      _ExportForm = (ExportPathFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      _ExportForm.AutoScaleMode = AutoScaleMode.None;
+      _ExportForm.Dock = DockStyle.Fill;
+      _ExportForm.Parent = panelExport;
+      _ExportForm.CreateControl();
+    }
+
+
+
+    private ArrangedItemEntry listMappings_CloningItem( object sender, ArrangedItemEntry Item )
+    {
+      var vd = (PathProject.ValueDescriptor)Item.Tag;
+
+      var clonedItem = new ArrangedItemEntry() { Text = Item.Text };
+      var clonedVD = new PathProject.ValueDescriptor( vd );
+
+      clonedItem.Tag = clonedVD;
+      return clonedItem;
+    }
+
+
+
+    private void listMappings_ItemAdded( object sender, ArrangedItemEntry Item )
+    {
+      if ( _updatingParams )
+      {
+        return;
+      }
+      if ( Item.Tag == null )
+      {
+        var newVD = new PathProject.ValueDescriptor();
+        newVD.Step = ( (GR.Generic.Tupel<PathProject.StepType, string>)comboMappingStepType.SelectedItem ).first;
+        newVD.ValueStep = GR.Convert.ToU8( editMappingStepValue.Text, 16 );
+        newVD.AddressOffsetStep = GR.Convert.ToI32( editMappingStepOffset.Text );
+        newVD.RelevantBitsStep = GR.Convert.ToU8( editMappingStepMask.Text, 16 );
+
+        newVD.AddressOffsetDuration = GR.Convert.ToI32( editMappingDurationOffset.Text );
+        newVD.ShiftBitsLeftDuration = GR.Convert.ToI32( editMappingDurationShiftLeft.Text );
+        newVD.ShiftBitsRightDuration = GR.Convert.ToI32( editMappingDurationShiftRight.Text );
+        newVD.RelevantBitsDuration = GR.Convert.ToU32( editMappingDurationMask.Text, 16 );
+
+        _project.ValueDescriptors.Add( newVD );
+
+        Item.Tag = newVD;
+        Item.Text = GenerateStepMappingToText( newVD, _project.DetermineTotalNumberOfBytes() );
+      }
+      else
+      {
+        _project.Paths.Add( (PathProject.Path)Item.Tag );
+      }
+
+      SetModified();
+    }
+
+
+
+    private void listMappings_ItemMoved( object sender, ArrangedItemEntry Item, int originalIndex )
+    {
+      var newList = new List<PathProject.ValueDescriptor>();
+      foreach ( var item in listMappings.Items )
+      {
+        newList.Add( (PathProject.ValueDescriptor)( (ArrangedItemEntry)item ).Tag );
+      }
+
+      _project.ValueDescriptors = newList;
+      SetModified();
+    }
+
+
+
+    private void listMappings_ItemRemoved( object sender, ArrangedItemEntry Item )
+    {
+      var vd = (PathProject.ValueDescriptor)Item.Tag;
+      _project.ValueDescriptors.Remove( vd );
+      SetModified();
+    }
+
+
+
+    private void editMappingLastStepAddressOffset_TextChanged( object sender, EventArgs e )
+    {
+      int newValue = GR.Convert.ToI32( editMappingLastStepAddressOffset.Text );
+      if ( _project.AddressOffsetLastFlag != newValue )
+      {
+        _project.AddressOffsetLastFlag = newValue;
+
+        FillMappings();
+        SetModified();
+      }
+    }
+
+
+
+    private void editMappingLastStepValue_TextChanged( object sender, EventArgs e )
+    {
+      byte newValue = GR.Convert.ToU8( editMappingLastStepValue.Text, 16 );
+      if ( _project.ValueLastFlag != newValue )
+      {
+        _project.ValueLastFlag = newValue;
+
+        FillMappings();
+        SetModified();
       }
     }
 

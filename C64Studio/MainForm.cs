@@ -822,7 +822,7 @@ namespace RetroDevStudio
       else if ( StudioCore.Settings.AutoOpenLastSolution )
       {
         if ( ( !StudioCore.Settings.LastSolutionWasEmpty )
-        &&   ( StudioCore.Settings.MRUProjects.Count > 0 ) )
+        && ( StudioCore.Settings.MRUProjects.Count > 0 ) )
         {
           var idleRequest = new IdleRequest();
           idleRequest.OpenLastSolution = StudioCore.Settings.MRUProjects[0];
@@ -2858,7 +2858,7 @@ namespace RetroDevStudio
 
         // check file version (WinVICE remote debugger changes)
         if ( ( StudioCore.Debugging.Debugger != null )
-        &&   ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
+        && ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
         {
           return false;
         }
@@ -2889,8 +2889,8 @@ namespace RetroDevStudio
         }
 
         if ( ( Document != null )
-        &&   ( Document.ASMFileInfo != null )
-        &&   ( toolRun.PassLabelsToEmulator ) )
+        && ( Document.ASMFileInfo != null )
+        && ( toolRun.PassLabelsToEmulator ) )
         {
           string labelInfo = Document.ASMFileInfo.LabelsAsFile( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) );
           if ( labelInfo.Length > 0 )
@@ -3009,7 +3009,7 @@ namespace RetroDevStudio
         return;
       }
       if ( ( baseDoc.DocumentInfo.Project != null )
-      &&   ( baseDoc.DocumentInfo.Project.Modified ) )
+      && ( baseDoc.DocumentInfo.Project.Modified ) )
       {
         if ( !SaveProject( baseDoc.DocumentInfo.Project ) )
         {
@@ -4122,8 +4122,8 @@ namespace RetroDevStudio
         {
           // leave Window and Help submenu intact!
           if ( ( subMenu.Text != "&Window" )
-          &&   ( subMenu.Text != "&Help" )
-          &&   ( subMenu.Text != "&Edit" ) )
+          && ( subMenu.Text != "&Help" )
+          && ( subMenu.Text != "&Edit" ) )
           {
             subMenu.Enabled = !Wait;
           }
@@ -4704,7 +4704,7 @@ namespace RetroDevStudio
 
           // only update if we're not during closing of debugger
           if ( ( StudioCore.Debugging.Debugger != null )
-          &&   ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
+          && ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
           {
             m_DebugRegisters.SetRegisters( Registers );
             m_DebugRegisters.EnableRegisterOverrides( true );
@@ -5104,7 +5104,7 @@ namespace RetroDevStudio
           return true;
         case RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT:
           if ( ( AppState != Types.StudioState.NORMAL )
-          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -5120,8 +5120,8 @@ namespace RetroDevStudio
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
-            &&   ( curDoc.BaseDoc != null )
-            &&   ( curDoc.ContainsCode ) )
+            && ( curDoc.BaseDoc != null )
+            && ( curDoc.ContainsCode ) )
             {
               if ( curDoc.BaseDoc.ApplyFunction( Function ) )
               {
@@ -5423,7 +5423,7 @@ namespace RetroDevStudio
           return true;
         case RetroDevStudio.Types.Function.DEBUG_RUN_TO:
           if ( ( AppState != Types.StudioState.NORMAL )
-          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -5433,9 +5433,9 @@ namespace RetroDevStudio
             DocumentInfo docActive = DetermineDocument();
 
             if ( ( docToDebug == null )
-            ||   ( docActive == null )
-            ||   ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
-            &&     ( docActive.Type != ProjectElement.ElementType.ASM_SOURCE ) ) )
+            || ( docActive == null )
+            || ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
+            && ( docActive.Type != ProjectElement.ElementType.ASM_SOURCE ) ) )
             {
               break;
             }
@@ -5474,7 +5474,7 @@ namespace RetroDevStudio
             foreach ( BaseDocument doc in panelMain.Documents )
             {
               if ( ( doc.DocumentInfo.Element == null )
-              &&   ( doc.Modified ) )
+              && ( doc.Modified ) )
               {
                 doc.Save( BaseDocument.SaveMethod.SAVE );
               }
@@ -5494,12 +5494,12 @@ namespace RetroDevStudio
             // save current document
             BaseDocument docToSave = ActiveContent;
             if ( ( docToSave != null )
-            &&   ( !docToSave.IsSaveable ) )
+            && ( !docToSave.IsSaveable ) )
             {
               docToSave = ActiveDocument;
             }
             if ( ( docToSave == null )
-            ||  ( !docToSave.IsSaveable ) )
+            || ( !docToSave.IsSaveable ) )
             {
               break;
             }
@@ -5511,8 +5511,8 @@ namespace RetroDevStudio
             }
 
             if ( ( docToSave.DocumentInfo.Project == null )
-            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
-            ||   ( docToSave.DocumentInfo.Element == null ) )
+            || ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
+            || ( docToSave.DocumentInfo.Element == null ) )
             {
               // no project yet (or no project element)
               if ( !SaveProject( docToSave.DocumentInfo.Project ) )
@@ -5532,12 +5532,12 @@ namespace RetroDevStudio
             // save current document as
             BaseDocument docToSave = ActiveContent;
             if ( ( docToSave != null )
-            &&   ( !docToSave.IsSaveable ) )
+            && ( !docToSave.IsSaveable ) )
             {
               docToSave = ActiveDocument;
             }
             if ( ( docToSave == null )
-            ||   ( !docToSave.IsSaveable ) )
+            || ( !docToSave.IsSaveable ) )
             {
               break;
             }
@@ -5555,8 +5555,8 @@ namespace RetroDevStudio
             }
 
             if ( ( docToSave.DocumentInfo.Project == null )
-            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
-            ||   ( docToSave.DocumentInfo.Element == null ) )
+            || ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
+            || ( docToSave.DocumentInfo.Element == null ) )
             {
               // no project yet (or no project element)
               if ( !SaveProject( docToSave.DocumentInfo.Project ) )
@@ -5821,8 +5821,8 @@ namespace RetroDevStudio
     public void AddWatchEntry( WatchEntry Watch )
     {
       if ( ( AppState == Types.StudioState.DEBUGGING_RUN )
-      ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      ||   ( AppState == Types.StudioState.NORMAL ) )
+      || ( AppState == Types.StudioState.DEBUGGING_BROKEN )
+      || ( AppState == Types.StudioState.NORMAL ) )
       {
         m_DebugWatch.AddWatchEntry( Watch );
 
@@ -6536,7 +6536,7 @@ namespace RetroDevStudio
 
       Project  project;
       if ( ( StudioCore.Navigating.Solution != null )
-      &&   ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
+      && ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
@@ -6545,7 +6545,7 @@ namespace RetroDevStudio
       // file already opened?
       var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
       if ( ( docInfo != null )
-      &&   ( docInfo.BaseDoc != null ) )
+      && ( docInfo.BaseDoc != null ) )
       {
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         docInfo.BaseDoc.Show();
@@ -6638,11 +6638,11 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".TXT" )
-      ||        ( extension == ".CFG" )
-      ||        ( extension == ".BAT" )
-      ||        ( extension == ".PS1" )
-      ||        ( extension == ".HTML" )
-      ||        ( extension == ".HTM" ) )
+      || ( extension == ".CFG" )
+      || ( extension == ".BAT" )
+      || ( extension == ".PS1" )
+      || ( extension == ".HTML" )
+      || ( extension == ".HTM" ) )
       {
         document = new TextFile( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6664,7 +6664,7 @@ namespace RetroDevStudio
           editor.ImportIFFPicture( GR.IO.File.ReadAllBytes( Filename ) );
         }
         else if ( ( extension == ".KLA" )
-        ||        ( extension == ".KOA" ) )
+        || ( extension == ".KOA" ) )
         {
           var editor = (GraphicScreenEditor)document;
 
@@ -6774,6 +6774,9 @@ namespace RetroDevStudio
         case ProjectElement.ElementType.VALUE_TABLE:
           newDoc = new ValueTableEditor( StudioCore );
           break;
+        case ProjectElement.ElementType.PATH_EDITOR:
+          newDoc = new PathEditor( StudioCore );
+          break;
         case ProjectElement.ElementType.TEXT_FILE:
           newDoc = new TextFile( StudioCore );
           break;
@@ -6831,6 +6834,9 @@ namespace RetroDevStudio
           break;
         case ProjectElement.ElementType.VALUE_TABLE:
           filterSource += Types.Constants.FILEFILTER_VALUE_TABLE_PROJECT;
+          break;
+        case ProjectElement.ElementType.PATH_EDITOR:
+          filterSource += Types.Constants.FILEFILTER_PATH_PROJECT;
           break;
         case ProjectElement.ElementType.TEXT_FILE:
           filterSource += Types.Constants.FILEFILTER_TEXT_FILE;
@@ -8683,6 +8689,14 @@ namespace RetroDevStudio
     {
       ApplyFunction( Function.DEBUG_RUN_FOR_SPECIFIC_TIME );
     }
+
+
+
+    private void fileNewPathProjectToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddNewDocumentOrElement( ProjectElement.ElementType.PATH_EDITOR, "New Path", m_CurrentProject, ( m_CurrentProject != null ) ? m_CurrentProject.Node : null );
+    }
+
 
 
 

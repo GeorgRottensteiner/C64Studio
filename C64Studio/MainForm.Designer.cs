@@ -45,6 +45,7 @@ namespace RetroDevStudio
       fileNewGraphicScreenEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       fileNewMapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       valueTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      pathProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       fileNewBinaryEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       memoryViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       mediaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -170,6 +171,7 @@ namespace RetroDevStudio
       mapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       spriteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       valueTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      pathEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       paletteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       sfxEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
@@ -253,7 +255,6 @@ namespace RetroDevStudio
       mainDebugAdvanceToLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       mainDebugAdvanceFrame = new System.Windows.Forms.ToolStripButton();
       timerAutoSave = new System.Windows.Forms.Timer( components );
-      pathEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       mainMenu.SuspendLayout();
       mainTools.SuspendLayout();
       mainStatus.SuspendLayout();
@@ -290,7 +291,7 @@ namespace RetroDevStudio
       // 
       // newToolStripMenuItem
       // 
-      newToolStripMenuItem.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] { fileNewSolutionToolStripMenuItem, fileNewProjectToolStripMenuItem, toolStripSeparator2, fileNewASMFileToolStripMenuItem, fileNewBasicFileToolStripMenuItem, fileNewSpriteFileToolStripMenuItem, fileNewCharacterFileToolStripMenuItem, fileNewCharacterScreenEditorToolStripMenuItem, fileNewGraphicScreenEditorToolStripMenuItem, fileNewMapEditorToolStripMenuItem, valueTableToolStripMenuItem, fileNewBinaryEditorToolStripMenuItem, memoryViewToolStripMenuItem, mediaToolStripMenuItem } );
+      newToolStripMenuItem.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] { fileNewSolutionToolStripMenuItem, fileNewProjectToolStripMenuItem, toolStripSeparator2, fileNewASMFileToolStripMenuItem, fileNewBasicFileToolStripMenuItem, fileNewSpriteFileToolStripMenuItem, fileNewCharacterFileToolStripMenuItem, fileNewCharacterScreenEditorToolStripMenuItem, fileNewGraphicScreenEditorToolStripMenuItem, fileNewMapEditorToolStripMenuItem, valueTableToolStripMenuItem, pathProjectToolStripMenuItem, fileNewBinaryEditorToolStripMenuItem, memoryViewToolStripMenuItem, mediaToolStripMenuItem } );
       newToolStripMenuItem.Image = Properties.Resources.ToolNewItem;
       newToolStripMenuItem.Name = "newToolStripMenuItem";
       newToolStripMenuItem.Size = new System.Drawing.Size( 260, 22 );
@@ -299,96 +300,103 @@ namespace RetroDevStudio
       // fileNewSolutionToolStripMenuItem
       // 
       fileNewSolutionToolStripMenuItem.Name = "fileNewSolutionToolStripMenuItem";
-      fileNewSolutionToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewSolutionToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewSolutionToolStripMenuItem.Text = "&Solution";
       fileNewSolutionToolStripMenuItem.Click +=  fileNewSolutionToolStripMenuItem_Click ;
       // 
       // fileNewProjectToolStripMenuItem
       // 
       fileNewProjectToolStripMenuItem.Name = "fileNewProjectToolStripMenuItem";
-      fileNewProjectToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewProjectToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewProjectToolStripMenuItem.Text = "&Project";
       fileNewProjectToolStripMenuItem.Click +=  fileNewProjectToolStripMenuItem_Click ;
       // 
       // toolStripSeparator2
       // 
       toolStripSeparator2.Name = "toolStripSeparator2";
-      toolStripSeparator2.Size = new System.Drawing.Size( 160, 6 );
+      toolStripSeparator2.Size = new System.Drawing.Size( 177, 6 );
       // 
       // fileNewASMFileToolStripMenuItem
       // 
       fileNewASMFileToolStripMenuItem.Name = "fileNewASMFileToolStripMenuItem";
-      fileNewASMFileToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewASMFileToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewASMFileToolStripMenuItem.Text = "ASM File";
       fileNewASMFileToolStripMenuItem.Click +=  fileNewASMFileToolStripMenuItem_Click ;
       // 
       // fileNewBasicFileToolStripMenuItem
       // 
       fileNewBasicFileToolStripMenuItem.Name = "fileNewBasicFileToolStripMenuItem";
-      fileNewBasicFileToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewBasicFileToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewBasicFileToolStripMenuItem.Text = "BASIC File";
       fileNewBasicFileToolStripMenuItem.Click +=  fileNewBasicFileToolStripMenuItem_Click ;
       // 
       // fileNewSpriteFileToolStripMenuItem
       // 
       fileNewSpriteFileToolStripMenuItem.Name = "fileNewSpriteFileToolStripMenuItem";
-      fileNewSpriteFileToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewSpriteFileToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewSpriteFileToolStripMenuItem.Text = "Sprite Set";
       fileNewSpriteFileToolStripMenuItem.Click +=  fileNewSpriteFileToolStripMenuItem_Click ;
       // 
       // fileNewCharacterFileToolStripMenuItem
       // 
       fileNewCharacterFileToolStripMenuItem.Name = "fileNewCharacterFileToolStripMenuItem";
-      fileNewCharacterFileToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewCharacterFileToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewCharacterFileToolStripMenuItem.Text = "Character Set";
       fileNewCharacterFileToolStripMenuItem.Click +=  fileNewCharacterFileToolStripMenuItem_Click ;
       // 
       // fileNewCharacterScreenEditorToolStripMenuItem
       // 
       fileNewCharacterScreenEditorToolStripMenuItem.Name = "fileNewCharacterScreenEditorToolStripMenuItem";
-      fileNewCharacterScreenEditorToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewCharacterScreenEditorToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewCharacterScreenEditorToolStripMenuItem.Text = "Character Screen";
       fileNewCharacterScreenEditorToolStripMenuItem.Click +=  fileNewCharacterScreenEditorToolStripMenuItem_Click ;
       // 
       // fileNewGraphicScreenEditorToolStripMenuItem
       // 
       fileNewGraphicScreenEditorToolStripMenuItem.Name = "fileNewGraphicScreenEditorToolStripMenuItem";
-      fileNewGraphicScreenEditorToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewGraphicScreenEditorToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewGraphicScreenEditorToolStripMenuItem.Text = "Graphic Screen";
       fileNewGraphicScreenEditorToolStripMenuItem.Click +=  fileNewScreenEditorToolStripMenuItem_Click ;
       // 
       // fileNewMapEditorToolStripMenuItem
       // 
       fileNewMapEditorToolStripMenuItem.Name = "fileNewMapEditorToolStripMenuItem";
-      fileNewMapEditorToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewMapEditorToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewMapEditorToolStripMenuItem.Text = "Map";
       fileNewMapEditorToolStripMenuItem.Click +=  fileNewMapEditorToolStripMenuItem_Click ;
       // 
       // valueTableToolStripMenuItem
       // 
       valueTableToolStripMenuItem.Name = "valueTableToolStripMenuItem";
-      valueTableToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      valueTableToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       valueTableToolStripMenuItem.Text = "Value Table";
       valueTableToolStripMenuItem.Click +=  valueTableToolStripMenuItem_Click ;
+      // 
+      // pathProjectToolStripMenuItem
+      // 
+      pathProjectToolStripMenuItem.Name = "pathProjectToolStripMenuItem";
+      pathProjectToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
+      pathProjectToolStripMenuItem.Text = "Path Editor";
+      pathProjectToolStripMenuItem.Click +=  fileNewPathProjectToolStripMenuItem_Click ;
       // 
       // fileNewBinaryEditorToolStripMenuItem
       // 
       fileNewBinaryEditorToolStripMenuItem.Name = "fileNewBinaryEditorToolStripMenuItem";
-      fileNewBinaryEditorToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      fileNewBinaryEditorToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       fileNewBinaryEditorToolStripMenuItem.Text = "Binary Editor";
       fileNewBinaryEditorToolStripMenuItem.Click +=  fileNewBinaryEditorToolStripMenuItem_Click ;
       // 
       // memoryViewToolStripMenuItem
       // 
       memoryViewToolStripMenuItem.Name = "memoryViewToolStripMenuItem";
-      memoryViewToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      memoryViewToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       memoryViewToolStripMenuItem.Text = "Memory View";
       memoryViewToolStripMenuItem.Click +=  memoryViewToolStripMenuItem_Click ;
       // 
       // mediaToolStripMenuItem
       // 
       mediaToolStripMenuItem.Name = "mediaToolStripMenuItem";
-      mediaToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      mediaToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       mediaToolStripMenuItem.Text = "Media";
       // 
       // openToolStripMenuItem
@@ -1237,6 +1245,12 @@ namespace RetroDevStudio
       valueTableEditorToolStripMenuItem.Size = new System.Drawing.Size( 187, 22 );
       valueTableEditorToolStripMenuItem.Text = "Value Table Editor";
       // 
+      // pathEditorToolStripMenuItem
+      // 
+      pathEditorToolStripMenuItem.Name = "pathEditorToolStripMenuItem";
+      pathEditorToolStripMenuItem.Size = new System.Drawing.Size( 187, 22 );
+      pathEditorToolStripMenuItem.Text = "Path Editor";
+      // 
       // paletteEditorToolStripMenuItem
       // 
       paletteEditorToolStripMenuItem.Name = "paletteEditorToolStripMenuItem";
@@ -1924,12 +1938,6 @@ namespace RetroDevStudio
       timerAutoSave.Interval = 300000;
       timerAutoSave.Tick +=  timerAutoSave_Tick ;
       // 
-      // pathEditorToolStripMenuItem
-      // 
-      pathEditorToolStripMenuItem.Name = "pathEditorToolStripMenuItem";
-      pathEditorToolStripMenuItem.Size = new System.Drawing.Size( 187, 22 );
-      pathEditorToolStripMenuItem.Text = "Path Editor";
-      // 
       // MainForm
       // 
       AllowDrop = true;
@@ -2199,6 +2207,7 @@ namespace RetroDevStudio
     private System.Windows.Forms.ToolStripSplitButton mainDebugGo;
     private System.Windows.Forms.ToolStripMenuItem mainDebugGoRunForOneSecondToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem pathEditorToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem pathProjectToolStripMenuItem;
   }
 }
 

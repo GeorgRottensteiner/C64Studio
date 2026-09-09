@@ -1,4 +1,4 @@
-﻿using GR.Memory;
+using GR.Memory;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Types;
@@ -147,6 +147,13 @@ namespace RetroDevStudio.Parser
       else if ( extension == ".MAPPROJECT" )
       {
         if ( !POIncludeMediaMapProject( lineIndex, Binary, subFilename, method, paramTokens, labelPrefix, out dataToInclude, out ReplacementLines ) )
+        {
+          return false;
+        }
+      }
+      else if ( extension == ".PATHPROJECT" )
+      {
+        if ( !POIncludeMediaPathProject( lineIndex, Binary, subFilename, method, paramTokens, labelPrefix, out dataToInclude, out ReplacementLines ) )
         {
           return false;
         }
