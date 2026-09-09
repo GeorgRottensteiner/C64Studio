@@ -3717,9 +3717,9 @@ namespace RetroDevStudio.Documents
             for ( int i = 0; i < count; ++i )
             {
               if ( ( first + i >= 0 )
-              &&   ( first + i <= m_CharsetScreen.Screens.Count ) )
+              &&   ( first + i < m_CharsetScreen.Screens.Count ) )
               {
-                exportInfo.ScreensToExport.Add( i );
+                exportInfo.ScreensToExport.Add( first + i );
               }
             }
           }
