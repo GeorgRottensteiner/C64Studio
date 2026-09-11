@@ -1,4 +1,4 @@
-﻿using GR.Image;
+using GR.Image;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -1280,7 +1280,10 @@ namespace DecentForms
             rect.X += listBox.ItemHeight;
           }
 
-          DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
+          if ( !listBox.OnCustomDrawItem( this, item, rect ) )
+          {
+            DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
+          }
           DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
         }
         else if ( realIndex == listBox.MouseOverItem )
@@ -1294,7 +1297,10 @@ namespace DecentForms
             rect.X += listBox.ItemHeight;
           }
 
-          DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
+          if ( !listBox.OnCustomDrawItem( this, item, rect ) )
+          {
+            DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
+          }
         }
         else
         {
@@ -1306,7 +1312,10 @@ namespace DecentForms
             rect.X += listBox.ItemHeight;
           }
 
-          DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
+          if ( !listBox.OnCustomDrawItem( this, item, rect ) )
+          {
+            DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
+          }
         }
         if ( listBox.DragTargetItemIndex != -1 )
         {

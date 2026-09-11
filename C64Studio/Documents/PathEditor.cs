@@ -91,7 +91,103 @@ namespace RetroDevStudio.Documents
 
 
 
-    private string GenerateStepMappingToText( PathProject.ValueDescriptor mapping, int totalNumberOfBytes )
+    private bool IsMappingValid( out List<PathProject.ValueDescriptor> overlappingInMappings, out GR.Collections.Set<PathProject.ValueDescriptor> overlappingBetweenMappings )
+    {
+      overlappingInMappings = new List<PathProject.ValueDescriptor>();
+      overlappingBetweenMappings = new GR.Collections.Set<PathProject.ValueDescriptor>();
+
+      int totalNumberOfBytes = _project.DetermineTotalNumberOfBytes();
+
+      foreach ( var mapping in _project.ValueDescriptors )
+      {
+        int bitCount = CountBits( mapping.RelevantBitsStep, out int highestBit, out int lowestBit );
+        var usedBits = new GR.Collections.Set<int>();
+        for ( int i = 0; i < bitCount; ++i )
+        {
+          int bitIndex = mapping.AddressOffsetStep * 8 + i + 7 - highestBit;
+
+          if ( usedBits.Contains( bitIndex ) )
+          {
+            overlappingInMappings.Add( mapping );
+          }
+          usedBits.Add( bitIndex );
+        }
+
+        bitCount = CountBits( mapping.RelevantBitsDuration, out highestBit, out lowestBit );
+        for ( int i = 0; i < bitCount; ++i )
+        {
+          int bitIndex = mapping.AddressOffsetDuration * 8 + i + 7 - highestBit;
+
+          if ( usedBits.Contains( bitIndex ) )
+          {
+            overlappingInMappings.Add( mapping );
+          }
+          usedBits.Add( bitIndex );
+        }
+
+        bitCount = CountBits( _project.ValueLastFlag, out highestBit, out lowestBit );
+        for ( int i = 0; i < bitCount; ++i )
+        {
+          int bitIndex = _project.AddressOffsetLastFlag * 8 + i + 7 - highestBit;
+
+          if ( usedBits.Contains( bitIndex ) )
+          {
+            overlappingInMappings.Add( mapping );
+          }
+          usedBits.Add( bitIndex );
+        }
+
+        foreach ( var otherMapping in _project.ValueDescriptors )
+        {
+          if ( mapping == otherMapping )
+          {
+            continue;
+          }
+          bitCount = CountBits( mapping.RelevantBitsStep, out highestBit, out lowestBit );
+          for ( int i = 0; i < bitCount; ++i )
+          {
+            int bitIndex = mapping.AddressOffsetStep * 8 + i + 7 - highestBit;
+
+            if ( usedBits.Contains( bitIndex ) )
+            {
+              overlappingBetweenMappings.Add( mapping );
+              overlappingBetweenMappings.Add( otherMapping );
+            }
+          }
+
+          bitCount = CountBits( mapping.RelevantBitsDuration, out highestBit, out lowestBit );
+          for ( int i = 0; i < bitCount; ++i )
+          {
+            int bitIndex = mapping.AddressOffsetDuration * 8 + i + 7 - highestBit;
+
+            if ( usedBits.Contains( bitIndex ) )
+            {
+              overlappingBetweenMappings.Add( mapping );
+              overlappingBetweenMappings.Add( otherMapping );
+            }
+          }
+
+          bitCount = CountBits( _project.ValueLastFlag, out highestBit, out lowestBit );
+          for ( int i = 0; i < bitCount; ++i )
+          {
+            int bitIndex = _project.AddressOffsetLastFlag * 8 + i + 7 - highestBit;
+
+            if ( usedBits.Contains( bitIndex ) )
+            {
+              overlappingBetweenMappings.Add( mapping );
+              overlappingBetweenMappings.Add( otherMapping );
+            }
+          }
+        }
+      }
+      
+      return ( ( overlappingInMappings.Count == 0 ) 
+        &&     ( overlappingBetweenMappings.Count == 0 ) );
+    }
+
+
+
+    private string GenerateMaskString( PathProject.ValueDescriptor mapping, int totalNumberOfBytes )
     {
       string    fullBits = new string( '*', totalNumberOfBytes * 8 );
 
@@ -125,8 +221,16 @@ namespace RetroDevStudio.Documents
           finalString += " ";
         }
       }
+      return finalString;
+    }
 
-      return $"{mapping.Step} byte {mapping.AddressOffsetStep}: {finalString}";
+
+
+    private string GenerateStepMappingToText( PathProject.ValueDescriptor mapping, int totalNumberOfBytes )
+    {
+      string maskString = GenerateMaskString( mapping, totalNumberOfBytes );
+
+      return $"{GR.EnumHelper.GetDescription( mapping.Step )} byte {mapping.AddressOffsetStep}: {maskString}";
     }
 
 
@@ -212,7 +316,7 @@ namespace RetroDevStudio.Documents
       FillPathList();
       FillMappings();
       editMappingLastStepAddressOffset.Text = _project.AddressOffsetLastFlag.ToString( "X2" );
-      editMappingLastStepValue.Text         = _project.ValueLastFlag.ToString( "X2" );
+      editMappingLastStepValue.Text = _project.ValueLastFlag.ToString( "X2" );
       return true;
     }
 
@@ -630,9 +734,10 @@ namespace RetroDevStudio.Documents
 
       var mapping = (PathProject.ValueDescriptor)Item.Tag;
 
-      editMappingStepOffset.Text = mapping.AddressOffsetStep.ToString();
-      editMappingStepValue.Text = mapping.ValueStep.ToString( "X2" );
-      editMappingStepMask.Text = mapping.RelevantBitsStep.ToString( "X2" );
+      editMappingStepOffset.Text          = mapping.AddressOffsetStep.ToString();
+      editMappingStepValue.Text           = mapping.ValueStep.ToString( "X2" );
+      editMappingStepMask.Text            = mapping.RelevantBitsStep.ToString( "X2" );
+      comboMappingStepType.SelectedIndex  = (int)mapping.Step;
 
       editMappingDurationOffset.Text = mapping.AddressOffsetDuration.ToString();
       editMappingDurationShiftLeft.Text = mapping.ShiftBitsLeftDuration.ToString();
@@ -897,6 +1002,40 @@ namespace RetroDevStudio.Documents
         FillMappings();
         SetModified();
       }
+    }
+
+
+
+    private void listMappings_CustomDrawItem( DecentForms.ControlRenderer renderer, ArrangedItemEntry item, GR.Math.Rectangle rect, DecentForms.ListBox.ItemState state )
+    {
+      uint color = DecentForms.ControlRenderer.ColorControlText;
+
+      switch ( state )
+      {
+        case DecentForms.ListBox.ItemState.SELECTED:
+          color = DecentForms.ControlRenderer.ColorControlTextSelected;
+          break;
+        case DecentForms.ListBox.ItemState.MOUSE_OVER:
+          color = DecentForms.ControlRenderer.ColorControlTextMouseOver;
+          break;
+      }
+      // return $"{GR.EnumHelper.GetDescription( mapping.Step )} byte {mapping.AddressOffsetStep}: {finalString}";
+      var vd = (PathProject.ValueDescriptor)item.Tag;
+
+      int offset1 = GR.Image.DPIHandler.AdjustPixelSize( 90 );
+      int offset2 = GR.Image.DPIHandler.AdjustPixelSize( 140 );
+
+      renderer.DrawText( GR.EnumHelper.GetDescription( vd.Step ),
+                         rect.Left, rect.Top, rect.Width, rect.Height,
+                          DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.CENTERED_V, color );
+
+      renderer.DrawText( $"Byte {vd.AddressOffsetStep}:",
+                         rect.Left + offset1, rect.Top, rect.Width - offset1, rect.Height,
+                         DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.CENTERED_V, color );
+
+      renderer.DrawText( GenerateMaskString( vd, _project.DetermineTotalNumberOfBytes() ),
+                         rect.Left + offset2, rect.Top, rect.Width - offset2, rect.Height,
+                         DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.CENTERED_V, color );
     }
 
 

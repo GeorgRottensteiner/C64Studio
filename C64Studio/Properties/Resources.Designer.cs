@@ -550,6 +550,16 @@ namespace RetroDevStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon path_editor {
+            get {
+                object obj = ResourceManager.GetObject("path_editor", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon project {
             get {
                 object obj = ResourceManager.GetObject("project", resourceCulture);

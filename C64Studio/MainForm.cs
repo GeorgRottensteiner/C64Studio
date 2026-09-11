@@ -6732,6 +6732,8 @@ namespace RetroDevStudio
           return RetroDevStudio.Properties.Resources.binary;
         case ProjectElement.ElementType.VALUE_TABLE:
           return RetroDevStudio.Properties.Resources.valuetable;
+        case ProjectElement.ElementType.PATH_EDITOR:
+          return RetroDevStudio.Properties.Resources.path_editor;
       }
       return System.Drawing.SystemIcons.Asterisk;
     }

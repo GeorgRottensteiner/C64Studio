@@ -46,6 +46,7 @@ namespace RetroDevStudio.Documents
       seBtnAddNewCharScreen = new System.Windows.Forms.ToolStripMenuItem();
       seBtnAddNewGraphicScreen = new System.Windows.Forms.ToolStripMenuItem();
       seBtnAddNewMap = new System.Windows.Forms.ToolStripMenuItem();
+      pathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       seBtnAddExisting = new System.Windows.Forms.ToolStripButton();
       seBtnDelete = new System.Windows.Forms.ToolStripButton();
       toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -56,7 +57,6 @@ namespace RetroDevStudio.Documents
       keepFoldersGroupedOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       keepFoldersGroupedOnBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       imageListSourceControlOverlay = new System.Windows.Forms.ImageList( components );
-      pathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).BeginInit();
       toolStrip1.SuspendLayout();
       SuspendLayout();
@@ -114,6 +114,7 @@ namespace RetroDevStudio.Documents
       imageListExplorer.Images.SetKeyName( 13, "filemanager.ico" );
       imageListExplorer.Images.SetKeyName( 14, "valuetable.ico" );
       imageListExplorer.Images.SetKeyName( 15, "icon_textfile.ico" );
+      imageListExplorer.Images.SetKeyName( 16, "path_editor.ico" );
       // 
       // toolStrip1
       // 
@@ -138,77 +139,84 @@ namespace RetroDevStudio.Documents
       // projectToolStripMenuItem
       // 
       projectToolStripMenuItem.Name = "projectToolStripMenuItem";
-      projectToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
+      projectToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
       projectToolStripMenuItem.Text = "Project";
       projectToolStripMenuItem.Click +=  projectToolStripMenuItem_Click ;
       // 
       // toolStripSeparator1
       // 
       toolStripSeparator1.Name = "toolStripSeparator1";
-      toolStripSeparator1.Size = new System.Drawing.Size( 177, 6 );
+      toolStripSeparator1.Size = new System.Drawing.Size( 160, 6 );
       // 
       // seBtnAddNewFolder
       // 
       seBtnAddNewFolder.Name = "seBtnAddNewFolder";
-      seBtnAddNewFolder.Size = new System.Drawing.Size( 180, 22 );
+      seBtnAddNewFolder.Size = new System.Drawing.Size( 163, 22 );
       seBtnAddNewFolder.Text = "Folder";
       seBtnAddNewFolder.Click +=  seBtnAddNewFolder_Click ;
       // 
       // seBtnAddNewASMFile
       // 
       seBtnAddNewASMFile.Name = "seBtnAddNewASMFile";
-      seBtnAddNewASMFile.Size = new System.Drawing.Size( 180, 22 );
+      seBtnAddNewASMFile.Size = new System.Drawing.Size( 163, 22 );
       seBtnAddNewASMFile.Text = "ASM File";
       seBtnAddNewASMFile.Click +=  seBtnAddNewASMFile_Click ;
       // 
       // seBtnAddNewBASICFile
       // 
       seBtnAddNewBASICFile.Name = "seBtnAddNewBASICFile";
-      seBtnAddNewBASICFile.Size = new System.Drawing.Size( 180, 22 );
+      seBtnAddNewBASICFile.Size = new System.Drawing.Size( 163, 22 );
       seBtnAddNewBASICFile.Text = "BASIC File";
       seBtnAddNewBASICFile.Click +=  seBtnAddNewBASICFile_Click ;
       // 
       // seBtnAddNewTextFile
       // 
       seBtnAddNewTextFile.Name = "seBtnAddNewTextFile";
-      seBtnAddNewTextFile.Size = new System.Drawing.Size( 180, 22 );
+      seBtnAddNewTextFile.Size = new System.Drawing.Size( 163, 22 );
       seBtnAddNewTextFile.Text = "Text File";
       seBtnAddNewTextFile.Click +=  seBtnAddNewTextFile_Click ;
       // 
       // seBtnAddNewSpriteSet
       // 
       seBtnAddNewSpriteSet.Name = "seBtnAddNewSpriteSet";
-      seBtnAddNewSpriteSet.Size = new System.Drawing.Size( 180, 22 );
+      seBtnAddNewSpriteSet.Size = new System.Drawing.Size( 163, 22 );
       seBtnAddNewSpriteSet.Text = "Sprite Set";
       seBtnAddNewSpriteSet.Click +=  seBtnAddNewSpriteSet_Click ;
       // 
       // seBtnAddNewCharacterSet
       // 
       seBtnAddNewCharacterSet.Name = "seBtnAddNewCharacterSet";
-      seBtnAddNewCharacterSet.Size = new System.Drawing.Size( 180, 22 );
+      seBtnAddNewCharacterSet.Size = new System.Drawing.Size( 163, 22 );
       seBtnAddNewCharacterSet.Text = "Character Set";
       seBtnAddNewCharacterSet.Click +=  seBtnAddNewCharacterSet_Click ;
       // 
       // seBtnAddNewCharScreen
       // 
       seBtnAddNewCharScreen.Name = "seBtnAddNewCharScreen";
-      seBtnAddNewCharScreen.Size = new System.Drawing.Size( 180, 22 );
+      seBtnAddNewCharScreen.Size = new System.Drawing.Size( 163, 22 );
       seBtnAddNewCharScreen.Text = "Character Screen";
       seBtnAddNewCharScreen.Click +=  seBtnAddNewCharScreen_Click ;
       // 
       // seBtnAddNewGraphicScreen
       // 
       seBtnAddNewGraphicScreen.Name = "seBtnAddNewGraphicScreen";
-      seBtnAddNewGraphicScreen.Size = new System.Drawing.Size( 180, 22 );
+      seBtnAddNewGraphicScreen.Size = new System.Drawing.Size( 163, 22 );
       seBtnAddNewGraphicScreen.Text = "Graphic Screen";
       seBtnAddNewGraphicScreen.Click +=  seBtnAddNewGraphicScreen_Click ;
       // 
       // seBtnAddNewMap
       // 
       seBtnAddNewMap.Name = "seBtnAddNewMap";
-      seBtnAddNewMap.Size = new System.Drawing.Size( 180, 22 );
+      seBtnAddNewMap.Size = new System.Drawing.Size( 163, 22 );
       seBtnAddNewMap.Text = "Map";
       seBtnAddNewMap.Click +=  seBtnAddNewMap_Click ;
+      // 
+      // pathToolStripMenuItem
+      // 
+      pathToolStripMenuItem.Name = "pathToolStripMenuItem";
+      pathToolStripMenuItem.Size = new System.Drawing.Size( 163, 22 );
+      pathToolStripMenuItem.Text = "Path";
+      pathToolStripMenuItem.Click +=  projectAddPathFile_Click ;
       // 
       // seBtnAddExisting
       // 
@@ -296,13 +304,6 @@ namespace RetroDevStudio.Documents
       imageListSourceControlOverlay.Images.SetKeyName( 2, "se_sc_changes.ico" );
       imageListSourceControlOverlay.Images.SetKeyName( 3, "se_sc_ignore.ico" );
       imageListSourceControlOverlay.Images.SetKeyName( 4, "se_sc_conflict.ico" );
-      // 
-      // pathToolStripMenuItem
-      // 
-      pathToolStripMenuItem.Name = "pathToolStripMenuItem";
-      pathToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
-      pathToolStripMenuItem.Text = "Path";
-      pathToolStripMenuItem.Click +=  projectAddPathFile_Click ;
       // 
       // SolutionExplorer
       // 

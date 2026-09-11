@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -248,6 +248,13 @@ namespace GR.Image
 
       imageIn.Dispose();
       return newBitmap;
+    }
+
+
+
+    public static int AdjustPixelSize( int size )
+    {
+      return (int)( size * DPIX / 96.0f + 0.5f );
     }
 
 

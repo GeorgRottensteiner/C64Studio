@@ -312,6 +312,7 @@ namespace RetroDevStudio.Documents
       listMappings.ItemRemoved +=  listMappings_ItemRemoved ;
       listMappings.ItemMoved +=  listMappings_ItemMoved ;
       listMappings.SelectedIndexChanged +=  listMappings_SelectedIndexChanged ;
+      listMappings.CustomDrawItem +=  listMappings_CustomDrawItem ;
       // 
       // groupDurationValues
       // 

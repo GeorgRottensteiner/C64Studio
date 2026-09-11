@@ -1,12 +1,14 @@
+using DecentForms;
+using GR.Image;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using System.Collections;
-using GR.Image;
+using static DecentForms.ListBox;
 
 
 
@@ -22,6 +24,8 @@ namespace RetroDevStudio.Controls
     public delegate void ItemModifiedEventHandler( object sender, ArrangedItemEntry Item );
     public delegate bool ItemMovingEventHandler( object sender, ArrangedItemEntry Item, int newIndex );
     public delegate void ItemMovedEventHandler( object sender, ArrangedItemEntry Item, int originalIndex );
+    public delegate void CustomDrawItemEventHandler( ControlRenderer renderer, ArrangedItemEntry item, GR.Math.Rectangle rect, ItemState state );
+
 
     // called when a new item is to be added (allows generating a custom object)
     public event AddingItemEventHandler AddingItem;
@@ -37,6 +41,27 @@ namespace RetroDevStudio.Controls
     public event ItemMovingEventHandler MovingItem;
     public event ItemMovedEventHandler ItemMoved;
     public event ItemModifiedEventHandler SelectedIndexChanged;
+
+    private event CustomDrawItemEventHandler  _CustomDrawItem;
+    private int                               _numListCustomDrawItemHandlersInstalled = 0;
+
+
+
+    public event CustomDrawItemEventHandler CustomDrawItem
+    {
+      add
+      {
+        OnHandlerAdded( value );
+        _CustomDrawItem += value;
+      }
+      remove
+      {
+        OnHandlerRemoved( value );
+        _CustomDrawItem -= value;
+      }
+    }
+
+
 
     private ArrangedItemListCollection _Items;
     private bool      _HasOwnerDrawColumn = false;
@@ -76,6 +101,35 @@ namespace RetroDevStudio.Controls
 
 
 
+    protected virtual void OnHandlerAdded( Delegate handler )
+    {
+      if ( _numListCustomDrawItemHandlersInstalled == 0 )
+      {
+        listItems.CustomDrawItem += listItems_CustomDrawItem;
+      }
+      ++_numListCustomDrawItemHandlersInstalled;
+    }
+
+
+
+    protected virtual void OnHandlerRemoved( Delegate handler )
+    {
+      --_numListCustomDrawItemHandlersInstalled;
+      if ( _numListCustomDrawItemHandlersInstalled == 0 )
+      {
+        listItems.CustomDrawItem -= listItems_CustomDrawItem;
+      }
+    }
+
+
+
+    private void listItems_CustomDrawItem( ControlRenderer renderer, ListBoxItem item, GR.Math.Rectangle rect, ItemState state )
+    {
+      _CustomDrawItem?.Invoke( renderer, (ArrangedItemEntry)item, rect, state );
+    }
+
+
+
     public new void Invalidate()
     {
       if ( _UpdateLocked )
@@ -100,6 +154,7 @@ namespace RetroDevStudio.Controls
 
 
 
+    /*
     private void ListItems_DrawItem( object sender, DrawItemEventArgs e )
     {
       if ( !_HasOwnerDrawColumn )
@@ -110,7 +165,6 @@ namespace RetroDevStudio.Controls
 
       if ( e.Index != -1 )
       {
-        //var rect = listItems.GetItemRectangle( e.Index );
         var rect = e.Bounds;
 
         var textColor = ForeColor;
@@ -129,10 +183,11 @@ namespace RetroDevStudio.Controls
         e.Graphics.DrawString( Items[e.Index].Text, Font, new SolidBrush( textColor ), rect );
       }
       e.DrawFocusRectangle();
-    }
+    }*/
 
 
 
+    /*
     private void ListItems_DrawSubItem( object sender, DrawListViewSubItemEventArgs e )
     {
       if ( !_HasOwnerDrawColumn )
@@ -148,7 +203,7 @@ namespace RetroDevStudio.Controls
       e.Graphics.FillRectangle( Brushes.Aqua, e.SubItem.Bounds );
       e.DrawText();
       e.DrawDefault = false;
-    }
+    }*/
 
 
 

@@ -2,7 +2,6 @@ using GR.Image;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -34,6 +33,17 @@ namespace DecentForms
     public event EventHandler             ItemCheck;
     public event ItemSwappingEventHandler ItemSwapping;
     public event ItemSwappedEventHandler  ItemSwapped;
+
+    public enum ItemState
+    {
+      NORMAL      = 0,
+      MOUSE_OVER,
+      SELECTED
+    };
+
+    public delegate void CustomDrawItemEventHandler( ControlRenderer renderer, ListBoxItem item, GR.Math.Rectangle rect, ItemState state );
+
+    public event CustomDrawItemEventHandler CustomDrawItem;
 
 
 
@@ -97,10 +107,10 @@ namespace DecentForms
 
 
 
-    private int   _ItemHeight = 15;
-    private Point _MouseDownPos;
-    private bool  _MouseButtonReleased;
-    private int   _draggedItemIndex = -1;
+    private int             _ItemHeight = 15;
+    private GR.Math.Point   _MouseDownPos;
+    private bool            _MouseButtonReleased;
+    private int             _draggedItemIndex = -1;
 
 
 
@@ -386,7 +396,7 @@ namespace DecentForms
 
 
 
-    public new void Invalidate( Rectangle rect )
+    public new void Invalidate( GR.Math.Rectangle rect )
     {
       if ( _UpdateLocked )
       {
@@ -574,7 +584,7 @@ namespace DecentForms
           {
             SelectedIndex = _MouseOverItem;
           }
-          _MouseDownPos = new Point( Event.MouseX, Event.MouseY );
+          _MouseDownPos = new GR.Math.Point( Event.MouseX, Event.MouseY );
           if ( ( SelectedIndex != -1 )
           &&   ( GetItemCheckRect( SelectedIndex ).Contains( Event.MouseX, Event.MouseY ) ) )
           {
@@ -816,18 +826,23 @@ namespace DecentForms
 
 
 
-    private int IndexOfItem( ListBoxItem Item )
+    internal bool OnCustomDrawItem( ControlRenderer renderer, ListBoxItem item, GR.Math.Rectangle rect )
     {
-      int     index = 0;
-      foreach ( var item in Items )
+      if ( CustomDrawItem != null )
       {
-        if ( item == Item )
+        ItemState state = ItemState.NORMAL;
+        if ( item.Selected )
         {
-          return index;
+          state = ItemState.SELECTED;
         }
-        ++index;
+        else if ( item.Index == MouseOverItem )
+        {
+          state = ItemState.MOUSE_OVER;
+        }
+        CustomDrawItem.Invoke( renderer, item, rect, state );
+        return true;
       }
-      return -1;
+      return false;
     }
 
 
@@ -876,15 +891,15 @@ namespace DecentForms
 
 
 
-    internal Rectangle GetItemRect( int ItemIndex )
+    internal GR.Math.Rectangle GetItemRect( int ItemIndex )
     {
       if ( ( ItemIndex < FirstVisibleItemIndex )
       ||   ( ItemIndex >= Items.Count ) )
       {
-        return Rectangle.Empty;
+        return GR.Math.Rectangle.Empty;
       }
       // TODO - check, multi column
-      return new Rectangle( 0, ( ItemIndex - FirstVisibleItemIndex ) * ItemHeight, UsableItemWidth, ItemHeight );
+      return new GR.Math.Rectangle( 0, ( ItemIndex - FirstVisibleItemIndex ) * ItemHeight, UsableItemWidth, ItemHeight );
     }
 
 
