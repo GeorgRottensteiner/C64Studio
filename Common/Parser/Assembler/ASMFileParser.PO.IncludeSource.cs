@@ -1,4 +1,4 @@
-﻿using GR.Memory;
+using GR.Memory;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Types;

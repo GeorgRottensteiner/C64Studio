@@ -4,7 +4,11 @@ namespace GR
 {
   public static class Path
   {
+#if OS_WINDOWS
     public const string PotentialPathSeparators = "\\/";
+#else
+    public const string PotentialPathSeparators = "/";
+#endif
 
 
 
@@ -115,7 +119,7 @@ namespace GR
 
         if ( IsSeparator( letter, Separators ) )
         {
-          // auf .. prüfen
+          // auf .. prÃ¼fen
           string subPath;
           if ( lastSeparatorPos == -1 )
           {
@@ -167,7 +171,15 @@ namespace GR
       }
       else if ( skipNextDirCount == 0 )
       {
-        result = Append( Path.Substring( 0, lastSeparatorPos ), result, Separators );
+        if ( lastSeparatorPos == 0 )
+        {
+          // a Linux root path
+          result = Separators[0] + result;
+        }
+        else
+        {
+          result = Append( Path.Substring( 0, lastSeparatorPos ), result, Separators );
+        }
       }
       return result;
     }
