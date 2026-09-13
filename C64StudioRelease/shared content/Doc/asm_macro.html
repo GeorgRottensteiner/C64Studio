@@ -21,7 +21,9 @@
       <li><a href="#byte">!BYTE, !BY, !8, !08</a></li>
       <li><a href="#convtab">!CONVTAB, !CT</a></li>
       <li><a href="#cpu">!CPU</a></li>
+      <li><a href="#warnoff">!DISABLEWARNING</a></li>
       <li><a href="#dword">!DWORD, !32, !BE32, !LE32</a></li>
+      <li><a href="#warnon">!ENABLEWARNING</a></li>
       <li><a href="#end">!END</a></li>
       <li><a href="#eof">!ENDOFFILE, !EOF</a></li>
       <li><a href="#error">!ERROR, !SERIOUS</a></li>
@@ -53,6 +55,8 @@
       <li><a href="#to">!TO</a></li>
       <li><a href="#trace">!TRACE</a></li>
       <li><a href="#warn">!WARN</a></li>
+      <li><a href="#warnoff">!WARNOFF</a></li>
+      <li><a href="#warnon">!WARNON</a></li>
       <li><a href="#while">!WHILE</a></li>
       <li><a href="#word">!WORD, !WO, !16, !BE16, !LE16</a></li>
       <li><a href="#zone">!ZONE, !ZN</a></li>
@@ -3467,6 +3471,34 @@
     <br />
     <div id="code">
       <br />      !warning "File is ", CODE_END - CODE_START, " bytes long, longer than 2048 bytes!"
+    </div>
+    <br />
+    <br />
+  </div>
+  <a name="warnoff"></a>
+  <H2>!WARNOFF &lt;warning code(s)&gt;</H2>
+  <div id="mybody">
+    This pseudo op disables the provided warnings after the current line.<br />
+    <br />
+    The warning codes are expected in the Wxxxx form. To ignore the overlapping segment warning (W0001) call like shown in the sample below.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !WARNOFF w0001
+    </div>
+    <br />
+    <br />
+  </div>
+  <a name="warnon"></a>
+  <H2>!WARNON &lt;warning code(s)&gt;</H2>
+  <div id="mybody">
+    This pseudo op enables the provided warnings after the current line.<br />
+    <br />
+    The warning codes are expected in the Wxxxx form. To un-ignore the overlapping segment warning (W0001) call like shown in the sample below.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !WARNON w0001
     </div>
     <br />
     <br />

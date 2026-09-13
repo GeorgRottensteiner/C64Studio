@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Types;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -272,6 +272,10 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!ENDOFFILE", Types.MacroInfo.PseudoOpType.END_OF_FILE );
           AddPseudoOp( "!EOF", Types.MacroInfo.PseudoOpType.END_OF_FILE );
           AddPseudoOp( "!NOWARN", Types.MacroInfo.PseudoOpType.NO_WARNING );
+          AddPseudoOp( "!ENABLEWARNING", Types.MacroInfo.PseudoOpType.ENABLE_WARNING );
+          AddPseudoOp( "!WARNON", Types.MacroInfo.PseudoOpType.ENABLE_WARNING );
+          AddPseudoOp( "!DISABLEWARNING", Types.MacroInfo.PseudoOpType.DISABLE_WARNING );
+          AddPseudoOp( "!WARNOFF", Types.MacroInfo.PseudoOpType.DISABLE_WARNING );
           AddPseudoOp( "!FOR", Types.MacroInfo.PseudoOpType.FOR );
           AddPseudoOp( "!END", Types.MacroInfo.PseudoOpType.END );
           AddPseudoOp( "!MACRO", Types.MacroInfo.PseudoOpType.MACRO );

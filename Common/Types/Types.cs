@@ -101,7 +101,9 @@ namespace RetroDevStudio.Types
       JUMP_TABLE,                       // !jumplist Label
       SCOPED_ZONE,                      // TMP: .block
       SCOPED_ZONE_END,                  // TMP: .bend
-      MACRO_ZONED                       // TMP: .macro (intrinsic .block/.bend)
+      MACRO_ZONED,                      // TMP: .macro (intrinsic .block/.bend)
+      ENABLE_WARNING,                   // re-enable (scoped, not global)
+      DISABLE_WARNING                   // disable (scoped, not global)
     }
 
     public PseudoOpType      Type = PseudoOpType.UNKNOWN;

@@ -87,7 +87,14 @@ namespace RetroDevStudio.Parser
       public int            NumArguments = 0;
       public int            NumResults = 0;
       public ExtFunction    Function = null;
-    };
+    }
+
+    public class ScopedWarningState
+    {
+      public ErrorCode    Warning = ErrorCode.OK;
+      public int          GlobalLineIndex = -1;
+      public bool         Enabled = true;
+    }
 
     public Processor                    m_Processor = Processor.Create6510();
 
@@ -101,6 +108,7 @@ namespace RetroDevStudio.Parser
     private AssemblerSettings           m_AssemblerSettings = new AssemblerSettings();
 
     private List<Types.ErrorCode>       m_WarningsToIgnore = new List<Types.ErrorCode>();
+    private List<ScopedWarningState>    m_ScopedWarningStates = new List<ScopedWarningState>();
 
     private StringBuilder               m_CurrentCommentSB = new StringBuilder();
 
@@ -6871,6 +6879,20 @@ namespace RetroDevStudio.Parser
                 continue;
               }
             }
+            else if ( ( pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.ENABLE_WARNING )
+            ||        ( pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.DISABLE_WARNING ) )
+            {
+              ParseLineResult   plResult = POEnableDisableWarning( lineTokenInfos, pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.ENABLE_WARNING );
+              if ( plResult == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( plResult == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
             else if ( pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.TRACE )
             {
               string  traceFilename;
@@ -11099,6 +11121,7 @@ namespace RetroDevStudio.Parser
       m_ASMFileInfo.LabelDumpSettings = m_CompileConfig.LabelDumpSettings;
 
       m_WarningsToIgnore.Clear();
+      m_ScopedWarningStates.Clear();
 
       bool    hadFatalError = false;
       lines = PreProcess( lines, m_Filename, Configuration, AdditionalPredefines, out hadFatalError );
@@ -11149,6 +11172,8 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      RemoveScopedDisabledWarnings();
+
       // create preprocessed file even with errors (might be the reason to get the preprocessed file in the first place)
       if ( Config.CreatePreProcesseFile )
       {
@@ -11168,6 +11193,60 @@ namespace RetroDevStudio.Parser
 
       DumpLineAddresses();
       return true;
+    }
+
+
+
+    private void RemoveScopedDisabledWarnings()
+    {
+      var warningsToRemove = new List<ParseMessage>();
+      foreach ( var entry in m_ASMFileInfo.Messages )
+      {
+        if ( ( entry.Value.Type == ParseMessage.LineType.WARNING )
+        ||   ( entry.Value.Type == ParseMessage.LineType.SEVERE_WARNING ) )
+        {
+          bool    isEnabled = !m_WarningsToIgnore.Contains( entry.Value.Code );
+          if ( !isEnabled )
+          {
+            // shouldn't have been added at all
+            warningsToRemove.Add( entry.Value );
+          }
+          else
+          {
+            // check scope state
+            foreach ( var warningScopes in m_ScopedWarningStates )
+            {
+              if ( warningScopes.Warning == entry.Value.Code )
+              {
+                if ( entry.Key <= warningScopes.GlobalLineIndex )
+                {
+                  // all scope entries are after our current one, active state counts
+                  if ( !isEnabled )
+                  {
+                    warningsToRemove.Add( entry.Value );
+                    break;
+                  }
+                }
+                else
+                {
+                  isEnabled = warningScopes.Enabled;
+                }
+              }
+            }
+          }
+        }
+      }
+      foreach ( var entryToRemove in warningsToRemove )
+      {
+        foreach ( var entry in m_ASMFileInfo.Messages )
+        {
+          if ( entry.Value == entryToRemove )
+          {
+            m_ASMFileInfo.Messages.Remove( entry.Key, entry.Value );
+            break;
+          }
+        }
+      }
     }
 
 
