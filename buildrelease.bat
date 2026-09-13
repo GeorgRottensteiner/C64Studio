@@ -1,5 +1,6 @@
 @echo off
 set WINRAR=D:\Tools\winrar\winrar.exe
+set TARMODIFIER=d:\Tools\TarModifier\TarModifier.exe
 
 if exist C64StudioRelease.zip del C64StudioRelease.zip
 if exist C64StudioRelease3.5.zip del C64StudioRelease3.5.zip
@@ -11,6 +12,9 @@ if exist C64Ass-Linux.tar.gz del C64Ass-Linux.tar.gz
 
 rem pack C64Ass for Linux
 tar -czf C64Ass-Linux.tar.gz C64Ass-Linux
+
+rem set executable bits
+%TARMODIFIER% C64Ass-Linux.tar.gz C64Ass-Linux/C64Ass
 
 rem complete archive
 cd "C64StudioRelease\net3.5\AnyCPU"
