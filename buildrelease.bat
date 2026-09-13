@@ -11,7 +11,7 @@ if exist C64AssLinux.zip del C64AssLinux.zip
 
 rem pack C64Ass for Linux
 cd "C64AssLinux"
-%winrar% -ibck a -r -afzip C64Ass-Linux.zip -apC64Ass .
+%winrar% -ibck a -r -afzip ../C64Ass-Linux.zip -apC64Ass .
 cd ..
 
 rem complete archive
