@@ -1,4 +1,4 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,7 +96,7 @@ namespace C64Ass
       System.Console.WriteLine( "                                 PDS" );
       System.Console.WriteLine( "                                 TASM" );
       System.Console.WriteLine( "-H, --HACK [List of Hacks]     - Enable specific hacks" );
-      System.Console.WriteLine( "                                 Values values are" );
+      System.Console.WriteLine( "                                 Valid values are" );
       foreach ( RetroDevStudio.Parser.AssemblerSettings.Hacks hack in Enum.GetValues( typeof( RetroDevStudio.Parser.AssemblerSettings.Hacks ) ) )
       {
         var hackAttribute = GR.EnumHelper.GetAttributeOfType<RuntimeArgumentNameAttribute>( hack );
