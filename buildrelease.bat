@@ -7,12 +7,10 @@ if exist C64StudioRelease4.8.zip del C64StudioRelease4.8.zip
 if exist C64StudioRelease6.0.zip del C64StudioRelease6.0.zip
 if exist C64StudioRelease8.0.zip del C64StudioRelease8.0.zip
 if exist C64StudioRelease10.0.zip del C64StudioRelease10.0.zip
-if exist C64AssLinux.zip del C64AssLinux.zip
+if exist C64Ass-Linux.tar.gz del C64Ass-Linux.tar.gz
 
 rem pack C64Ass for Linux
-cd "C64AssLinux"
-%winrar% -ibck a -r -afzip ../C64Ass-Linux.zip -apC64Ass .
-cd ..
+tar -czf C64Ass-Linux.tar.gz C64Ass-Linux
 
 rem complete archive
 cd "C64StudioRelease\net3.5\AnyCPU"
