@@ -11214,13 +11214,17 @@ namespace RetroDevStudio.Parser
           else
           {
             // check scope state
+            int   lastLineNumber = -1;
+            bool  foundRelevantEntry = false;
             foreach ( var warningScopes in m_ScopedWarningStates )
             {
               if ( warningScopes.Warning == entry.Value.Code )
               {
+                lastLineNumber = entry.Key;
                 if ( entry.Key <= warningScopes.GlobalLineIndex )
                 {
                   // all scope entries are after our current one, active state counts
+                  foundRelevantEntry = true;
                   if ( !isEnabled )
                   {
                     warningsToRemove.Add( entry.Value );
@@ -11232,6 +11236,12 @@ namespace RetroDevStudio.Parser
                   isEnabled = warningScopes.Enabled;
                 }
               }
+            }
+            // warning placed after last disabling entry
+            if ( ( !foundRelevantEntry )
+            &&   ( !isEnabled ) )
+            {
+              warningsToRemove.Add( entry.Value );
             }
           }
         }
