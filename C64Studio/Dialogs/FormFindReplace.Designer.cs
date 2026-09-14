@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Controls;
+using RetroDevStudio.Controls;
 
 namespace RetroDevStudio.Dialogs
 {
@@ -30,520 +30,517 @@ namespace RetroDevStudio.Dialogs
     /// </summary>
     private void InitializeComponent()
     {
-      this.tabFindReplace = new System.Windows.Forms.TabControl();
-      this.tabSearch = new System.Windows.Forms.TabPage();
-      this.btnSearchBookmark = new DecentForms.Button();
-      this.btnFindNext = new DecentForms.Button();
-      this.btnFindAll = new DecentForms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.radioSearchDirDown = new System.Windows.Forms.RadioButton();
-      this.radioSearchDirUp = new System.Windows.Forms.RadioButton();
-      this.checkSearchWrap = new System.Windows.Forms.CheckBox();
-      this.checkSearchRegExp = new System.Windows.Forms.CheckBox();
-      this.checkSearchFullWords = new System.Windows.Forms.CheckBox();
-      this.checkSearchIgnoreCase = new System.Windows.Forms.CheckBox();
-      this.comboSearchTarget = new System.Windows.Forms.ComboBox();
-      this.comboSearchText = new System.Windows.Forms.ComboBox();
-      this.labelSearchResult = new System.Windows.Forms.Label();
-      this.label2 = new System.Windows.Forms.Label();
-      this.label1 = new System.Windows.Forms.Label();
-      this.tabReplace = new System.Windows.Forms.TabPage();
-      this.labelReplaceResult = new System.Windows.Forms.Label();
-      this.editReplaceWith = new System.Windows.Forms.TextBox();
-      this.btnReplaceAll = new DecentForms.Button();
-      this.btnReplaceFindNext = new DecentForms.Button();
-      this.btnReplaceNext = new DecentForms.Button();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.radioReplaceSearchDown = new System.Windows.Forms.RadioButton();
-      this.radioReplaceSearchUp = new System.Windows.Forms.RadioButton();
-      this.checkReplaceWrap = new System.Windows.Forms.CheckBox();
-      this.checkReplaceRegexp = new System.Windows.Forms.CheckBox();
-      this.checkReplaceWholeWords = new System.Windows.Forms.CheckBox();
-      this.checkReplaceIgnoreCase = new System.Windows.Forms.CheckBox();
-      this.comboReplaceTarget = new System.Windows.Forms.ComboBox();
-      this.comboReplaceSearchText = new System.Windows.Forms.ComboBox();
-      this.label3 = new System.Windows.Forms.Label();
-      this.label5 = new System.Windows.Forms.Label();
-      this.label4 = new System.Windows.Forms.Label();
-      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
-      this.tabFindReplace.SuspendLayout();
-      this.tabSearch.SuspendLayout();
-      this.groupBox1.SuspendLayout();
-      this.tabReplace.SuspendLayout();
-      this.groupBox2.SuspendLayout();
-      this.SuspendLayout();
+      tabFindReplace = new System.Windows.Forms.TabControl();
+      tabSearch = new System.Windows.Forms.TabPage();
+      btnSearchBookmark = new DecentForms.Button();
+      btnFindNext = new DecentForms.Button();
+      btnFindAll = new DecentForms.Button();
+      groupBox1 = new System.Windows.Forms.GroupBox();
+      radioSearchDirDown = new System.Windows.Forms.RadioButton();
+      radioSearchDirUp = new System.Windows.Forms.RadioButton();
+      checkSearchWrap = new System.Windows.Forms.CheckBox();
+      checkSearchRegExp = new System.Windows.Forms.CheckBox();
+      checkSearchFullWords = new System.Windows.Forms.CheckBox();
+      checkSearchIgnoreCase = new System.Windows.Forms.CheckBox();
+      comboSearchTarget = new System.Windows.Forms.ComboBox();
+      comboSearchText = new System.Windows.Forms.ComboBox();
+      labelSearchResult = new System.Windows.Forms.Label();
+      label2 = new System.Windows.Forms.Label();
+      label1 = new System.Windows.Forms.Label();
+      tabReplace = new System.Windows.Forms.TabPage();
+      labelReplaceResult = new System.Windows.Forms.Label();
+      editReplaceWith = new System.Windows.Forms.TextBox();
+      btnReplaceAll = new DecentForms.Button();
+      btnReplaceFindNext = new DecentForms.Button();
+      btnReplaceNext = new DecentForms.Button();
+      groupBox2 = new System.Windows.Forms.GroupBox();
+      radioReplaceSearchDown = new System.Windows.Forms.RadioButton();
+      radioReplaceSearchUp = new System.Windows.Forms.RadioButton();
+      checkReplaceWrap = new System.Windows.Forms.CheckBox();
+      checkReplaceRegexp = new System.Windows.Forms.CheckBox();
+      checkReplaceWholeWords = new System.Windows.Forms.CheckBox();
+      checkReplaceIgnoreCase = new System.Windows.Forms.CheckBox();
+      comboReplaceTarget = new System.Windows.Forms.ComboBox();
+      comboReplaceSearchText = new System.Windows.Forms.ComboBox();
+      label3 = new System.Windows.Forms.Label();
+      label5 = new System.Windows.Forms.Label();
+      label4 = new System.Windows.Forms.Label();
+      ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).BeginInit();
+      tabFindReplace.SuspendLayout();
+      tabSearch.SuspendLayout();
+      groupBox1.SuspendLayout();
+      tabReplace.SuspendLayout();
+      groupBox2.SuspendLayout();
+      SuspendLayout();
       // 
       // tabFindReplace
       // 
-      this.tabFindReplace.Controls.Add(this.tabSearch);
-      this.tabFindReplace.Controls.Add(this.tabReplace);
-      this.tabFindReplace.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tabFindReplace.Location = new System.Drawing.Point(0, 0);
-      this.tabFindReplace.Name = "tabFindReplace";
-      this.tabFindReplace.SelectedIndex = 0;
-      this.tabFindReplace.Size = new System.Drawing.Size(350, 320);
-      this.tabFindReplace.TabIndex = 0;
-      this.tabFindReplace.SelectedIndexChanged += new System.EventHandler(this.tabFindReplace_SelectedIndexChanged);
+      tabFindReplace.Controls.Add( tabSearch );
+      tabFindReplace.Controls.Add( tabReplace );
+      tabFindReplace.Dock = System.Windows.Forms.DockStyle.Fill;
+      tabFindReplace.Location = new System.Drawing.Point( 0, 0 );
+      tabFindReplace.Name = "tabFindReplace";
+      tabFindReplace.SelectedIndex = 0;
+      tabFindReplace.Size = new System.Drawing.Size( 350, 320 );
+      tabFindReplace.TabIndex = 0;
+      tabFindReplace.SelectedIndexChanged +=  tabFindReplace_SelectedIndexChanged ;
       // 
       // tabSearch
       // 
-      this.tabSearch.Controls.Add(this.btnSearchBookmark);
-      this.tabSearch.Controls.Add(this.btnFindNext);
-      this.tabSearch.Controls.Add(this.btnFindAll);
-      this.tabSearch.Controls.Add(this.groupBox1);
-      this.tabSearch.Controls.Add(this.comboSearchTarget);
-      this.tabSearch.Controls.Add(this.comboSearchText);
-      this.tabSearch.Controls.Add(this.labelSearchResult);
-      this.tabSearch.Controls.Add(this.label2);
-      this.tabSearch.Controls.Add(this.label1);
-      this.tabSearch.Location = new System.Drawing.Point(4, 22);
-      this.tabSearch.Name = "tabSearch";
-      this.tabSearch.Padding = new System.Windows.Forms.Padding(3);
-      this.tabSearch.Size = new System.Drawing.Size(342, 294);
-      this.tabSearch.TabIndex = 0;
-      this.tabSearch.Text = "Search";
-      this.tabSearch.UseVisualStyleBackColor = true;
+      tabSearch.Controls.Add( btnSearchBookmark );
+      tabSearch.Controls.Add( btnFindNext );
+      tabSearch.Controls.Add( btnFindAll );
+      tabSearch.Controls.Add( groupBox1 );
+      tabSearch.Controls.Add( comboSearchTarget );
+      tabSearch.Controls.Add( comboSearchText );
+      tabSearch.Controls.Add( labelSearchResult );
+      tabSearch.Controls.Add( label2 );
+      tabSearch.Controls.Add( label1 );
+      tabSearch.Location = new System.Drawing.Point( 4, 22 );
+      tabSearch.Name = "tabSearch";
+      tabSearch.Padding = new System.Windows.Forms.Padding( 3 );
+      tabSearch.Size = new System.Drawing.Size( 342, 294 );
+      tabSearch.TabIndex = 0;
+      tabSearch.Text = "Search";
+      tabSearch.UseVisualStyleBackColor = true;
       // 
       // btnSearchBookmark
       // 
-      this.btnSearchBookmark.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnSearchBookmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnSearchBookmark.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnSearchBookmark.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnSearchBookmark.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnSearchBookmark.Image = null;
-      this.btnSearchBookmark.Location = new System.Drawing.Point(257, 198);
-      this.btnSearchBookmark.Name = "btnSearchBookmark";
-      this.btnSearchBookmark.Size = new System.Drawing.Size(75, 23);
-      this.btnSearchBookmark.TabIndex = 4;
-      this.btnSearchBookmark.Text = "Bookmark";
-      this.btnSearchBookmark.Click += new DecentForms.EventHandler(this.btnSearchBookmark_Click);
+      btnSearchBookmark.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnSearchBookmark.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnSearchBookmark.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnSearchBookmark.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnSearchBookmark.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnSearchBookmark.DisplayAntiAliased = true;
+      btnSearchBookmark.Image = null;
+      btnSearchBookmark.Location = new System.Drawing.Point( 257, 198 );
+      btnSearchBookmark.Name = "btnSearchBookmark";
+      btnSearchBookmark.Size = new System.Drawing.Size( 75, 23 );
+      btnSearchBookmark.TabIndex = 4;
+      btnSearchBookmark.Text = "Bookmark";
+      btnSearchBookmark.Click +=  btnSearchBookmark_Click ;
       // 
       // btnFindNext
       // 
-      this.btnFindNext.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnFindNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFindNext.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnFindNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnFindNext.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnFindNext.Image = null;
-      this.btnFindNext.Location = new System.Drawing.Point(95, 198);
-      this.btnFindNext.Name = "btnFindNext";
-      this.btnFindNext.Size = new System.Drawing.Size(75, 23);
-      this.btnFindNext.TabIndex = 2;
-      this.btnFindNext.Text = "Find Next";
-      this.btnFindNext.Click += new DecentForms.EventHandler(this.btnFindNext_Click);
+      btnFindNext.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnFindNext.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnFindNext.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnFindNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnFindNext.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnFindNext.DisplayAntiAliased = true;
+      btnFindNext.Image = null;
+      btnFindNext.Location = new System.Drawing.Point( 95, 198 );
+      btnFindNext.Name = "btnFindNext";
+      btnFindNext.Size = new System.Drawing.Size( 75, 23 );
+      btnFindNext.TabIndex = 2;
+      btnFindNext.Text = "Find Next";
+      btnFindNext.Click +=  btnFindNext_Click ;
       // 
       // btnFindAll
       // 
-      this.btnFindAll.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnFindAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFindAll.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnFindAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnFindAll.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnFindAll.Image = null;
-      this.btnFindAll.Location = new System.Drawing.Point(176, 198);
-      this.btnFindAll.Name = "btnFindAll";
-      this.btnFindAll.Size = new System.Drawing.Size(75, 23);
-      this.btnFindAll.TabIndex = 3;
-      this.btnFindAll.Text = "Find All";
-      this.btnFindAll.Click += new DecentForms.EventHandler(this.btnFindAll_Click);
+      btnFindAll.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnFindAll.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnFindAll.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnFindAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnFindAll.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnFindAll.DisplayAntiAliased = true;
+      btnFindAll.Image = null;
+      btnFindAll.Location = new System.Drawing.Point( 176, 198 );
+      btnFindAll.Name = "btnFindAll";
+      btnFindAll.Size = new System.Drawing.Size( 75, 23 );
+      btnFindAll.TabIndex = 3;
+      btnFindAll.Text = "Find All";
+      btnFindAll.Click +=  btnFindAll_Click ;
       // 
       // groupBox1
       // 
-      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox1.Controls.Add(this.radioSearchDirDown);
-      this.groupBox1.Controls.Add(this.radioSearchDirUp);
-      this.groupBox1.Controls.Add(this.checkSearchWrap);
-      this.groupBox1.Controls.Add(this.checkSearchRegExp);
-      this.groupBox1.Controls.Add(this.checkSearchFullWords);
-      this.groupBox1.Controls.Add(this.checkSearchIgnoreCase);
-      this.groupBox1.Location = new System.Drawing.Point(6, 86);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(326, 106);
-      this.groupBox1.TabIndex = 2;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Search Options";
+      groupBox1.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      groupBox1.Controls.Add( radioSearchDirDown );
+      groupBox1.Controls.Add( radioSearchDirUp );
+      groupBox1.Controls.Add( checkSearchWrap );
+      groupBox1.Controls.Add( checkSearchRegExp );
+      groupBox1.Controls.Add( checkSearchFullWords );
+      groupBox1.Controls.Add( checkSearchIgnoreCase );
+      groupBox1.Location = new System.Drawing.Point( 6, 86 );
+      groupBox1.Name = "groupBox1";
+      groupBox1.Size = new System.Drawing.Size( 326, 106 );
+      groupBox1.TabIndex = 2;
+      groupBox1.TabStop = false;
+      groupBox1.Text = "Search Options";
       // 
       // radioSearchDirDown
       // 
-      this.radioSearchDirDown.AutoSize = true;
-      this.radioSearchDirDown.Checked = true;
-      this.radioSearchDirDown.Location = new System.Drawing.Point(159, 39);
-      this.radioSearchDirDown.Name = "radioSearchDirDown";
-      this.radioSearchDirDown.Size = new System.Drawing.Size(118, 17);
-      this.radioSearchDirDown.TabIndex = 5;
-      this.radioSearchDirDown.TabStop = true;
-      this.radioSearchDirDown.Text = "Search Downwards";
-      this.radioSearchDirDown.UseVisualStyleBackColor = true;
-      this.radioSearchDirDown.Visible = false;
-      this.radioSearchDirDown.CheckedChanged += new System.EventHandler(this.radioSearchDirDown_CheckedChanged);
+      radioSearchDirDown.AutoSize = true;
+      radioSearchDirDown.Checked = true;
+      radioSearchDirDown.Location = new System.Drawing.Point( 159, 39 );
+      radioSearchDirDown.Name = "radioSearchDirDown";
+      radioSearchDirDown.Size = new System.Drawing.Size( 118, 17 );
+      radioSearchDirDown.TabIndex = 5;
+      radioSearchDirDown.TabStop = true;
+      radioSearchDirDown.Text = "Search Downwards";
+      radioSearchDirDown.UseVisualStyleBackColor = true;
+      radioSearchDirDown.Visible = false;
+      radioSearchDirDown.CheckedChanged +=  radioSearchDirDown_CheckedChanged ;
       // 
       // radioSearchDirUp
       // 
-      this.radioSearchDirUp.AutoSize = true;
-      this.radioSearchDirUp.Location = new System.Drawing.Point(159, 19);
-      this.radioSearchDirUp.Name = "radioSearchDirUp";
-      this.radioSearchDirUp.Size = new System.Drawing.Size(104, 17);
-      this.radioSearchDirUp.TabIndex = 4;
-      this.radioSearchDirUp.TabStop = true;
-      this.radioSearchDirUp.Text = "Search Upwards";
-      this.radioSearchDirUp.UseVisualStyleBackColor = true;
-      this.radioSearchDirUp.Visible = false;
-      this.radioSearchDirUp.CheckedChanged += new System.EventHandler(this.radioSearchDirUp_CheckedChanged);
+      radioSearchDirUp.AutoSize = true;
+      radioSearchDirUp.Location = new System.Drawing.Point( 159, 19 );
+      radioSearchDirUp.Name = "radioSearchDirUp";
+      radioSearchDirUp.Size = new System.Drawing.Size( 104, 17 );
+      radioSearchDirUp.TabIndex = 4;
+      radioSearchDirUp.TabStop = true;
+      radioSearchDirUp.Text = "Search Upwards";
+      radioSearchDirUp.UseVisualStyleBackColor = true;
+      radioSearchDirUp.Visible = false;
+      radioSearchDirUp.CheckedChanged +=  radioSearchDirUp_CheckedChanged ;
       // 
       // checkSearchWrap
       // 
-      this.checkSearchWrap.AutoSize = true;
-      this.checkSearchWrap.Checked = true;
-      this.checkSearchWrap.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkSearchWrap.Location = new System.Drawing.Point(6, 83);
-      this.checkSearchWrap.Name = "checkSearchWrap";
-      this.checkSearchWrap.Size = new System.Drawing.Size(52, 17);
-      this.checkSearchWrap.TabIndex = 3;
-      this.checkSearchWrap.Text = "Wrap";
-      this.checkSearchWrap.UseVisualStyleBackColor = true;
-      this.checkSearchWrap.CheckedChanged += new System.EventHandler(this.checkSearchWrap_CheckedChanged);
+      checkSearchWrap.AutoSize = true;
+      checkSearchWrap.Checked = true;
+      checkSearchWrap.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkSearchWrap.Location = new System.Drawing.Point( 6, 83 );
+      checkSearchWrap.Name = "checkSearchWrap";
+      checkSearchWrap.Size = new System.Drawing.Size( 52, 17 );
+      checkSearchWrap.TabIndex = 3;
+      checkSearchWrap.Text = "Wrap";
+      checkSearchWrap.UseVisualStyleBackColor = true;
+      checkSearchWrap.CheckedChanged +=  checkSearchWrap_CheckedChanged ;
       // 
       // checkSearchRegExp
       // 
-      this.checkSearchRegExp.AutoSize = true;
-      this.checkSearchRegExp.Location = new System.Drawing.Point(6, 61);
-      this.checkSearchRegExp.Name = "checkSearchRegExp";
-      this.checkSearchRegExp.Size = new System.Drawing.Size(117, 17);
-      this.checkSearchRegExp.TabIndex = 2;
-      this.checkSearchRegExp.Text = "Regular Expression";
-      this.checkSearchRegExp.UseVisualStyleBackColor = true;
-      this.checkSearchRegExp.CheckedChanged += new System.EventHandler(this.checkSearchRegExp_CheckedChanged);
+      checkSearchRegExp.AutoSize = true;
+      checkSearchRegExp.Location = new System.Drawing.Point( 6, 61 );
+      checkSearchRegExp.Name = "checkSearchRegExp";
+      checkSearchRegExp.Size = new System.Drawing.Size( 117, 17 );
+      checkSearchRegExp.TabIndex = 2;
+      checkSearchRegExp.Text = "Regular Expression";
+      checkSearchRegExp.UseVisualStyleBackColor = true;
+      checkSearchRegExp.CheckedChanged +=  checkSearchRegExp_CheckedChanged ;
       // 
       // checkSearchFullWords
       // 
-      this.checkSearchFullWords.AutoSize = true;
-      this.checkSearchFullWords.Location = new System.Drawing.Point(6, 40);
-      this.checkSearchFullWords.Name = "checkSearchFullWords";
-      this.checkSearchFullWords.Size = new System.Drawing.Size(95, 17);
-      this.checkSearchFullWords.TabIndex = 1;
-      this.checkSearchFullWords.Text = "Full words only";
-      this.checkSearchFullWords.UseVisualStyleBackColor = true;
-      this.checkSearchFullWords.CheckedChanged += new System.EventHandler(this.checkSearchFullWords_CheckedChanged);
+      checkSearchFullWords.AutoSize = true;
+      checkSearchFullWords.Location = new System.Drawing.Point( 6, 40 );
+      checkSearchFullWords.Name = "checkSearchFullWords";
+      checkSearchFullWords.Size = new System.Drawing.Size( 95, 17 );
+      checkSearchFullWords.TabIndex = 1;
+      checkSearchFullWords.Text = "Full words only";
+      checkSearchFullWords.UseVisualStyleBackColor = true;
+      checkSearchFullWords.CheckedChanged +=  checkSearchFullWords_CheckedChanged ;
       // 
       // checkSearchIgnoreCase
       // 
-      this.checkSearchIgnoreCase.AutoSize = true;
-      this.checkSearchIgnoreCase.Checked = true;
-      this.checkSearchIgnoreCase.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkSearchIgnoreCase.Location = new System.Drawing.Point(6, 19);
-      this.checkSearchIgnoreCase.Name = "checkSearchIgnoreCase";
-      this.checkSearchIgnoreCase.Size = new System.Drawing.Size(83, 17);
-      this.checkSearchIgnoreCase.TabIndex = 0;
-      this.checkSearchIgnoreCase.Text = "Ignore Case";
-      this.checkSearchIgnoreCase.UseVisualStyleBackColor = true;
-      this.checkSearchIgnoreCase.CheckedChanged += new System.EventHandler(this.checkSearchIgnoreCase_CheckedChanged);
+      checkSearchIgnoreCase.AutoSize = true;
+      checkSearchIgnoreCase.Checked = true;
+      checkSearchIgnoreCase.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkSearchIgnoreCase.Location = new System.Drawing.Point( 6, 19 );
+      checkSearchIgnoreCase.Name = "checkSearchIgnoreCase";
+      checkSearchIgnoreCase.Size = new System.Drawing.Size( 83, 17 );
+      checkSearchIgnoreCase.TabIndex = 0;
+      checkSearchIgnoreCase.Text = "Ignore Case";
+      checkSearchIgnoreCase.UseVisualStyleBackColor = true;
+      checkSearchIgnoreCase.CheckedChanged +=  checkSearchIgnoreCase_CheckedChanged ;
       // 
       // comboSearchTarget
       // 
-      this.comboSearchTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboSearchTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboSearchTarget.FormattingEnabled = true;
-      this.comboSearchTarget.Location = new System.Drawing.Point(6, 59);
-      this.comboSearchTarget.Name = "comboSearchTarget";
-      this.comboSearchTarget.Size = new System.Drawing.Size(328, 21);
-      this.comboSearchTarget.TabIndex = 1;
-      this.comboSearchTarget.SelectedIndexChanged += new System.EventHandler(this.comboSearchTarget_SelectedIndexChanged);
+      comboSearchTarget.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      comboSearchTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboSearchTarget.FormattingEnabled = true;
+      comboSearchTarget.Location = new System.Drawing.Point( 6, 59 );
+      comboSearchTarget.Name = "comboSearchTarget";
+      comboSearchTarget.Size = new System.Drawing.Size( 328, 21 );
+      comboSearchTarget.TabIndex = 1;
+      comboSearchTarget.SelectedIndexChanged +=  comboSearchTarget_SelectedIndexChanged ;
       // 
       // comboSearchText
       // 
-      this.comboSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboSearchText.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-      this.comboSearchText.FormattingEnabled = true;
-      this.comboSearchText.Location = new System.Drawing.Point(6, 19);
-      this.comboSearchText.Name = "comboSearchText";
-      this.comboSearchText.Size = new System.Drawing.Size(328, 21);
-      this.comboSearchText.TabIndex = 0;
+      comboSearchText.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      comboSearchText.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+      comboSearchText.FormattingEnabled = true;
+      comboSearchText.Location = new System.Drawing.Point( 6, 19 );
+      comboSearchText.Name = "comboSearchText";
+      comboSearchText.Size = new System.Drawing.Size( 328, 21 );
+      comboSearchText.TabIndex = 0;
       // 
       // labelSearchResult
       // 
-      this.labelSearchResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.labelSearchResult.Location = new System.Drawing.Point(3, 235);
-      this.labelSearchResult.Name = "labelSearchResult";
-      this.labelSearchResult.Size = new System.Drawing.Size(329, 17);
-      this.labelSearchResult.TabIndex = 0;
-      this.labelSearchResult.Text = "No text searched for";
+      labelSearchResult.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      labelSearchResult.Location = new System.Drawing.Point( 3, 235 );
+      labelSearchResult.Name = "labelSearchResult";
+      labelSearchResult.Size = new System.Drawing.Size( 329, 17 );
+      labelSearchResult.TabIndex = 0;
+      labelSearchResult.Text = "No text searched for";
       // 
       // label2
       // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(3, 43);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(55, 13);
-      this.label2.TabIndex = 0;
-      this.label2.Text = "Search in:";
+      label2.AutoSize = true;
+      label2.Location = new System.Drawing.Point( 3, 43 );
+      label2.Name = "label2";
+      label2.Size = new System.Drawing.Size( 55, 13 );
+      label2.TabIndex = 0;
+      label2.Text = "Search in:";
       // 
       // label1
       // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(3, 3);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(59, 13);
-      this.label1.TabIndex = 0;
-      this.label1.Text = "Search for:";
+      label1.AutoSize = true;
+      label1.Location = new System.Drawing.Point( 3, 3 );
+      label1.Name = "label1";
+      label1.Size = new System.Drawing.Size( 59, 13 );
+      label1.TabIndex = 0;
+      label1.Text = "Search for:";
       // 
       // tabReplace
       // 
-      this.tabReplace.Controls.Add(this.labelReplaceResult);
-      this.tabReplace.Controls.Add(this.editReplaceWith);
-      this.tabReplace.Controls.Add(this.btnReplaceAll);
-      this.tabReplace.Controls.Add(this.btnReplaceFindNext);
-      this.tabReplace.Controls.Add(this.btnReplaceNext);
-      this.tabReplace.Controls.Add(this.groupBox2);
-      this.tabReplace.Controls.Add(this.comboReplaceTarget);
-      this.tabReplace.Controls.Add(this.comboReplaceSearchText);
-      this.tabReplace.Controls.Add(this.label3);
-      this.tabReplace.Controls.Add(this.label5);
-      this.tabReplace.Controls.Add(this.label4);
-      this.tabReplace.Location = new System.Drawing.Point(4, 22);
-      this.tabReplace.Name = "tabReplace";
-      this.tabReplace.Padding = new System.Windows.Forms.Padding(3);
-      this.tabReplace.Size = new System.Drawing.Size(342, 294);
-      this.tabReplace.TabIndex = 1;
-      this.tabReplace.Text = "Replace";
-      this.tabReplace.UseVisualStyleBackColor = true;
+      tabReplace.Controls.Add( labelReplaceResult );
+      tabReplace.Controls.Add( editReplaceWith );
+      tabReplace.Controls.Add( btnReplaceAll );
+      tabReplace.Controls.Add( btnReplaceFindNext );
+      tabReplace.Controls.Add( btnReplaceNext );
+      tabReplace.Controls.Add( groupBox2 );
+      tabReplace.Controls.Add( comboReplaceTarget );
+      tabReplace.Controls.Add( comboReplaceSearchText );
+      tabReplace.Controls.Add( label3 );
+      tabReplace.Controls.Add( label5 );
+      tabReplace.Controls.Add( label4 );
+      tabReplace.Location = new System.Drawing.Point( 4, 22 );
+      tabReplace.Name = "tabReplace";
+      tabReplace.Padding = new System.Windows.Forms.Padding( 3 );
+      tabReplace.Size = new System.Drawing.Size( 342, 294 );
+      tabReplace.TabIndex = 1;
+      tabReplace.Text = "Replace";
+      tabReplace.UseVisualStyleBackColor = true;
       // 
       // labelReplaceResult
       // 
-      this.labelReplaceResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.labelReplaceResult.Location = new System.Drawing.Point(6, 264);
-      this.labelReplaceResult.Name = "labelReplaceResult";
-      this.labelReplaceResult.Size = new System.Drawing.Size(328, 17);
-      this.labelReplaceResult.TabIndex = 8;
-      this.labelReplaceResult.Text = "No text searched for";
+      labelReplaceResult.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      labelReplaceResult.Location = new System.Drawing.Point( 6, 264 );
+      labelReplaceResult.Name = "labelReplaceResult";
+      labelReplaceResult.Size = new System.Drawing.Size( 328, 17 );
+      labelReplaceResult.TabIndex = 8;
+      labelReplaceResult.Text = "No text searched for";
       // 
       // editReplaceWith
       // 
-      this.editReplaceWith.AcceptsReturn = true;
-      this.editReplaceWith.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editReplaceWith.Location = new System.Drawing.Point(6, 60);
-      this.editReplaceWith.Name = "editReplaceWith";
-      this.editReplaceWith.Size = new System.Drawing.Size(328, 20);
-      this.editReplaceWith.TabIndex = 1;
-      this.editReplaceWith.TextChanged += new System.EventHandler(this.editReplaceTarget_TextChanged);
+      editReplaceWith.AcceptsReturn = true;
+      editReplaceWith.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      editReplaceWith.Location = new System.Drawing.Point( 6, 60 );
+      editReplaceWith.Name = "editReplaceWith";
+      editReplaceWith.Size = new System.Drawing.Size( 328, 20 );
+      editReplaceWith.TabIndex = 1;
+      editReplaceWith.TextChanged +=  editReplaceTarget_TextChanged ;
       // 
       // btnReplaceAll
       // 
-      this.btnReplaceAll.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnReplaceAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnReplaceAll.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnReplaceAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnReplaceAll.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnReplaceAll.Image = null;
-      this.btnReplaceAll.Location = new System.Drawing.Point(257, 238);
-      this.btnReplaceAll.Name = "btnReplaceAll";
-      this.btnReplaceAll.Size = new System.Drawing.Size(75, 23);
-      this.btnReplaceAll.TabIndex = 5;
-      this.btnReplaceAll.Text = "Replace All";
-      this.btnReplaceAll.Click += new DecentForms.EventHandler(this.btnReplaceAll_Click);
+      btnReplaceAll.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnReplaceAll.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnReplaceAll.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnReplaceAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnReplaceAll.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnReplaceAll.DisplayAntiAliased = true;
+      btnReplaceAll.Image = null;
+      btnReplaceAll.Location = new System.Drawing.Point( 257, 238 );
+      btnReplaceAll.Name = "btnReplaceAll";
+      btnReplaceAll.Size = new System.Drawing.Size( 75, 23 );
+      btnReplaceAll.TabIndex = 5;
+      btnReplaceAll.Text = "Replace All";
+      btnReplaceAll.Click +=  btnReplaceAll_Click ;
       // 
       // btnReplaceFindNext
       // 
-      this.btnReplaceFindNext.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnReplaceFindNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnReplaceFindNext.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnReplaceFindNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnReplaceFindNext.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnReplaceFindNext.Image = null;
-      this.btnReplaceFindNext.Location = new System.Drawing.Point(93, 238);
-      this.btnReplaceFindNext.Name = "btnReplaceFindNext";
-      this.btnReplaceFindNext.Size = new System.Drawing.Size(75, 23);
-      this.btnReplaceFindNext.TabIndex = 3;
-      this.btnReplaceFindNext.Text = "Find Next";
-      this.btnReplaceFindNext.Click += new DecentForms.EventHandler(this.btnReplaceFindNext_Click);
+      btnReplaceFindNext.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnReplaceFindNext.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnReplaceFindNext.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnReplaceFindNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnReplaceFindNext.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnReplaceFindNext.DisplayAntiAliased = true;
+      btnReplaceFindNext.Image = null;
+      btnReplaceFindNext.Location = new System.Drawing.Point( 93, 238 );
+      btnReplaceFindNext.Name = "btnReplaceFindNext";
+      btnReplaceFindNext.Size = new System.Drawing.Size( 75, 23 );
+      btnReplaceFindNext.TabIndex = 3;
+      btnReplaceFindNext.Text = "Find Next";
+      btnReplaceFindNext.Click +=  btnReplaceFindNext_Click ;
       // 
       // btnReplaceNext
       // 
-      this.btnReplaceNext.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnReplaceNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnReplaceNext.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnReplaceNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnReplaceNext.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnReplaceNext.Image = null;
-      this.btnReplaceNext.Location = new System.Drawing.Point(174, 238);
-      this.btnReplaceNext.Name = "btnReplaceNext";
-      this.btnReplaceNext.Size = new System.Drawing.Size(75, 23);
-      this.btnReplaceNext.TabIndex = 4;
-      this.btnReplaceNext.Text = "Replace";
-      this.btnReplaceNext.Click += new DecentForms.EventHandler(this.btnReplaceNext_Click);
+      btnReplaceNext.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnReplaceNext.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnReplaceNext.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnReplaceNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnReplaceNext.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnReplaceNext.DisplayAntiAliased = true;
+      btnReplaceNext.Image = null;
+      btnReplaceNext.Location = new System.Drawing.Point( 174, 238 );
+      btnReplaceNext.Name = "btnReplaceNext";
+      btnReplaceNext.Size = new System.Drawing.Size( 75, 23 );
+      btnReplaceNext.TabIndex = 4;
+      btnReplaceNext.Text = "Replace";
+      btnReplaceNext.Click +=  btnReplaceNext_Click ;
       // 
       // groupBox2
       // 
-      this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox2.Controls.Add(this.radioReplaceSearchDown);
-      this.groupBox2.Controls.Add(this.radioReplaceSearchUp);
-      this.groupBox2.Controls.Add(this.checkReplaceWrap);
-      this.groupBox2.Controls.Add(this.checkReplaceRegexp);
-      this.groupBox2.Controls.Add(this.checkReplaceWholeWords);
-      this.groupBox2.Controls.Add(this.checkReplaceIgnoreCase);
-      this.groupBox2.Location = new System.Drawing.Point(6, 126);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(326, 106);
-      this.groupBox2.TabIndex = 7;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Search Options";
+      groupBox2.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      groupBox2.Controls.Add( radioReplaceSearchDown );
+      groupBox2.Controls.Add( radioReplaceSearchUp );
+      groupBox2.Controls.Add( checkReplaceWrap );
+      groupBox2.Controls.Add( checkReplaceRegexp );
+      groupBox2.Controls.Add( checkReplaceWholeWords );
+      groupBox2.Controls.Add( checkReplaceIgnoreCase );
+      groupBox2.Location = new System.Drawing.Point( 6, 126 );
+      groupBox2.Name = "groupBox2";
+      groupBox2.Size = new System.Drawing.Size( 326, 106 );
+      groupBox2.TabIndex = 7;
+      groupBox2.TabStop = false;
+      groupBox2.Text = "Search Options";
       // 
       // radioReplaceSearchDown
       // 
-      this.radioReplaceSearchDown.AutoSize = true;
-      this.radioReplaceSearchDown.Checked = true;
-      this.radioReplaceSearchDown.Location = new System.Drawing.Point(159, 39);
-      this.radioReplaceSearchDown.Name = "radioReplaceSearchDown";
-      this.radioReplaceSearchDown.Size = new System.Drawing.Size(118, 17);
-      this.radioReplaceSearchDown.TabIndex = 3;
-      this.radioReplaceSearchDown.TabStop = true;
-      this.radioReplaceSearchDown.Text = "Search Downwards";
-      this.radioReplaceSearchDown.UseVisualStyleBackColor = true;
-      this.radioReplaceSearchDown.Visible = false;
-      this.radioReplaceSearchDown.CheckedChanged += new System.EventHandler(this.radioReplaceSearchDown_CheckedChanged);
+      radioReplaceSearchDown.AutoSize = true;
+      radioReplaceSearchDown.Checked = true;
+      radioReplaceSearchDown.Location = new System.Drawing.Point( 159, 39 );
+      radioReplaceSearchDown.Name = "radioReplaceSearchDown";
+      radioReplaceSearchDown.Size = new System.Drawing.Size( 118, 17 );
+      radioReplaceSearchDown.TabIndex = 3;
+      radioReplaceSearchDown.TabStop = true;
+      radioReplaceSearchDown.Text = "Search Downwards";
+      radioReplaceSearchDown.UseVisualStyleBackColor = true;
+      radioReplaceSearchDown.Visible = false;
+      radioReplaceSearchDown.CheckedChanged +=  radioReplaceSearchDown_CheckedChanged ;
       // 
       // radioReplaceSearchUp
       // 
-      this.radioReplaceSearchUp.AutoSize = true;
-      this.radioReplaceSearchUp.Location = new System.Drawing.Point(159, 19);
-      this.radioReplaceSearchUp.Name = "radioReplaceSearchUp";
-      this.radioReplaceSearchUp.Size = new System.Drawing.Size(104, 17);
-      this.radioReplaceSearchUp.TabIndex = 1;
-      this.radioReplaceSearchUp.TabStop = true;
-      this.radioReplaceSearchUp.Text = "Search Upwards";
-      this.radioReplaceSearchUp.UseVisualStyleBackColor = true;
-      this.radioReplaceSearchUp.Visible = false;
-      this.radioReplaceSearchUp.CheckedChanged += new System.EventHandler(this.radioReplaceSearchUp_CheckedChanged);
+      radioReplaceSearchUp.AutoSize = true;
+      radioReplaceSearchUp.Location = new System.Drawing.Point( 159, 19 );
+      radioReplaceSearchUp.Name = "radioReplaceSearchUp";
+      radioReplaceSearchUp.Size = new System.Drawing.Size( 104, 17 );
+      radioReplaceSearchUp.TabIndex = 1;
+      radioReplaceSearchUp.TabStop = true;
+      radioReplaceSearchUp.Text = "Search Upwards";
+      radioReplaceSearchUp.UseVisualStyleBackColor = true;
+      radioReplaceSearchUp.Visible = false;
+      radioReplaceSearchUp.CheckedChanged +=  radioReplaceSearchUp_CheckedChanged ;
       // 
       // checkReplaceWrap
       // 
-      this.checkReplaceWrap.AutoSize = true;
-      this.checkReplaceWrap.Checked = true;
-      this.checkReplaceWrap.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkReplaceWrap.Location = new System.Drawing.Point(6, 83);
-      this.checkReplaceWrap.Name = "checkReplaceWrap";
-      this.checkReplaceWrap.Size = new System.Drawing.Size(52, 17);
-      this.checkReplaceWrap.TabIndex = 5;
-      this.checkReplaceWrap.Text = "Wrap";
-      this.checkReplaceWrap.UseVisualStyleBackColor = true;
-      this.checkReplaceWrap.CheckedChanged += new System.EventHandler(this.checkReplaceWrap_CheckedChanged);
+      checkReplaceWrap.AutoSize = true;
+      checkReplaceWrap.Checked = true;
+      checkReplaceWrap.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkReplaceWrap.Location = new System.Drawing.Point( 6, 83 );
+      checkReplaceWrap.Name = "checkReplaceWrap";
+      checkReplaceWrap.Size = new System.Drawing.Size( 52, 17 );
+      checkReplaceWrap.TabIndex = 5;
+      checkReplaceWrap.Text = "Wrap";
+      checkReplaceWrap.UseVisualStyleBackColor = true;
+      checkReplaceWrap.CheckedChanged +=  checkReplaceWrap_CheckedChanged ;
       // 
       // checkReplaceRegexp
       // 
-      this.checkReplaceRegexp.AutoSize = true;
-      this.checkReplaceRegexp.Location = new System.Drawing.Point(6, 61);
-      this.checkReplaceRegexp.Name = "checkReplaceRegexp";
-      this.checkReplaceRegexp.Size = new System.Drawing.Size(117, 17);
-      this.checkReplaceRegexp.TabIndex = 4;
-      this.checkReplaceRegexp.Text = "Regular Expression";
-      this.checkReplaceRegexp.UseVisualStyleBackColor = true;
-      this.checkReplaceRegexp.CheckedChanged += new System.EventHandler(this.checkReplaceRegexp_CheckedChanged);
+      checkReplaceRegexp.AutoSize = true;
+      checkReplaceRegexp.Location = new System.Drawing.Point( 6, 61 );
+      checkReplaceRegexp.Name = "checkReplaceRegexp";
+      checkReplaceRegexp.Size = new System.Drawing.Size( 117, 17 );
+      checkReplaceRegexp.TabIndex = 4;
+      checkReplaceRegexp.Text = "Regular Expression";
+      checkReplaceRegexp.UseVisualStyleBackColor = true;
+      checkReplaceRegexp.CheckedChanged +=  checkReplaceRegexp_CheckedChanged ;
       // 
       // checkReplaceWholeWords
       // 
-      this.checkReplaceWholeWords.AutoSize = true;
-      this.checkReplaceWholeWords.Location = new System.Drawing.Point(6, 40);
-      this.checkReplaceWholeWords.Name = "checkReplaceWholeWords";
-      this.checkReplaceWholeWords.Size = new System.Drawing.Size(95, 17);
-      this.checkReplaceWholeWords.TabIndex = 2;
-      this.checkReplaceWholeWords.Text = "Full words only";
-      this.checkReplaceWholeWords.UseVisualStyleBackColor = true;
-      this.checkReplaceWholeWords.CheckedChanged += new System.EventHandler(this.checkReplaceWholeWords_CheckedChanged);
+      checkReplaceWholeWords.AutoSize = true;
+      checkReplaceWholeWords.Location = new System.Drawing.Point( 6, 40 );
+      checkReplaceWholeWords.Name = "checkReplaceWholeWords";
+      checkReplaceWholeWords.Size = new System.Drawing.Size( 95, 17 );
+      checkReplaceWholeWords.TabIndex = 2;
+      checkReplaceWholeWords.Text = "Full words only";
+      checkReplaceWholeWords.UseVisualStyleBackColor = true;
+      checkReplaceWholeWords.CheckedChanged +=  checkReplaceWholeWords_CheckedChanged ;
       // 
       // checkReplaceIgnoreCase
       // 
-      this.checkReplaceIgnoreCase.AutoSize = true;
-      this.checkReplaceIgnoreCase.Checked = true;
-      this.checkReplaceIgnoreCase.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkReplaceIgnoreCase.Location = new System.Drawing.Point(6, 19);
-      this.checkReplaceIgnoreCase.Name = "checkReplaceIgnoreCase";
-      this.checkReplaceIgnoreCase.Size = new System.Drawing.Size(83, 17);
-      this.checkReplaceIgnoreCase.TabIndex = 0;
-      this.checkReplaceIgnoreCase.Text = "Ignore Case";
-      this.checkReplaceIgnoreCase.UseVisualStyleBackColor = true;
-      this.checkReplaceIgnoreCase.CheckedChanged += new System.EventHandler(this.checkReplaceIgnoreCase_CheckedChanged);
+      checkReplaceIgnoreCase.AutoSize = true;
+      checkReplaceIgnoreCase.Checked = true;
+      checkReplaceIgnoreCase.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkReplaceIgnoreCase.Location = new System.Drawing.Point( 6, 19 );
+      checkReplaceIgnoreCase.Name = "checkReplaceIgnoreCase";
+      checkReplaceIgnoreCase.Size = new System.Drawing.Size( 83, 17 );
+      checkReplaceIgnoreCase.TabIndex = 0;
+      checkReplaceIgnoreCase.Text = "Ignore Case";
+      checkReplaceIgnoreCase.UseVisualStyleBackColor = true;
+      checkReplaceIgnoreCase.CheckedChanged +=  checkReplaceIgnoreCase_CheckedChanged ;
       // 
       // comboReplaceTarget
       // 
-      this.comboReplaceTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboReplaceTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboReplaceTarget.FormattingEnabled = true;
-      this.comboReplaceTarget.Location = new System.Drawing.Point(6, 99);
-      this.comboReplaceTarget.Name = "comboReplaceTarget";
-      this.comboReplaceTarget.Size = new System.Drawing.Size(328, 21);
-      this.comboReplaceTarget.TabIndex = 2;
-      this.comboReplaceTarget.SelectedIndexChanged += new System.EventHandler(this.comboReplaceTarget_SelectedIndexChanged);
+      comboReplaceTarget.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      comboReplaceTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboReplaceTarget.FormattingEnabled = true;
+      comboReplaceTarget.Location = new System.Drawing.Point( 6, 99 );
+      comboReplaceTarget.Name = "comboReplaceTarget";
+      comboReplaceTarget.Size = new System.Drawing.Size( 328, 21 );
+      comboReplaceTarget.TabIndex = 2;
+      comboReplaceTarget.SelectedIndexChanged +=  comboReplaceTarget_SelectedIndexChanged ;
       // 
       // comboReplaceSearchText
       // 
-      this.comboReplaceSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboReplaceSearchText.Location = new System.Drawing.Point(6, 19);
-      this.comboReplaceSearchText.Name = "comboReplaceSearchText";
-      this.comboReplaceSearchText.Size = new System.Drawing.Size(328, 21);
-      this.comboReplaceSearchText.TabIndex = 0;
+      comboReplaceSearchText.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      comboReplaceSearchText.Location = new System.Drawing.Point( 6, 19 );
+      comboReplaceSearchText.Name = "comboReplaceSearchText";
+      comboReplaceSearchText.Size = new System.Drawing.Size( 328, 21 );
+      comboReplaceSearchText.TabIndex = 0;
       // 
       // label3
       // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(3, 83);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(55, 13);
-      this.label3.TabIndex = 3;
-      this.label3.Text = "Search in:";
+      label3.AutoSize = true;
+      label3.Location = new System.Drawing.Point( 3, 83 );
+      label3.Name = "label3";
+      label3.Size = new System.Drawing.Size( 55, 13 );
+      label3.TabIndex = 3;
+      label3.Text = "Search in:";
       // 
       // label5
       // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(3, 43);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(72, 13);
-      this.label5.TabIndex = 4;
-      this.label5.Text = "Replace with:";
+      label5.AutoSize = true;
+      label5.Location = new System.Drawing.Point( 3, 43 );
+      label5.Name = "label5";
+      label5.Size = new System.Drawing.Size( 72, 13 );
+      label5.TabIndex = 4;
+      label5.Text = "Replace with:";
       // 
       // label4
       // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(3, 3);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(59, 13);
-      this.label4.TabIndex = 4;
-      this.label4.Text = "Search for:";
+      label4.AutoSize = true;
+      label4.Location = new System.Drawing.Point( 3, 3 );
+      label4.Name = "label4";
+      label4.Size = new System.Drawing.Size( 59, 13 );
+      label4.TabIndex = 4;
+      label4.Text = "Search for:";
       // 
       // FormFindReplace
       // 
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.ClientSize = new System.Drawing.Size(350, 320);
-      this.Controls.Add(this.tabFindReplace);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-      this.HideOnClose = true;
-      this.KeyPreview = true;
-      this.Name = "FormFindReplace";
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.Text = "Find/Replace";
-      this.VisibleChanged += new System.EventHandler(this.FormFindReplace_VisibleChanged);
-      this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormFindReplace_KeyDown);
-      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
-      this.tabFindReplace.ResumeLayout(false);
-      this.tabSearch.ResumeLayout(false);
-      this.tabSearch.PerformLayout();
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
-      this.tabReplace.ResumeLayout(false);
-      this.tabReplace.PerformLayout();
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox2.PerformLayout();
-      this.ResumeLayout(false);
+      AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+      ClientSize = new System.Drawing.Size( 350, 320 );
+      Controls.Add( tabFindReplace );
+      FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+      HideOnClose = true;
+      KeyPreview = true;
+      Name = "FormFindReplace";
+      ShowIcon = false;
+      ShowInTaskbar = false;
+      Text = "Find/Replace";
+      VisibleChanged +=  FormFindReplace_VisibleChanged ;
+      KeyDown +=  FormFindReplace_KeyDown ;
+      ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).EndInit();
+      tabFindReplace.ResumeLayout( false );
+      tabSearch.ResumeLayout( false );
+      tabSearch.PerformLayout();
+      groupBox1.ResumeLayout( false );
+      groupBox1.PerformLayout();
+      tabReplace.ResumeLayout( false );
+      tabReplace.PerformLayout();
+      groupBox2.ResumeLayout( false );
+      groupBox2.PerformLayout();
+      ResumeLayout( false );
 
     }
 

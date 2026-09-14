@@ -2178,20 +2178,21 @@ namespace RetroDevStudio.Documents
 
     private void DrawLeafTopPlaceholders( DecentForms.TreeView.TreeNode NodeOver )
     {
-      Graphics g = treeProject.CreateGraphics();
+      using ( Graphics g = treeProject.CreateGraphics() )
+      {
 
-      int NodeOverImageWidth = treeProject.ImageList.Images[NodeOver.ImageIndex].Size.Width + 8;
-      int LeftPos = NodeOver.Bounds.Left - NodeOverImageWidth;
-      int RightPos = treeProject.Width - 4;
+        int NodeOverImageWidth  = treeProject.ImageList.Images[NodeOver.ImageIndex].Size.Width + 8;
+        int LeftPos             = NodeOver.Bounds.Left - NodeOverImageWidth;
+        int RightPos            = treeProject.Width - 4;
 
-      Point[] LeftTriangle = new Point[5]{
+        Point[] LeftTriangle = new Point[5]{
                            new Point(LeftPos, NodeOver.Bounds.Top - 4),
                            new Point(LeftPos, NodeOver.Bounds.Top + 4),
                            new Point(LeftPos + 4, NodeOver.Bounds.Y),
                            new Point(LeftPos + 4, NodeOver.Bounds.Top - 1),
                            new Point(LeftPos, NodeOver.Bounds.Top - 5)};
 
-      Point[] RightTriangle = new Point[5]{
+        Point[] RightTriangle = new Point[5]{
                           new Point(RightPos, NodeOver.Bounds.Top - 4),
                           new Point(RightPos, NodeOver.Bounds.Top + 4),
                           new Point(RightPos - 4, NodeOver.Bounds.Y),
@@ -2199,10 +2200,10 @@ namespace RetroDevStudio.Documents
                           new Point(RightPos, NodeOver.Bounds.Top - 5)};
 
 
-      g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
-      g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
-      g.DrawLine( new System.Drawing.Pen( Color.Black, 2 ), new Point( LeftPos, NodeOver.Bounds.Top ), new Point( RightPos, NodeOver.Bounds.Top ) );
-
+        g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
+        g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
+        g.DrawLine( new System.Drawing.Pen( Color.Black, 2 ), new Point( LeftPos, NodeOver.Bounds.Top ), new Point( RightPos, NodeOver.Bounds.Top ) );
+      }
     }
 
 

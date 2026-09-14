@@ -45,10 +45,10 @@ namespace RetroDevStudio.Dialogs
 
       public SearchLocation()
       {
-        StartPosition   = -1;
-        LineNumber      = -1;
-        Length          = 0;
-        EndReached      = false;
+        StartPosition = -1;
+        LineNumber = -1;
+        Length = 0;
+        EndReached = false;
         FoundInDocument = null;
       }
 
@@ -56,23 +56,23 @@ namespace RetroDevStudio.Dialogs
 
       public SearchLocation( SearchLocation RHS )
       {
-        StartPosition   = RHS.StartPosition;
-        Length          = RHS.Length;
-        LineNumber      = RHS.LineNumber;
-        EndReached      = RHS.EndReached;
+        StartPosition = RHS.StartPosition;
+        Length = RHS.Length;
+        LineNumber = RHS.LineNumber;
+        EndReached = RHS.EndReached;
         FoundInDocument = RHS.FoundInDocument;
-        AdditionalInfo  = RHS.AdditionalInfo;
-        FoundLine       = RHS.FoundLine;
+        AdditionalInfo = RHS.AdditionalInfo;
+        FoundLine = RHS.FoundLine;
       }
 
 
 
       public SearchLocation( int startPos, int length )
       {
-        StartPosition   = startPos;
-        Length          = length;
-        LineNumber      = -1;
-        EndReached      = false;
+        StartPosition = startPos;
+        Length = length;
+        LineNumber = -1;
+        EndReached = false;
         FoundInDocument = null;
       }
 
@@ -80,12 +80,12 @@ namespace RetroDevStudio.Dialogs
 
       public void Clear()
       {
-        StartPosition   = -1;
-        LineNumber      = -1;
-        Length          = 0;
-        EndReached      = false;
+        StartPosition = -1;
+        LineNumber = -1;
+        Length = 0;
+        EndReached = false;
         FoundInDocument = null;
-        AdditionalInfo  = "";
+        AdditionalInfo = "";
       }
 
 
@@ -100,9 +100,9 @@ namespace RetroDevStudio.Dialogs
       public bool IsSameLocation( SearchLocation RHS )
       {
         return ( ( RHS.FoundInDocument == FoundInDocument )
-        &&       ( RHS.EndReached == EndReached )
-        &&       ( RHS.Length == Length )
-        &&       ( RHS.StartPosition == StartPosition ) );
+        && ( RHS.EndReached == EndReached )
+        && ( RHS.Length == Length )
+        && ( RHS.StartPosition == StartPosition ) );
       }
     };
 
@@ -141,8 +141,8 @@ namespace RetroDevStudio.Dialogs
     private bool HasSearchableControl( DocumentInfo DocInfo )
     {
       if ( ( DocInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-      ||   ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
-      ||   ( DocInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
+      || ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+      || ( DocInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
       {
         return true;
       }
@@ -153,7 +153,8 @@ namespace RetroDevStudio.Dialogs
 
     public override Size GetPreferredSize( Size proposedSize )
     {
-      return new Size( 366, 328 );
+      return Size;
+      //return new Size( 366, 328 );
     }
 
 
@@ -270,7 +271,7 @@ namespace RetroDevStudio.Dialogs
     {
       Core.MainForm.WriteToLog( "FindNext " + SearchText + " with " + (FindTarget)comboSearchTarget.SelectedIndex );
       if ( ( LastSearchFound != null )
-      &&   ( LastSearchFound.FoundInDocument != null ) )
+      && ( LastSearchFound.FoundInDocument != null ) )
       {
         Core.MainForm.WriteToLog( "-continue from " + LastSearchFound.FoundInDocument.DocumentFilename + " at " + LastSearchFound.StartPosition );
       }
@@ -278,7 +279,7 @@ namespace RetroDevStudio.Dialogs
       int forceOffset = 0;
 
       if ( ( LastSearchFound.StartPosition != -1 )
-      &&   ( LastSearchFound.Length > 0 ) )
+      && ( LastSearchFound.Length > 0 ) )
       {
         if ( searchForward )
         {
@@ -318,7 +319,7 @@ namespace RetroDevStudio.Dialogs
         if ( LastSearchFound.FoundInDocument.BaseDoc == null )
         {
           if ( ( LastSearchFound.FoundInDocument.Element != null )
-          &&   ( LastSearchFound.FoundInDocument.Project != null ) )
+          && ( LastSearchFound.FoundInDocument.Project != null ) )
           {
             LastSearchFound.FoundInDocument.Element.Document = LastSearchFound.FoundInDocument.Project.ShowDocument( LastSearchFound.FoundInDocument.Element );
             LastSearchFound.FoundInDocument.BaseDoc.Show( Core.MainForm.panelMain );
@@ -436,12 +437,12 @@ namespace RetroDevStudio.Dialogs
     private static bool IsCharPartOfWord( char TestChar )
     {
       if ( ( TestChar == '_' )
-      ||   ( ( TestChar >= 'A' )
-      &&     ( TestChar <= 'Z' ) )
-      ||   ( ( TestChar >= 'a' )
-      &&     ( TestChar <= 'z' ) )
-      ||   ( ( TestChar >= '0' )
-      &&     ( TestChar <= '9' ) ) )
+      || ( ( TestChar >= 'A' )
+      && ( TestChar <= 'Z' ) )
+      || ( ( TestChar >= 'a' )
+      && ( TestChar <= 'z' ) )
+      || ( ( TestChar >= '0' )
+      && ( TestChar <= '9' ) ) )
       {
         return true;
       }
@@ -451,11 +452,11 @@ namespace RetroDevStudio.Dialogs
 
 
     private static SearchLocation FindNextOccurrence( string SearchSource,
-                                                      string SearchString, 
-                                                      bool RegularExpression, 
-                                                      bool WholeWords, 
-                                                      bool IgnoreCase, 
-                                                      bool Upwards, 
+                                                      string SearchString,
+                                                      bool RegularExpression,
+                                                      bool WholeWords,
+                                                      bool IgnoreCase,
+                                                      bool Upwards,
                                                       int LastPosition,
                                                       out string errorMessage )
     {
@@ -476,7 +477,7 @@ namespace RetroDevStudio.Dialogs
       }
 
       if ( ( LastPosition == -1 )
-      &&   ( Upwards ) )
+      && ( Upwards ) )
       {
         startPos = SearchSource.Length;
       }
@@ -530,7 +531,8 @@ namespace RetroDevStudio.Dialogs
         compareFlags = StringComparison.CurrentCultureIgnoreCase;
       }
 
-      find_next:;
+      find_next:
+      ;
       int pos = -1;
       if ( startPos <= SearchSource.Length )
       {
@@ -552,13 +554,13 @@ namespace RetroDevStudio.Dialogs
         bool    isWholeWord = true;
         // previous char is the same category as search char?
         if ( ( pos > 0 )
-        &&   ( IsCharPartOfWord( SearchSource[pos - 1] ) == IsCharPartOfWord( SearchString[0] ) ) )
+        && ( IsCharPartOfWord( SearchSource[pos - 1] ) == IsCharPartOfWord( SearchString[0] ) ) )
         {
           isWholeWord = false;
         }
         // next char is same category as last search char?
         if ( ( pos + SearchString.Length < SearchSource.Length )
-        &&   ( IsCharPartOfWord( SearchSource[pos + SearchString.Length] ) == IsCharPartOfWord( SearchString[SearchString.Length - 1] ) ) )
+        && ( IsCharPartOfWord( SearchSource[pos + SearchString.Length] ) == IsCharPartOfWord( SearchString[SearchString.Length - 1] ) ) )
         {
           isWholeWord = false;
         }
@@ -574,7 +576,7 @@ namespace RetroDevStudio.Dialogs
             startPos = pos + 1;
           }
           if ( ( startPos < 0 )
-          ||   ( startPos >= SearchSource.Length ) )
+          || ( startPos >= SearchSource.Length ) )
           {
             return new SearchLocation();
           }
@@ -590,7 +592,7 @@ namespace RetroDevStudio.Dialogs
     private FastColoredTextBoxNS.FastColoredTextBox EditFromDocumentEx( DocumentInfo Document )
     {
       if ( ( Document == null )
-      ||   ( Document.BaseDoc == null ) )
+      || ( Document.BaseDoc == null ) )
       {
         return null;
       }
@@ -684,7 +686,7 @@ namespace RetroDevStudio.Dialogs
         previousElement = element;
       }
       if ( ( previousElement == null )
-      &&   ( !Wrap ) )
+      && ( !Wrap ) )
       {
         return null;
       }
@@ -801,7 +803,7 @@ namespace RetroDevStudio.Dialogs
         }
       }
       if ( ( previousElement == null )
-      &&   ( !Wrap ) )
+      && ( !Wrap ) )
       {
         return null;
       }
@@ -950,7 +952,7 @@ namespace RetroDevStudio.Dialogs
       int   virtualStart = Edit.PositionToVirtualPosition( start );
 
       if ( ( virtualStart >= Edit.Text.Length )
-      ||   ( virtualStart + Location.Length > Edit.Text.Length ) )
+      || ( virtualStart + Location.Length > Edit.Text.Length ) )
       {
         return null;
       }
@@ -967,14 +969,14 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private bool FindNextNew( string SearchString, 
-                              bool SearchDown, 
-                              bool RegularExpression, 
-                              bool WholeWords, 
-                              bool IgnoreCase, 
-                              bool Wrap, 
-                              FindTarget Target, 
-                              BaseDocument DirectlyFromSourceFile, 
+    private bool FindNextNew( string SearchString,
+                              bool SearchDown,
+                              bool RegularExpression,
+                              bool WholeWords,
+                              bool IgnoreCase,
+                              bool Wrap,
+                              FindTarget Target,
+                              BaseDocument DirectlyFromSourceFile,
                               int forceOffset,
                               SearchLocation LastFound )
     {
@@ -1075,7 +1077,7 @@ namespace RetroDevStudio.Dialogs
         docInfoToSearch = activeDocument.DocumentInfo;
         edit = EditFromDocumentEx( activeDocument.DocumentInfo );
         if ( ( edit == null )
-        ||   ( edit.SelectionLength == 0 ) )
+        || ( edit.SelectionLength == 0 ) )
         {
           LastFound.Clear();
           return false;
@@ -1092,7 +1094,7 @@ namespace RetroDevStudio.Dialogs
         }
 
         if ( ( lastPosition >= edit.PlaceToPosition( edit.Selection.Start ) )
-        &&   ( lastPosition < edit.PlaceToPosition( edit.Selection.End ) ) )
+        && ( lastPosition < edit.PlaceToPosition( edit.Selection.End ) ) )
         {
           searchStart = lastPosition - edit.PlaceToPosition( edit.Selection.Start );
         }
@@ -1113,8 +1115,8 @@ namespace RetroDevStudio.Dialogs
         }
 
         if ( ( edit.SelectionLength != PreviousSearchSelection.Length )
-        ||   ( edit.PlaceToPosition( edit.Selection.Start ) != PreviousSearchSelection.StartPosition )
-        ||   ( activeDocument != PreviousSearchSelection.FoundInDocument.BaseDoc ) )
+        || ( edit.PlaceToPosition( edit.Selection.Start ) != PreviousSearchSelection.StartPosition )
+        || ( activeDocument != PreviousSearchSelection.FoundInDocument.BaseDoc ) )
         {
           // store the previous search selection (finding something changes the selection!)
           PreviousSearchSelection.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
@@ -1196,7 +1198,7 @@ namespace RetroDevStudio.Dialogs
           firstElement = elementToSearch;
         }
         if ( ( elementToSearch == null )
-        ||   ( string.IsNullOrEmpty( elementToSearch.Filename ) ) )
+        || ( string.IsNullOrEmpty( elementToSearch.Filename ) ) )
         {
           LastFound.Clear();
           return false;
@@ -1280,7 +1282,7 @@ namespace RetroDevStudio.Dialogs
           firstProject = elementToSearch.DocumentInfo.Project;
         }
         if ( ( elementToSearch == null )
-        ||   ( string.IsNullOrEmpty( elementToSearch.Filename ) ) )
+        || ( string.IsNullOrEmpty( elementToSearch.Filename ) ) )
         {
           LastFound.Clear();
           return false;
@@ -1354,7 +1356,7 @@ namespace RetroDevStudio.Dialogs
       FindLineAndTextFromResult( newLocation, LastFound, textFromElement );
 
       // urgh - so we can use virtualpositiontoposition
-      
+
       if ( edit == null )
       {
         edit = new FastColoredTextBoxNS.FastColoredTextBox();
@@ -1369,13 +1371,13 @@ namespace RetroDevStudio.Dialogs
       var end = edit.VirtualPositionToPosition( newLocation.StartPosition + newLocation.Length );
 
       newLocation.StartPosition = start;
-      newLocation.Length        = end - start;
-      newLocation.LineNumber    = LastFound.LineNumber;
+      newLocation.Length = end - start;
+      newLocation.LineNumber = LastFound.LineNumber;
 
       LastFound.FoundInDocument = docInfoToSearch;
-      LastFound.StartPosition   = newLocation.StartPosition;
-      LastFound.Length          = newLocation.Length;
-      LastFound.LineNumber      = newLocation.LineNumber;
+      LastFound.StartPosition = newLocation.StartPosition;
+      LastFound.Length = newLocation.Length;
+      LastFound.LineNumber = newLocation.LineNumber;
 
       if ( createdDummyEdit )
       {
@@ -1389,9 +1391,9 @@ namespace RetroDevStudio.Dialogs
     private bool IsTargettingProjectOrSolutionWithoutProject( FindTarget Target )
     {
       if ( ( ( Target == FindTarget.FULL_PROJECT )
-      &&     ( Core.Navigating.Solution == null ) )
-      ||   ( ( Target == FindTarget.FULL_SOLUTION )
-      &&     ( Core.Navigating.Solution == null ) ) )
+      && ( Core.Navigating.Solution == null ) )
+      || ( ( Target == FindTarget.FULL_SOLUTION )
+      && ( Core.Navigating.Solution == null ) ) )
       {
         return true;
       }
@@ -1426,8 +1428,8 @@ namespace RetroDevStudio.Dialogs
 
       // try to find zone
       if ( ( NewLocation.FoundInDocument != null )
-      &&   ( NewLocation.FoundInDocument.Type == ProjectElement.ElementType.ASM_SOURCE )
-      &&   ( NewLocation.FoundInDocument.ASMFileInfo != null ) )
+      && ( NewLocation.FoundInDocument.Type == ProjectElement.ElementType.ASM_SOURCE )
+      && ( NewLocation.FoundInDocument.ASMFileInfo != null ) )
       {
         if ( NewLocation.FoundInDocument.ASMFileInfo.FindZoneInfoFromDocumentLine( NewLocation.FoundInDocument.FullPath, numLines, out string zone, out string cheapLabelZone ) )
         {
@@ -1436,7 +1438,7 @@ namespace RetroDevStudio.Dialogs
       }
       LastFound.LineNumber = numLines;
       if ( ( curPos != -1 )
-      &&   ( lastPos != -1 ) )
+      && ( lastPos != -1 ) )
       {
         LastFound.FoundLine = TextToSearch.Substring( lastPos + 1, curPos - lastPos - 2 );
       }
@@ -1503,10 +1505,10 @@ namespace RetroDevStudio.Dialogs
 
     public void Fill( StudioSettings Settings )
     {
-      checkSearchFullWords.Checked  = Settings.LastFindWholeWord;
+      checkSearchFullWords.Checked = Settings.LastFindWholeWord;
       checkSearchIgnoreCase.Checked = Settings.LastFindIgnoreCase;
-      checkSearchRegExp.Checked     = Settings.LastFindRegexp;
-      checkSearchWrap.Checked       = Settings.LastFindWrap;
+      checkSearchRegExp.Checked = Settings.LastFindRegexp;
+      checkSearchWrap.Checked = Settings.LastFindWrap;
 
       if ( Settings.RestoreLastFindTarget )
       {
@@ -1535,13 +1537,13 @@ namespace RetroDevStudio.Dialogs
 
     public void ToSettings( StudioSettings Settings )
     {
-      Settings.LastFindWholeWord  = checkSearchFullWords.Checked;
+      Settings.LastFindWholeWord = checkSearchFullWords.Checked;
       Settings.LastFindIgnoreCase = checkSearchIgnoreCase.Checked;
-      Settings.LastFindRegexp     = checkSearchRegExp.Checked;
-      Settings.LastFindWrap       = checkSearchWrap.Checked;
+      Settings.LastFindRegexp = checkSearchRegExp.Checked;
+      Settings.LastFindWrap = checkSearchWrap.Checked;
 
-      Settings.LastFindTarget     = comboSearchTarget.SelectedIndex;
-      Settings.LastReplaceTarget  = comboReplaceTarget.SelectedIndex;
+      Settings.LastFindTarget = comboSearchTarget.SelectedIndex;
+      Settings.LastReplaceTarget = comboReplaceTarget.SelectedIndex;
       Settings.FindArguments.Clear();
       foreach ( object obj in comboSearchText.Items )
       {
@@ -1700,7 +1702,7 @@ namespace RetroDevStudio.Dialogs
         if ( LastReplaceFound.FoundInDocument.BaseDoc == null )
         {
           if ( ( LastReplaceFound.FoundInDocument.Element != null )
-          &&   ( LastReplaceFound.FoundInDocument.Project != null ) )
+          && ( LastReplaceFound.FoundInDocument.Project != null ) )
           {
             LastReplaceFound.FoundInDocument.Element.Document = LastReplaceFound.FoundInDocument.Project.ShowDocument( LastReplaceFound.FoundInDocument.Element );
             LastReplaceFound.FoundInDocument.BaseDoc.Show( Core.MainForm.panelMain );
@@ -1758,9 +1760,9 @@ namespace RetroDevStudio.Dialogs
           {
             // go left (a tab means more than one step!)
             if ( ( edit.AllowTabs )
-            &&   ( curPos.iChar > 0 )
-            &&   ( curPos.iChar - 1 < edit[curPos.iLine].Count )
-            &&   ( edit[curPos.iLine][curPos.iChar - 1].c == '\t' ) )
+            && ( curPos.iChar > 0 )
+            && ( curPos.iChar - 1 < edit[curPos.iLine].Count )
+            && ( edit[curPos.iLine][curPos.iChar - 1].c == '\t' ) )
             {
               int delta = curPos.iChar % edit.TabLength;
               if ( delta == 0 )
@@ -1781,7 +1783,7 @@ namespace RetroDevStudio.Dialogs
             }
             else
             {
-                curPos.Offset( -1, 0 );
+              curPos.Offset( -1, 0 );
             }
             LastReplaceFound.StartPosition = edit.PlaceToPosition( curPos );
           }
@@ -1903,7 +1905,7 @@ namespace RetroDevStudio.Dialogs
       }
 
       Dictionary<DocumentInfo,string>     elementsToReplaceIn = new Dictionary<DocumentInfo,string>();
- 
+
       switch ( replaceTarget )
       {
         case FindTarget.ACTIVE_DOCUMENT:
@@ -1921,8 +1923,8 @@ namespace RetroDevStudio.Dialogs
           foreach ( BaseDocument doc in Core.MainForm.panelMain.Documents )
           {
             if ( ( doc.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-            ||   ( doc.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
-            ||   ( doc.DocumentInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
+            || ( doc.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+            || ( doc.DocumentInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
             {
               string textFromElement = Core.Searching.GetDocumentInfoText( doc.DocumentInfo );
               elementsToReplaceIn.Add( doc.DocumentInfo, textFromElement );
@@ -1938,8 +1940,8 @@ namespace RetroDevStudio.Dialogs
               {
                 DocumentInfo    docInfo = element.DocumentInfo;
                 if ( ( docInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-                ||   ( docInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
-                ||   ( docInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
+                || ( docInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+                || ( docInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
                 {
                   string textFromElement = Core.Searching.GetDocumentInfoText( docInfo );
                   elementsToReplaceIn.Add( docInfo, textFromElement );
@@ -1957,8 +1959,8 @@ namespace RetroDevStudio.Dialogs
               {
                 DocumentInfo    docInfo = element.DocumentInfo;
                 if ( ( docInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-                ||   ( docInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
-                ||   ( docInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
+                || ( docInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+                || ( docInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
                 {
                   string textFromElement = Core.Searching.GetDocumentInfoText( docInfo );
                   elementsToReplaceIn.Add( docInfo, textFromElement );
@@ -2027,12 +2029,12 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private string ReplaceTextInString( DocumentInfo DocInfo, 
+    private string ReplaceTextInString( DocumentInfo DocInfo,
                                         string TextToSearchIn,
-                                        string StringToFind, 
-                                        string StringToReplaceWith, 
-                                        bool RegexAllowed, 
-                                        bool WholeWords, 
+                                        string StringToFind,
+                                        string StringToReplaceWith,
+                                        bool RegexAllowed,
+                                        bool WholeWords,
                                         bool IgnoreCase,
                                         out int NumOccurences )
     {
@@ -2050,7 +2052,7 @@ namespace RetroDevStudio.Dialogs
                                                          WholeWords,
                                                          IgnoreCase,
                                                          false,
-                                                         LastReplaceFound.StartPosition, 
+                                                         LastReplaceFound.StartPosition,
                                                          out _LastErrorMessage );
         if ( newLocation.StartPosition == -1 )
         {
@@ -2061,16 +2063,16 @@ namespace RetroDevStudio.Dialogs
         FindLineAndTextFromResult( newLocation, LastReplaceFound, TextToSearchIn );
 
         searchResults.Add( new SearchLocation()
-          {
-            FoundInDocument = DocInfo,
-            LineNumber = LastReplaceFound.LineNumber,
-            StartPosition = LastReplaceFound.StartPosition,
-            Length = LastReplaceFound.Length,
-            FoundLine = LastReplaceFound.FoundLine
-          } );
-                
-        TextToSearchIn = TextToSearchIn.Substring( 0, newLocation.StartPosition ) 
-                        + StringToReplaceWith 
+        {
+          FoundInDocument = DocInfo,
+          LineNumber = LastReplaceFound.LineNumber,
+          StartPosition = LastReplaceFound.StartPosition,
+          Length = LastReplaceFound.Length,
+          FoundLine = LastReplaceFound.FoundLine
+        } );
+
+        TextToSearchIn = TextToSearchIn.Substring( 0, newLocation.StartPosition )
+                        + StringToReplaceWith
                         + TextToSearchIn.Substring( newLocation.StartPosition + newLocation.Length );
 
         // offset start pos to new string
@@ -2196,7 +2198,7 @@ namespace RetroDevStudio.Dialogs
           comboSearchText.Items.Clear();
           comboSearchText.Items.AddRange( Core.Settings.FindArguments.ToArray() );
           break;
-          case ApplicationEvent.Type.REPLACE_SEARCH_HISTORY_UPDATED:
+        case ApplicationEvent.Type.REPLACE_SEARCH_HISTORY_UPDATED:
           comboReplaceSearchText.Items.Clear();
           comboReplaceSearchText.Items.AddRange( Core.Settings.ReplaceArguments.ToArray() );
           break;
