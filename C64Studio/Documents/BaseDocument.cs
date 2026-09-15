@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Types;
+using RetroDevStudio.Types;
 using GR.Memory;
 using System;
 using System.Collections.Generic;
@@ -791,8 +791,10 @@ namespace RetroDevStudio.Documents
           //DockHandler.FloatPane.FloatWindow.Bounds = new System.Drawing.Rectangle( DockHandler.FloatPane.FloatWindow.Bounds.Location, new System.Drawing.Size( 677, 417 ) );
           System.Drawing.Size newSize = GetPreferredSize( new System.Drawing.Size( 677, 417 ) );
 
+          // no more scaling
+          /*
           newSize = new Size( (int)( newSize.Width * DPIHandler.DPIX / 96 ),
-                              (int)( newSize.Height * DPIHandler.DPIY / 96 ) );
+                              (int)( newSize.Height * DPIHandler.DPIY / 96 ) );*/
           DockHandler.FloatPane.FloatWindow.ClientSize = newSize;
           //DockHandler.FloatPane.FloatWindow.Bounds = new System.Drawing.Rectangle( DockHandler.FloatPane.FloatWindow.Bounds.Location, newSize );
         }

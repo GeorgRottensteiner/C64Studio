@@ -141,8 +141,8 @@ namespace RetroDevStudio.Dialogs
     private bool HasSearchableControl( DocumentInfo DocInfo )
     {
       if ( ( DocInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-      || ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
-      || ( DocInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
+      ||   ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+      ||   ( DocInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
       {
         return true;
       }
@@ -155,6 +155,13 @@ namespace RetroDevStudio.Dialogs
     {
       return Size;
       //return new Size( 366, 328 );
+    }
+
+
+
+    protected override void OnSizeChanged( EventArgs e )
+    {
+      base.OnSizeChanged( e );
     }
 
 
