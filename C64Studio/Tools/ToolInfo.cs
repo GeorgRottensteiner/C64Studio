@@ -223,7 +223,7 @@ namespace RetroDevStudio
         Tool.Name = "Denise";
         Tool.PassLabelsToEmulator = false;
         Tool.PRGArguments = "\"$(RunFilename)\"";
-        Tool.DebugArguments = "-binarymonitor -binarymonitoraddress 127.0.0.1:6510";
+        Tool.DebugArguments = "-binarymonitor -binarymonitoraddress 127.0.0.1:6510 -initbreak reset";
       }
       else if ( Emulators.EmulatorInfo.IsMega65Family( Tool.Filename ) )
       {
