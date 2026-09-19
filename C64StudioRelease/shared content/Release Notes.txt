@@ -17,6 +17,98 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+19.09.2026 - 8.5:         Add: Remote debugging for Denise and VICE now parses the arguments for the correct IP/port
+                          Add: Path Editor now final, activated sample project
+                          Fix: Scaaaaaling
+                          Upd/Fix: Find/Replace doesn't try to use a preferred size that's bigger than the minimum
+                          Add: Assembler !warnon/!warnoff directives
+                          Add Linux build for C64Ass
+                          Merge pull request #187 from alexanderfontana/fix/arraybounds-exportcharscreenasassembly-l104
+                          Off-by-one-Fehler im Screen-Export behoben
+                          Fix ArrayBounds in CharsetEditor.cs: clamp charset export range indices
+                          Upd: Map Editor, now also properly loading Charpad 8.2 formats (all but bitmaps)
+                          Fix: MapEditor - Reading Charpad format 7 now works for all varations
+                          Fix stale symbol references after line removal in ASMFileInfo
+                          Fix ByteBuffer.TruncateFront to operate on logical length instead of capacity
+                          Fix swapped coordinates in FastImage.Box/BoxAlpha default fallback
+                          Fix T64 user description being read from wrong header offset
+                          Add range guards to UpdateMemory to reject out-of-range offsets
+                          Add: Default charsets for C16/PET WIP: More Path editor
+                          Fix InvalidOperationException when removing solution elements without deleting files
+                          Fix: BASIC #bindata didn't account for implicit space in length check
+                          Add: Allow string label as !bin file name
+                          Fix out-of-bounds read in ParseTokenInfo for trailing single-char operators
+                          Fix infinite loop in FindNextOccurrence for whole-word upwards search
+                          Fix missing ContainsKey check before lineNumberReference access in BasicFileParser.Renumber
+                          Fix: BASIC replacing macros with symbols in meta comments removed WIP: Path Editor
+                          Fix out-of-bounds palette index from unmasked VIC color register writes
+                          Fix wrong CartLO index base in Memory.ReadByteDirect
+                          Fix swapped buttons
+                          Add: Commodore TED modes
+                          Fix off-by-one in ByteBuffer.Find: include last valid start position
+                          Fix missing 0xa0 padding of NewFilename in CommodoreDisk.RenameFile
+                          Fix GDI+ handle leak in editSource_PaintLine (missing SolidBrush dispose)
+                          Upd: Allow dragging in ArrangedItemList WIP: Path Editor
+                          Fix GDI+ handle leak in EditC64Filename.OnPaint
+                          Fix GDI+ handle leak of highlight brush in ImageListbox.OnPaint
+                          Fix: Disable Go button if running normally
+                          fix(debugger): thread-safety for breakpoints, watches and memory caches
+                          fix: sprite deletion layer mapping bugs in SpriteEditor.cs
+                          Fix potential endless loop
+                          WIP: Debugger -> 1second-pause-breaks
+                          Fix: GDI font resource leak in BASIC editor preferences dialog
+                          Fix: Charscreen export area height calculation used wrong axis
+                          Fix: Charscreen editor external charset path was reset to empty after import
+                          Fix(D71): AllocSector verwendete BAM2-Offset (trackIndex) fälschlich für Tracks[]-Index. Für Tracks >= 35 wurde der Free-Status des falschen Sektors gesetzt; nutze nun originalen Track-Wert. Dokumentiere verwandten BAM2-Bug in IsSectorMarkedAsUsedInBAM() per Kommentar.
+                          Fix: Improve null handling in IComparer implementation for better compliance with contract
+                          Add: Solution Explorer: Sorting of items, with optional folders on top or bottom
+                          Add: Solution explorer, sorting of tree alphabetically
+                          Fix: Assembler label concatenation with local label inside macro was broken
+                          Add: Denise Debugger options to advance frame/line/to line
+                          Add: Denise debug interface, step over option Fix: VICE binary interface, startup behaviour smoothened Add: Disable anti aliasing for source option
+                          Fix: Assembler, # inside local and cheap labels as well
+                          Fix: Auto-Wrap debug toolbar to second line if it doesn't fit inside the window (part of #157)
+                          Add: Assembler, labels with # (inside or at the end) for C64Studio assembler
+                          Add: Show .NET runtime in about/splash dialogs
+                          Upgrade to .NET 10
+                          Add: BASIC use custom named labels in label mode
+                          Add: Reset breakpoint remove indices when stopping debugging
+                          Add: Graphic screen editor, undo check type change
+                          Fix: Nested macros issue (macro definition inside other macro)
+                          Add: Find/Replace, counter for find/replace all (issue #142)
+                          Fix issue #152: Crash in Mapeditor when counting tile indices that do not exist as tiles
+                          Fix: Syntax Coloring, separators were left out and got the control text color
+                          Fix: ListControl selected item not properly reset if items got cleared
+                          Add: Denise support (emulator defaults, binary interface WIP)
+                          Upd: Binary interface, switch to StepInto for DebugBreak
+                          Add: Disassembler, jump to address jumps both tabs
+                          Re-add missing click handler
+                          Add: Disassembler, jump to address
+                          WIP: Disassembler jump to address
+                          Fix: MainForm designer auto-deleting all event handlers Add: Single File Manager instance in Tools Menu
+                          Upd: Commit dialog to use DecentForms, group files by state
+                          Add: Solution Explorer, allow reorder of projects (drag and drop)
+                          Fix: Find/Replace saving last target on every call to the dialog Fix: Using cheap labels in macro arguments
+                          WIP: TMP macros with implicit block
+                          Fix: Autocomplete, filter relevance now ignores optional macro call prefix
+                          Add: Assembler, option H3 to scope cheap local labels to local labels
+                          Fix: Charscreen editor -> Update tile counts on clear and fill as well
+                          Fix: Docs for cheap local labels. They can only be reused in a different global label range
+                          Add: Visual updates to scrollbar, listcontrol Fix: Crash in debug watches when deleting via delete key Fix?: Wrong file opened from Compile Result window
+                          Upd: Rearrange control project Add: Charscreen - show char usage
+                          Add: Store/Restore list sort orders
+                          Add: C array export for graphic screen, map and sprite editor
+                          Add: Export to C array for charscreen, charset and binary
+                          Fix: Macro breaking with syntax error, if !for with curly braces was used inside
+                          Fix more sizing/scaling issues
+                          Fix issue #153 and #154 Both DPI scaling issues in ListBox and ListControl
+                          Fix: Charscreen exports not using per screen size on data
+                          WIP: TMP support
+                          Add: Macros for Executable (emulator) path and file
+                          Integrate Common with CommonWindows and Models. SharedProjects are cute unless you get a diamond dependency
+
+
+
 07.06.2026 - 8.4:         Fix: Editing code (inserted/deleting lines) now also updates the Find References Dialog
                           Fix: Passing labels to RetroDebugger used wrong argument Fix: Bookmark delete all not working properly
                           Fix: !media did not use start index offset properly
