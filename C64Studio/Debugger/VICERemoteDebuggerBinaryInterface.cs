@@ -1,4 +1,5 @@
 using GR.Memory;
+using Microsoft.Win32;
 using RetroDevStudio.Documents;
 using RetroDevStudio.Types;
 using System;
@@ -112,6 +113,9 @@ namespace RetroDevStudio
     private int                       m_LastRequestID = 0;
     private RegisterInfo              m_LastReceivedRegisterInfo = null;
 
+    private string                    _RemoteAddress = "127.0.0.1";
+    private int                       _RemotePort = 6510;
+
 
 
     private Dictionary<uint,RequestData>   m_UnansweredBinaryRequests = new Dictionary<uint, RequestData>();
@@ -201,7 +205,7 @@ namespace RetroDevStudio
         }
         Core.AddToOutput( "Connecting to VICE binary interface..." + Environment.NewLine );
         client = new System.Net.Sockets.Socket( System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp );
-        client.BeginConnect( "127.0.0.1", 6510, new AsyncCallback( Connected ), client );
+        client.BeginConnect( _RemoteAddress, _RemotePort, new AsyncCallback( Connected ), client );
       }
       catch ( System.Net.Sockets.SocketException se )
       {
@@ -1753,9 +1757,9 @@ namespace RetroDevStudio
       {
         case DebuggerFeature.REMOTE_MONITOR:
         case DebuggerFeature.REQUIRES_INITIAL_BREAKPOINT:
-        case DebuggerFeature.ADVANCE_FRAME:
-        case DebuggerFeature.ADVANCE_TO_SPECIFIC_LINE:
-        case DebuggerFeature.ADVANCE_LINE:
+        //case DebuggerFeature.ADVANCE_FRAME:
+        //case DebuggerFeature.ADVANCE_TO_SPECIFIC_LINE:
+        //case DebuggerFeature.ADVANCE_LINE:
           return true;
       }
       return false;
@@ -1875,6 +1879,24 @@ namespace RetroDevStudio
     List<WatchEntry> IDebugger.CurrentWatches()
     {
       return m_WatchEntries;
+    }
+
+
+
+    public override bool SetSetting( DebuggerSetting setting, string value )
+    {
+      switch ( setting )
+      {
+        case DebuggerSetting.DEBUGGER_PORT:
+          _RemotePort = GR.Convert.ToI32( value );
+          if ( ( _RemotePort <= 0 )
+          ||   ( _RemotePort >= 65536 ) )
+          {
+            _RemotePort = 6510;
+          }
+          return true;
+      }
+      return false;
     }
 
 

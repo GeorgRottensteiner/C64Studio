@@ -20,7 +20,9 @@ namespace RetroDevStudio
 
   public enum DebuggerSetting
   {
-    STEP_OVER_ALSO_STEPS_OVER_JMP_AND_BRANCHES
+    STEP_OVER_ALSO_STEPS_OVER_JMP_AND_BRANCHES,
+    DEBUGGER_ADDRESS,
+    DEBUGGER_PORT
   };
 
   public enum MemorySource

@@ -106,6 +106,7 @@ namespace RetroDevStudio
 
         var deniseDebugger = Debugger as DeniseRemoteDebuggerBinaryInterface;
         deniseDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
+        deniseDebugger.SetSetting( DebuggerSetting.DEBUGGER_PORT, DetermineRemoteInterfacePortFromArguments( runTool ) );
       }
       else if ( runTool.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" ) )
       {
@@ -113,6 +114,8 @@ namespace RetroDevStudio
 
         var viceDebugger = Debugger as VICERemoteDebuggerBinaryInterface;
         viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
+        viceDebugger.SetSetting( DebuggerSetting.DEBUGGER_PORT, DetermineRemoteInterfacePortFromArguments( runTool ) );
+        viceDebugger.SetSetting( DebuggerSetting.DEBUGGER_ADDRESS, DetermineRemoteInterfaceAddressFromArguments( runTool ) );
       }
       else
       {
@@ -122,6 +125,60 @@ namespace RetroDevStudio
         viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
       }
       return Debugger;
+    }
+
+
+
+    private string DetermineRemoteInterfacePortFromArguments( ToolInfo runTool )
+    {
+      if ( runTool.DebugArguments.ToUpper().Contains( "-BINARYMONITORADDRESS" ) )
+      {
+        // VICE and Denise use this
+        var args = runTool.DebugArguments.Split( new char[]{ ' ' }, StringSplitOptions.RemoveEmptyEntries );
+        for ( int i = 0; i < args.Length; ++i )
+        {
+          var arg = args[i].ToUpper();
+          if ( ( arg.StartsWith( "-BINARYMONITORADDRESS" ) )
+          &&   ( i + 1 < args.Length ) )
+          {
+            arg = args[i + 1].ToUpper();
+            int sepPos = arg.IndexOf( ':' );
+            if ( sepPos != -1 )
+            {
+              return arg.Substring( sepPos + 1 );
+            }
+          }
+        }
+      }
+      // default
+      return "6510";
+    }
+
+
+
+    private string DetermineRemoteInterfaceAddressFromArguments( ToolInfo runTool )
+    {
+      if ( runTool.DebugArguments.ToUpper().Contains( "-BINARYMONITORADDRESS" ) )
+      {
+        // VICE and Denise use this
+        var args = runTool.DebugArguments.Split( new char[]{ ' ' }, StringSplitOptions.RemoveEmptyEntries );
+        for ( int i = 0; i < args.Length; ++i )
+        {
+          var arg = args[i].ToUpper();
+          if ( ( arg.StartsWith( "-BINARYMONITORADDRESS" ) )
+          &&   ( i + 1 < args.Length ) )
+          {
+            arg = args[i + 1].ToUpper();
+            int sepPos = arg.IndexOf( ':' );
+            if ( sepPos != -1 )
+            {
+              return arg.Substring( 0, sepPos );
+            }
+          }
+        }
+      }
+      // default
+      return "127.0.0.1";
     }
 
 

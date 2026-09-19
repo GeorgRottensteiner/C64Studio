@@ -95,8 +95,10 @@ namespace RetroDevStudio
     private bool                      _StepOverIsSteppingOverJMPAndBranches = false;            
 
     private Dictionary<uint,RequestData>   m_UnansweredBinaryRequests = new Dictionary<uint, RequestData>();
-    private bool                      m_SendResumeAfterConditionResponse = false;            
+    private bool                      m_SendResumeAfterConditionResponse = false;
 
+    private string                    _RemoteAddress = "127.0.0.1";
+    private int                       _RemotePort = 6510;
 
 
     GR.Collections.Map<int, byte>     m_MemoryValues = new GR.Collections.Map<int, byte>();
@@ -136,8 +138,16 @@ namespace RetroDevStudio
         case DebuggerSetting.STEP_OVER_ALSO_STEPS_OVER_JMP_AND_BRANCHES:
           _StepOverIsSteppingOverJMPAndBranches = GR.Convert.ToBoolean( value );
           return true;
+        case DebuggerSetting.DEBUGGER_PORT:
+          _RemotePort = GR.Convert.ToI32( value );
+          if ( ( _RemotePort <= 0 )
+          ||   ( _RemotePort >= 65536 ) )
+          {
+            _RemotePort = 6510;
+          }
+          return true;
       }
-      return base.SetSetting( setting, value );
+      return false;
     }
 
 
@@ -191,7 +201,7 @@ namespace RetroDevStudio
         }
         Core.AddToOutput( "Connecting to Denise binary interface..." + Environment.NewLine );
         client = new System.Net.Sockets.Socket( System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp );
-        client.BeginConnect( "127.0.0.1", 6510, new AsyncCallback( Connected ), client );
+        client.BeginConnect( _RemoteAddress, _RemotePort, new AsyncCallback( Connected ), client );
       }
       catch ( System.Net.Sockets.SocketException se )
       {
