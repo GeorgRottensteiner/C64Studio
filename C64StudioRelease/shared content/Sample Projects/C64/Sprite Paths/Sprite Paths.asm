@@ -27,6 +27,16 @@ CURRENT_PATH_POS = $fe
           lda #14
           sta VIC.BACKGROUND_COLOR
 
+          ldx #0
+-
+          lda TEXT_INFO, x
+          sta $0400 + 22 * 40 + 6, x
+          lda #0
+          sta $d800 + 22 * 40 + 6, x
+          inx
+          cpx #28
+          bne -
+
           ;start with the first path of the project
           lda #0
           jsr InitPath
@@ -153,6 +163,22 @@ DIR_DELTA_Y
 !lzone InitPath
           sta CURRENT_PATH
 
+          ;display current path info (8 chars, 3 times asl)
+          asl
+          asl
+          asl
+          tay
+          ldx #0
+-
+          lda TEXT_OPTIONS, y
+          sta $0400 + 24 * 40 + 16, x
+          lda #0
+          sta $d800 + 24 * 40 + 16, x
+          iny
+          inx
+          cpx #8
+          bne -
+
           ;reset sprite position
           lda #160
           sta SPRITE_POS_X
@@ -207,6 +233,13 @@ CURRENT_DURATION
 CURRENT_PATH
           !byte 0
 
+TEXT_INFO
+          !scr "press 1 to ",( $30 + SAMPLE_NUM_PATHS )," to choose paths"
+TEXT_OPTIONS
+          !scr "pingpong"
+          !scr "square  "
+          !scr "octagon "
+
 ;place the sprite data in memory, at a 64 byte page
 !realign 64
 
@@ -233,5 +266,7 @@ SPRITE_DATA
           ;    !byte 3,40,4,40,5,40,6,40,7,40,8,40,1,40,130,40
 
 !mediasrc "paths.pathproject","SAMPLE_","PATH"
+
+
 
 

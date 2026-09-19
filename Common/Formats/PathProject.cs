@@ -1,13 +1,9 @@
 using GR.Generic;
 using GR.Memory;
-using RetroDevStudio;
-using RetroDevStudio.Types;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
 
 
 
@@ -93,14 +89,10 @@ namespace RetroDevStudio.Formats
 
       // default 0, may be 1 or more (split value as more than one byte)
       public int        AddressOffsetStep = 0;
-      public int        AddressOffsetDuration = 0;
       public byte       ValueStep = 0;
 
       // how to apply the value in the final byte
       public byte       RelevantBitsStep        = 0xff;
-      public int        ShiftBitsLeftDuration   = 0;
-      public int        ShiftBitsRightDuration  = 0;
-      public uint       RelevantBitsDuration    = 0xff;
 
       public ValueDescriptor()
       {
@@ -110,12 +102,8 @@ namespace RetroDevStudio.Formats
       {
         Step = other.Step;
         AddressOffsetStep = other.AddressOffsetStep;
-        AddressOffsetDuration = other.AddressOffsetDuration;
         ValueStep = other.ValueStep;
         RelevantBitsStep = other.RelevantBitsStep;
-        ShiftBitsLeftDuration = other.ShiftBitsLeftDuration;
-        ShiftBitsRightDuration = other.ShiftBitsRightDuration;
-        RelevantBitsDuration = other.RelevantBitsDuration;
       }
     }
 
@@ -128,6 +116,10 @@ namespace RetroDevStudio.Formats
     public int        AddressOffsetLastFlag   = 0;
     public byte       ValueLastFlag           = 0x80;
 
+    public int        AddressOffsetDuration   = 0;
+    public int        ShiftBitsLeftDuration   = 0;
+    public int        ShiftBitsRightDuration  = 0;
+    public uint       RelevantBitsDuration    = 0xff;
 
 
     public void Clear()
@@ -150,6 +142,11 @@ namespace RetroDevStudio.Formats
       var chunkInfo = new GR.IO.FileChunk( FileChunkConstants.PATH_PROJECT_INFO );
       chunkInfo.AppendI32( AddressOffsetLastFlag );
       chunkInfo.AppendU8( ValueLastFlag );
+      chunkInfo.AppendI32( AddressOffsetDuration );
+      chunkInfo.AppendU32( RelevantBitsDuration );
+      chunkInfo.AppendI32( ShiftBitsLeftDuration );
+      chunkInfo.AppendI32( ShiftBitsRightDuration );
+
       chunkProject.Append( chunkInfo.ToBuffer() );
 
       foreach ( var valueDesc in ValueDescriptors )
@@ -161,11 +158,6 @@ namespace RetroDevStudio.Formats
         chunkVD.AppendI32( valueDesc.AddressOffsetStep );
         chunkVD.AppendU8( valueDesc.RelevantBitsStep );
 
-        chunkVD.AppendI32( valueDesc.AddressOffsetDuration );
-        chunkVD.AppendU32( valueDesc.RelevantBitsDuration );
-        chunkVD.AppendI32( valueDesc.ShiftBitsLeftDuration );
-        chunkVD.AppendI32( valueDesc.ShiftBitsRightDuration );
-        
         chunkProject.Append( chunkVD.ToBuffer() );
       }
 
@@ -237,6 +229,10 @@ namespace RetroDevStudio.Formats
 
                       AddressOffsetLastFlag = subChunkReader.ReadInt32();
                       ValueLastFlag         = subChunkReader.ReadUInt8();
+                      AddressOffsetDuration = subChunkReader.ReadInt32();
+                      RelevantBitsDuration = subChunkReader.ReadUInt32();
+                      ShiftBitsLeftDuration = subChunkReader.ReadInt32();
+                      ShiftBitsRightDuration = subChunkReader.ReadInt32();
                     }
                     break;
                   case FileChunkConstants.PATH_PROJECT_VALUE_DESCRIPTOR:
@@ -247,12 +243,7 @@ namespace RetroDevStudio.Formats
                         Step = (StepType)subChunkReader.ReadInt32(),
                         ValueStep = subChunkReader.ReadUInt8(),
                         AddressOffsetStep = subChunkReader.ReadInt32(),
-                        RelevantBitsStep = subChunkReader.ReadUInt8(),
-
-                        AddressOffsetDuration = subChunkReader.ReadInt32(),
-                        RelevantBitsDuration = subChunkReader.ReadUInt32(),
-                        ShiftBitsLeftDuration = subChunkReader.ReadInt32(),
-                        ShiftBitsRightDuration = subChunkReader.ReadInt32()
+                        RelevantBitsStep = subChunkReader.ReadUInt8()
                       };
 
                       ValueDescriptors.Add( vd );
@@ -319,6 +310,8 @@ namespace RetroDevStudio.Formats
 
       AddressOffsetLastFlag = 0;
       ValueLastFlag         = 0x80;
+      AddressOffsetDuration = 1;
+      RelevantBitsDuration  = 0xff;
     }
 
 
@@ -332,9 +325,7 @@ namespace RetroDevStudio.Formats
             AddressOffsetStep     = 0,
             Step                  = StepType.NO_MOVEMENT,
             ValueStep             = 0,
-            RelevantBitsStep      = 0x0f,
-            AddressOffsetDuration = 1,
-            RelevantBitsDuration  = 0xff
+            RelevantBitsStep      = 0x0f
           } );
       }
       if ( !ValueDescriptors.Any( vd => vd.Step == StepType.NORTH ) )
@@ -344,9 +335,7 @@ namespace RetroDevStudio.Formats
           AddressOffsetStep     = 0,
           Step                  = StepType.NORTH,
           ValueStep             = 1,
-          RelevantBitsStep      = 0x0f,
-          AddressOffsetDuration = 1,
-          RelevantBitsDuration  = 0xff
+          RelevantBitsStep      = 0x0f
         } );
       }
       if ( !ValueDescriptors.Any( vd => vd.Step == StepType.NORTH_EAST ) )
@@ -356,9 +345,7 @@ namespace RetroDevStudio.Formats
           AddressOffsetStep     = 0,
           Step                  = StepType.NORTH_EAST,
           ValueStep             = 2,
-          RelevantBitsStep      = 0x0f,
-          AddressOffsetDuration = 1,
-          RelevantBitsDuration  = 0xff
+          RelevantBitsStep      = 0x0f
         } );
       }
       if ( !ValueDescriptors.Any( vd => vd.Step == StepType.EAST ) )
@@ -368,9 +355,7 @@ namespace RetroDevStudio.Formats
           AddressOffsetStep     = 0,
           Step                  = StepType.EAST,
           ValueStep             = 3,
-          RelevantBitsStep      = 0x0f,
-          AddressOffsetDuration = 1,
-          RelevantBitsDuration  = 0xff
+          RelevantBitsStep      = 0x0f
         } );
       }
       if ( !ValueDescriptors.Any( vd => vd.Step == StepType.SOUTH_EAST ) )
@@ -380,9 +365,7 @@ namespace RetroDevStudio.Formats
           AddressOffsetStep     = 0,
           Step                  = StepType.SOUTH_EAST,
           ValueStep             = 4,
-          RelevantBitsStep      = 0x0f,
-          AddressOffsetDuration = 1,
-          RelevantBitsDuration  = 0xff
+          RelevantBitsStep      = 0x0f
         } );
       }
       if ( !ValueDescriptors.Any( vd => vd.Step == StepType.SOUTH ) )
@@ -392,9 +375,7 @@ namespace RetroDevStudio.Formats
           AddressOffsetStep     = 0,
           Step                  = StepType.SOUTH,
           ValueStep             = 5,
-          RelevantBitsStep      = 0x0f,
-          AddressOffsetDuration = 1,
-          RelevantBitsDuration  = 0xff
+          RelevantBitsStep      = 0x0f
         } );
       }
       if ( !ValueDescriptors.Any( vd => vd.Step == StepType.SOUTH_WEST ) )
@@ -404,9 +385,7 @@ namespace RetroDevStudio.Formats
           AddressOffsetStep     = 0,
           Step                  = StepType.SOUTH_WEST,
           ValueStep             = 6,
-          RelevantBitsStep      = 0x0f,
-          AddressOffsetDuration = 1,
-          RelevantBitsDuration  = 0xff
+          RelevantBitsStep      = 0x0f
         } );
       }
       if ( !ValueDescriptors.Any( vd => vd.Step == StepType.WEST ) )
@@ -416,9 +395,7 @@ namespace RetroDevStudio.Formats
           AddressOffsetStep     = 0,
           Step                  = StepType.WEST,
           ValueStep             = 7,
-          RelevantBitsStep      = 0x0f,
-          AddressOffsetDuration = 1,
-          RelevantBitsDuration  = 0xff
+          RelevantBitsStep      = 0x0f
         } );
       }
       if ( !ValueDescriptors.Any( vd => vd.Step == StepType.NORTH_WEST ) )
@@ -428,9 +405,7 @@ namespace RetroDevStudio.Formats
           AddressOffsetStep     = 0,
           Step                  = StepType.NORTH_WEST,
           ValueStep             = 8,
-          RelevantBitsStep      = 0x0f,
-          AddressOffsetDuration = 1,
-          RelevantBitsDuration  = 0xff
+          RelevantBitsStep      = 0x0f
         } );
       }
     }
@@ -447,10 +422,10 @@ namespace RetroDevStudio.Formats
         {
           numBytes = vd.AddressOffsetStep + 1;
         }
-        int durationSize = (int)( vd.RelevantBitsDuration + 255 ) / 256;
-        if ( vd.AddressOffsetDuration + durationSize > numBytes )
+        int durationSize = (int)( RelevantBitsDuration + 255 ) / 256;
+        if ( AddressOffsetDuration + durationSize > numBytes )
         {
-          numBytes = vd.AddressOffsetDuration + durationSize;
+          numBytes = AddressOffsetDuration + durationSize;
         }
       }
       return numBytes;
@@ -480,21 +455,21 @@ namespace RetroDevStudio.Formats
             {
               data.SetU8At( currentStepDataOffset + mapping.AddressOffsetStep, mapping.ValueStep );
             }
-            if ( mapping.AddressOffsetDuration >= 0 )
+            if ( AddressOffsetDuration >= 0 )
             {
               int durationValue = step.Duration;
-              if ( mapping.ShiftBitsLeftDuration > 0 )
+              if ( ShiftBitsLeftDuration > 0 )
               {
-                durationValue <<= mapping.ShiftBitsLeftDuration;
+                durationValue <<= ShiftBitsLeftDuration;
               }
-              if ( mapping.ShiftBitsRightDuration > 0 )
+              if ( ShiftBitsRightDuration > 0 )
               {
-                durationValue >>= mapping.ShiftBitsRightDuration;
+                durationValue >>= ShiftBitsRightDuration;
               }
-              int durationSize = (int)( mapping.RelevantBitsDuration + 255 ) / 256;
+              int durationSize = (int)( RelevantBitsDuration + 255 ) / 256;
               for ( int i = 0; i < durationSize; ++i )
               {
-                data.SetU8At( currentStepDataOffset + mapping.AddressOffsetDuration + i, (byte)( ( durationValue >> ( i * 8 ) ) & 0xff ) );
+                data.SetU8At( currentStepDataOffset + AddressOffsetDuration + i, (byte)( ( durationValue >> ( i * 8 ) ) & 0xff ) );
               }
             }
             if ( stepIndex +1 == path.Steps.Count )
@@ -536,21 +511,21 @@ namespace RetroDevStudio.Formats
             {
               data.SetU8At( currentStepDataOffset + mapping.AddressOffsetStep, mapping.ValueStep );
             }
-            if ( mapping.AddressOffsetDuration >= 0 )
+            if ( AddressOffsetDuration >= 0 )
             {
               int durationValue = step.Duration;
-              if ( mapping.ShiftBitsLeftDuration > 0 )
+              if ( ShiftBitsLeftDuration > 0 )
               {
-                durationValue <<= mapping.ShiftBitsLeftDuration;
+                durationValue <<= ShiftBitsLeftDuration;
               }
-              if ( mapping.ShiftBitsRightDuration > 0 )
+              if ( ShiftBitsRightDuration > 0 )
               {
-                durationValue >>= mapping.ShiftBitsRightDuration;
+                durationValue >>= ShiftBitsRightDuration;
               }
-              int durationSize = (int)( mapping.RelevantBitsDuration + 255 ) / 256;
+              int durationSize = (int)( RelevantBitsDuration + 255 ) / 256;
               for ( int i = 0; i < durationSize; ++i )
               {
-                data.SetU8At( currentStepDataOffset + mapping.AddressOffsetDuration + i, (byte)( ( durationValue >> ( i * 8 ) ) & 0xff ) );
+                data.SetU8At( currentStepDataOffset + AddressOffsetDuration + i, (byte)( ( durationValue >> ( i * 8 ) ) & 0xff ) );
               }
             }
             if ( stepIndex + 1 == path.Steps.Count )

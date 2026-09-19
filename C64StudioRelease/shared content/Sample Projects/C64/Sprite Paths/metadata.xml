@@ -1,0 +1,6 @@
+<Sample Name="Paths"
+  Machine="C64"
+  ShortDescription="Showcases path projects"
+  Tags="C64,Assembly,Path,Sprites,Feature"
+  Desc="Showcases the usage of a path project in assembly. Uses the !mediasrc directive to include path data directly.">
+</Sample>

@@ -2380,6 +2380,39 @@
           Exports Count character data bytes starting at Index bytes of the character data
         </td>
       </tr>
+      <tr>
+        <td>
+          Path Project File
+        </td>
+        <td>
+          *.pathproject
+        </td>
+        <td>
+          path
+        </td>
+        <td>
+        </td>
+        <td>
+          Exports all paths data bytes
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Path Project File
+        </td>
+        <td>
+          *.pathproject
+        </td>
+        <td>
+          path
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports Count path data bytes starting at path Index
+        </td>
+      </tr>
     </table>
     <br />
     <br />
@@ -2420,6 +2453,10 @@
       !media "intro.graphicscreen",bitmapscreen,8,8,304,184
       !media "intro.graphicscreen",bitmapscreencolor
       !media "intro.graphicscreen",bitmapscreencolor,8,8,304,184
+
+      ;paths
+      !media "enemypatterns.pathproject",path
+      !media "enemypatterns.pathproject",path,5,16
     </div>
     <br />
     <br />
@@ -3094,6 +3131,164 @@
           Exports all character names of the given range as labels (only if their name is set)
         </td>
       </tr>
+      <tr>
+        <td>
+          Path Project File
+        </td>
+        <td>
+          *.pathproject
+        </td>
+        <td>
+          path
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all path datas in this format<br />
+          &lt;LabelPrefix&gt;NUM_PATHS = ...<br />
+          &lt;LabelPrefix&gt;PATH_LIST_LO<br />
+          &nbsp;&nbsp;&nbsp;!byte &lt;&lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte &lt;&lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          &lt;LabelPrefix&gt;PATH_LIST_HI<br />
+          &nbsp;&nbsp;&nbsp;!byte &gt;&lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte &gt;&lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          &lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte ...<br />
+          &lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;!byte ...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Path Project File
+        </td>
+        <td>
+          *.pathproject
+        </td>
+        <td>
+          path
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports all path datas in the given range in this format<br />
+          &lt;LabelPrefix&gt;NUM_PATHS = ...<br />
+          &lt;LabelPrefix&gt;PATH_LIST_LO<br />
+          &nbsp;&nbsp;&nbsp;!byte &lt;&lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte &lt;&lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          &lt;LabelPrefix&gt;PATH_LIST_HI<br />
+          &nbsp;&nbsp;&nbsp;!byte &gt;&lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte &gt;&lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          &lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte ...<br />
+          &lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;!byte ...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Path Project File
+        </td>
+        <td>
+          *.pathproject
+        </td>
+        <td>
+          pathonly
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports only the path datas in this format. This requires "pathlist" being used as well<br />
+          &lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte ...<br />
+          &lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;!byte ...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Path Project File
+        </td>
+        <td>
+          *.pathproject
+        </td>
+        <td>
+          pathonly
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports only the path datas in the given range in this format. This requires "pathlist" being used as well<br />
+          &lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte ...<br />
+          &lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;!byte ...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Path Project File
+        </td>
+        <td>
+          *.pathproject
+        </td>
+        <td>
+          pathlist
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports a list with references to all path datas in this format. This requires "pathonly" being used as well<br />
+          &lt;LabelPrefix&gt;NUM_PATHS = ...<br />
+          &lt;LabelPrefix&gt;PATH_LIST_LO<br />
+          &nbsp;&nbsp;&nbsp;!byte &lt;&lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte &lt;&lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          &lt;LabelPrefix&gt;PATH_LIST_HI<br />
+          &nbsp;&nbsp;&nbsp;!byte &gt;&lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte &gt;&lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Path Project File
+        </td>
+        <td>
+          *.pathproject
+        </td>
+        <td>
+          pathlist
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports a list with references to all path datas in the given range in this format. This requires "pathonly" being used as well<br />
+          &lt;LabelPrefix&gt;NUM_PATHS = ...<br />
+          &lt;LabelPrefix&gt;PATH_LIST_LO<br />
+          &nbsp;&nbsp;&nbsp;!byte &lt;&lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte &lt;&lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          &lt;LabelPrefix&gt;PATH_LIST_HI<br />
+          &nbsp;&nbsp;&nbsp;!byte &gt;&lt;LabelPrefix&gt;pathname1...<br />
+          &nbsp;&nbsp;&nbsp;!byte &gt;&lt;LabelPrefix&gt;pathname2...<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+        </td>
+      </tr>
     </table>
     <br />
     <br />
@@ -3134,6 +3329,14 @@
       !mediasrc "overworld.map",labelprefix,tilemap
       !mediasrc "overworld.map",labelprefix,charlabel
       !mediasrc "overworld.map",labelprefix,charlabel,64,32
+
+      ;Paths
+      !mediasrc "enemypatterns.pathproject",labelprefix,path
+      !mediasrc "enemypatterns.pathproject",labelprefix,path,5,16
+      !mediasrc "enemypatterns.pathproject",labelprefix,pathlist
+      !mediasrc "enemypatterns.pathproject",labelprefix,pathlist,5,16
+      !mediasrc "enemypatterns.pathproject",labelprefix,pathonly
+      !mediasrc "enemypatterns.pathproject",labelprefix,pathonly,5,16
     </div>
     <br />
     <br />

@@ -1,3 +1,4 @@
+using GR.Collections;
 using GR.Memory;
 using RetroDevStudio;
 using RetroDevStudio.Audio;
@@ -25,6 +26,8 @@ namespace RetroDevStudio.Documents
     private bool                      _updatingParams = false;
 
     private ExportPathFormBase        _ExportForm = null;
+
+    private Set<int>                  _problematicMappings = new Set<int>();
 
 
 
@@ -61,6 +64,12 @@ namespace RetroDevStudio.Documents
 
       SetDefaultDescriptors();
       FillMappings();
+      editMappingDurationOffset.Text = _project.AddressOffsetDuration.ToString();
+      editMappingDurationShiftLeft.Text = _project.ShiftBitsLeftDuration.ToString();
+      editMappingDurationShiftRight.Text = _project.ShiftBitsRightDuration.ToString();
+      editMappingDurationMask.Text = _project.RelevantBitsDuration.ToString( "X2" );
+      editMappingLastStepAddressOffset.Text = _project.AddressOffsetLastFlag.ToString( "X2" );
+      editMappingLastStepValue.Text = _project.ValueLastFlag.ToString( "X2" );
 
       _updatingParams = false;
 
@@ -101,40 +110,67 @@ namespace RetroDevStudio.Documents
       foreach ( var mapping in _project.ValueDescriptors )
       {
         int bitCount = CountBits( mapping.RelevantBitsStep, out int highestBit, out int lowestBit );
-        var usedBits = new GR.Collections.Set<int>();
+        var usedBits = new Dictionary<int,int>();
         for ( int i = 0; i < bitCount; ++i )
         {
-          int bitIndex = mapping.AddressOffsetStep * 8 + i + 7 - highestBit;
-
-          if ( usedBits.Contains( bitIndex ) )
+          if ( ( mapping.RelevantBitsStep & ( 1 << ( i + lowestBit ) ) ) != 0 )
           {
-            overlappingInMappings.Add( mapping );
+            int bitIndex = mapping.AddressOffsetStep * 8 + i + 7 - highestBit;
+
+            if ( usedBits.ContainsKey( bitIndex ) )
+            {
+              overlappingInMappings.Add( mapping );
+            }
+            else
+            {
+              usedBits.Add( bitIndex, 1 );
+            }
           }
-          usedBits.Add( bitIndex );
         }
 
-        bitCount = CountBits( mapping.RelevantBitsDuration, out highestBit, out lowestBit );
+        uint  value = _project.RelevantBitsDuration;
+        if ( _project.ShiftBitsLeftDuration > 0 )
+        {
+          value <<= _project.ShiftBitsLeftDuration;
+        }
+        if ( _project.ShiftBitsRightDuration > 0 )
+        {
+          value >>= _project.ShiftBitsRightDuration;
+        }
+        bitCount = CountBits( value, out highestBit, out lowestBit );
         for ( int i = 0; i < bitCount; ++i )
         {
-          int bitIndex = mapping.AddressOffsetDuration * 8 + i + 7 - highestBit;
-
-          if ( usedBits.Contains( bitIndex ) )
+          if ( ( _project.RelevantBitsDuration & ( 1 << ( i + lowestBit ) ) ) != 0 )
           {
-            overlappingInMappings.Add( mapping );
+            int bitIndex = _project.AddressOffsetDuration * 8 + i + 7 - highestBit;
+
+            if ( usedBits.ContainsKey( bitIndex ) )
+            {
+              overlappingInMappings.Add( mapping );
+            }
+            else
+            {
+              usedBits.Add( bitIndex, 2 );
+            }
           }
-          usedBits.Add( bitIndex );
         }
 
         bitCount = CountBits( _project.ValueLastFlag, out highestBit, out lowestBit );
         for ( int i = 0; i < bitCount; ++i )
         {
-          int bitIndex = _project.AddressOffsetLastFlag * 8 + i + 7 - highestBit;
-
-          if ( usedBits.Contains( bitIndex ) )
+          if ( ( _project.ValueLastFlag & ( 1 << ( i + lowestBit ) ) ) != 0 )
           {
-            overlappingInMappings.Add( mapping );
+            int bitIndex = _project.AddressOffsetLastFlag * 8 + i + 7 - highestBit;
+
+            if ( usedBits.ContainsKey( bitIndex ) )
+            {
+              overlappingInMappings.Add( mapping );
+            }
+            else
+            {
+              usedBits.Add( bitIndex, 3 );
+            }
           }
-          usedBits.Add( bitIndex );
         }
 
         foreach ( var otherMapping in _project.ValueDescriptors )
@@ -143,39 +179,26 @@ namespace RetroDevStudio.Documents
           {
             continue;
           }
-          bitCount = CountBits( mapping.RelevantBitsStep, out highestBit, out lowestBit );
+          /*
+          byte  resultingBits = (byte)( ( ( mapping.ValueStep & ~mapping.RelevantBitsStep ) & ( otherMapping.RelevantBitsStep ) ) | otherMapping.ValueStep );
+          if ( resultingBits != otherMapping.ValueStep )
+          {
+            overlappingBetweenMappings.Add( mapping );
+            overlappingBetweenMappings.Add( otherMapping );
+          }*/
+          bitCount = CountBits( otherMapping.RelevantBitsStep, out highestBit, out lowestBit );
           for ( int i = 0; i < bitCount; ++i )
           {
-            int bitIndex = mapping.AddressOffsetStep * 8 + i + 7 - highestBit;
-
-            if ( usedBits.Contains( bitIndex ) )
+            if ( ( otherMapping.RelevantBitsStep & ( 1 << ( i + lowestBit ) ) ) != 0 )
             {
-              overlappingBetweenMappings.Add( mapping );
-              overlappingBetweenMappings.Add( otherMapping );
-            }
-          }
+              int bitIndex = otherMapping.AddressOffsetStep * 8 + i + 7 - highestBit;
 
-          bitCount = CountBits( mapping.RelevantBitsDuration, out highestBit, out lowestBit );
-          for ( int i = 0; i < bitCount; ++i )
-          {
-            int bitIndex = mapping.AddressOffsetDuration * 8 + i + 7 - highestBit;
-
-            if ( usedBits.Contains( bitIndex ) )
-            {
-              overlappingBetweenMappings.Add( mapping );
-              overlappingBetweenMappings.Add( otherMapping );
-            }
-          }
-
-          bitCount = CountBits( _project.ValueLastFlag, out highestBit, out lowestBit );
-          for ( int i = 0; i < bitCount; ++i )
-          {
-            int bitIndex = _project.AddressOffsetLastFlag * 8 + i + 7 - highestBit;
-
-            if ( usedBits.Contains( bitIndex ) )
-            {
-              overlappingBetweenMappings.Add( mapping );
-              overlappingBetweenMappings.Add( otherMapping );
+              if ( ( usedBits.ContainsKey( bitIndex ) )
+              &&   ( usedBits[bitIndex] != 1 ) )
+              {
+                overlappingBetweenMappings.Add( mapping );
+                overlappingBetweenMappings.Add( otherMapping );
+              }
             }
           }
         }
@@ -192,24 +215,42 @@ namespace RetroDevStudio.Documents
       string    fullBits = new string( '*', totalNumberOfBytes * 8 );
 
       int bitCount = CountBits( mapping.RelevantBitsStep, out int highestBit, out int lowestBit );
-      for ( int i = 0; i < bitCount; ++i )
+      for ( int i = 0; i < highestBit - lowestBit + 1; ++i )
       {
-        int bitIndex = mapping.AddressOffsetStep * 8 + i + 7 - highestBit;
-        fullBits = fullBits.Substring( 0, bitIndex ) + "S" + fullBits.Substring( bitIndex + 1 );
+        if ( ( mapping.RelevantBitsStep & ( 1 << ( i + lowestBit ) ) ) != 0 )
+        {
+          int bitIndex = mapping.AddressOffsetStep * 8 + i + 7 - highestBit;
+          fullBits = fullBits.Substring( 0, bitIndex ) + "S" + fullBits.Substring( bitIndex + 1 );
+        }
       }
 
-      bitCount = CountBits( mapping.RelevantBitsDuration, out highestBit, out lowestBit );
-      for ( int i = 0; i < bitCount; ++i )
+      uint  value = _project.RelevantBitsDuration;
+      if ( _project.ShiftBitsLeftDuration > 0 )
       {
-        int bitIndex = mapping.AddressOffsetDuration * 8 + i + 7 - highestBit;
-        fullBits = fullBits.Substring( 0, bitIndex ) + "D" + fullBits.Substring( bitIndex + 1 );
+        value <<= _project.ShiftBitsLeftDuration;
+      }
+      if ( _project.ShiftBitsRightDuration > 0 )
+      {
+        value >>= _project.ShiftBitsRightDuration;
+      }
+      bitCount = CountBits( value, out highestBit, out lowestBit );
+      for ( int i = 0; i < highestBit - lowestBit + 1; ++i )
+      {
+        if ( ( value & ( 1 << ( i + lowestBit ) ) ) != 0 )
+        {
+          int bitIndex = _project.AddressOffsetDuration * 8 + i + 7 - highestBit;
+          fullBits = fullBits.Substring( 0, bitIndex ) + "D" + fullBits.Substring( bitIndex + 1 );
+        }
       }
 
       bitCount = CountBits( _project.ValueLastFlag, out highestBit, out lowestBit );
-      for ( int i = 0; i < bitCount; ++i )
+      for ( int i = 0; i < highestBit - lowestBit + 1; ++i )
       {
-        int bitIndex = _project.AddressOffsetLastFlag * 8 + i + 7 - highestBit;
-        fullBits = fullBits.Substring( 0, bitIndex ) + "L" + fullBits.Substring( bitIndex + 1 );
+        if ( ( _project.ValueLastFlag & ( 1 << ( i + lowestBit ) ) ) != 0 )
+        {
+          int bitIndex = _project.AddressOffsetLastFlag * 8 + i + 7 - highestBit;
+          fullBits = fullBits.Substring( 0, bitIndex ) + "L" + fullBits.Substring( bitIndex + 1 );
+        }
       }
 
       string finalString = "";
@@ -261,6 +302,29 @@ namespace RetroDevStudio.Documents
     {
       _project.ValueDescriptors.Clear();
       _project.SetDefaultDescriptors();
+      RevalidateMappings();
+    }
+
+
+
+    private void RevalidateMappings()
+    {
+      bool  isValid = IsMappingValid( out var overlappingInMappings, out var overlappingBetweenMappings );
+
+      _problematicMappings.Clear();
+      foreach ( var entry in overlappingInMappings )
+      {
+        var index = _project.ValueDescriptors.IndexOf( entry );
+
+        _problematicMappings.Add( index );
+      }
+      foreach ( var entry in overlappingBetweenMappings )
+      {
+        var index = _project.ValueDescriptors.IndexOf( entry );
+
+        _problematicMappings.Add( index );
+      }
+      listMappings.Invalidate();
     }
 
 
@@ -297,6 +361,7 @@ namespace RetroDevStudio.Documents
         Core.Notification.MessageBox( "Could not load file", "Could not load path project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
+      RevalidateMappings();
       SetUnmodified();
       return true;
     }
@@ -317,6 +382,12 @@ namespace RetroDevStudio.Documents
       FillMappings();
       editMappingLastStepAddressOffset.Text = _project.AddressOffsetLastFlag.ToString( "X2" );
       editMappingLastStepValue.Text = _project.ValueLastFlag.ToString( "X2" );
+      editMappingDurationOffset.Text = _project.AddressOffsetDuration.ToString();
+      editMappingDurationShiftLeft.Text = _project.ShiftBitsLeftDuration.ToString();
+      editMappingDurationShiftRight.Text = _project.ShiftBitsRightDuration.ToString();
+      editMappingDurationMask.Text = _project.RelevantBitsDuration.ToString( "X2" );
+
+      RevalidateMappings();
       return true;
     }
 
@@ -650,7 +721,7 @@ namespace RetroDevStudio.Documents
       }
 
       if ( ( listPaths.SelectedItem == null )
-      || ( listPathSteps.SelectedItem == null ) )
+      ||   ( listPathSteps.SelectedItem == null ) )
       {
         return;
       }
@@ -678,7 +749,7 @@ namespace RetroDevStudio.Documents
       }
 
       if ( ( listPaths.SelectedItem == null )
-      || ( listPathSteps.SelectedItem == null ) )
+      ||   ( listPathSteps.SelectedItem == null ) )
       {
         return;
       }
@@ -726,11 +797,9 @@ namespace RetroDevStudio.Documents
       if ( Item == null )
       {
         groupStepValues.Enabled = false;
-        groupDurationValues.Enabled = false;
         return;
       }
       groupStepValues.Enabled = true;
-      groupDurationValues.Enabled = true;
 
       var mapping = (PathProject.ValueDescriptor)Item.Tag;
 
@@ -738,11 +807,6 @@ namespace RetroDevStudio.Documents
       editMappingStepValue.Text           = mapping.ValueStep.ToString( "X2" );
       editMappingStepMask.Text            = mapping.RelevantBitsStep.ToString( "X2" );
       comboMappingStepType.SelectedIndex  = (int)mapping.Step;
-
-      editMappingDurationOffset.Text = mapping.AddressOffsetDuration.ToString();
-      editMappingDurationShiftLeft.Text = mapping.ShiftBitsLeftDuration.ToString();
-      editMappingDurationShiftRight.Text = mapping.ShiftBitsRightDuration.ToString();
-      editMappingDurationMask.Text = mapping.RelevantBitsDuration.ToString( "X2" );
     }
 
 
@@ -760,6 +824,7 @@ namespace RetroDevStudio.Documents
         mapping.AddressOffsetStep = newValue;
         SetModified();
         listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
+        RevalidateMappings();
       }
     }
 
@@ -778,6 +843,7 @@ namespace RetroDevStudio.Documents
         mapping.ValueStep = newValue;
         SetModified();
         listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
+        RevalidateMappings();
       }
     }
 
@@ -796,6 +862,7 @@ namespace RetroDevStudio.Documents
         mapping.RelevantBitsStep = newValue;
         SetModified();
         listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
+        RevalidateMappings();
       }
     }
 
@@ -803,17 +870,13 @@ namespace RetroDevStudio.Documents
 
     private void editMappingDurationOffset_TextChanged( object sender, EventArgs e )
     {
-      if ( listMappings.SelectedItem == null )
-      {
-        return;
-      }
-      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
       var newValue = GR.Convert.ToI32( editMappingDurationOffset.Text );
-      if ( mapping.AddressOffsetDuration != newValue )
+      if ( _project.AddressOffsetDuration != newValue )
       {
-        mapping.AddressOffsetDuration = newValue;
+        _project.AddressOffsetDuration = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
+        FillMappings();
+        RevalidateMappings();
       }
     }
 
@@ -821,17 +884,13 @@ namespace RetroDevStudio.Documents
 
     private void editMappingDurationShiftLeft_TextChanged( object sender, EventArgs e )
     {
-      if ( listMappings.SelectedItem == null )
-      {
-        return;
-      }
-      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
       var newValue = GR.Convert.ToI32( editMappingDurationShiftLeft.Text );
-      if ( mapping.ShiftBitsLeftDuration != newValue )
+      if ( _project.ShiftBitsLeftDuration != newValue )
       {
-        mapping.ShiftBitsLeftDuration = newValue;
+        _project.ShiftBitsLeftDuration = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
+        FillMappings();
+        RevalidateMappings();
       }
     }
 
@@ -839,17 +898,13 @@ namespace RetroDevStudio.Documents
 
     private void editMappingDurationShiftRight_TextChanged( object sender, EventArgs e )
     {
-      if ( listMappings.SelectedItem == null )
-      {
-        return;
-      }
-      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
       var newValue = GR.Convert.ToI32( editMappingDurationShiftRight.Text );
-      if ( mapping.ShiftBitsRightDuration != newValue )
+      if ( _project.ShiftBitsRightDuration != newValue )
       {
-        mapping.ShiftBitsRightDuration = newValue;
+        _project.ShiftBitsRightDuration = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
+        FillMappings();
+        RevalidateMappings();
       }
     }
 
@@ -857,17 +912,13 @@ namespace RetroDevStudio.Documents
 
     private void editMappingDurationMask_TextChanged( object sender, EventArgs e )
     {
-      if ( listMappings.SelectedItem == null )
-      {
-        return;
-      }
-      var mapping = (PathProject.ValueDescriptor)listMappings.SelectedItem.Tag;
       var newValue = GR.Convert.ToU32( editMappingDurationMask.Text, 16 );
-      if ( mapping.RelevantBitsDuration != newValue )
+      if ( _project.RelevantBitsDuration != newValue )
       {
-        mapping.RelevantBitsDuration = newValue;
+        _project.RelevantBitsDuration = newValue;
         SetModified();
-        listMappings.SelectedItem.Text = GenerateStepMappingToText( mapping, _project.DetermineTotalNumberOfBytes() );
+        FillMappings();
+        RevalidateMappings();
       }
     }
 
@@ -935,11 +986,6 @@ namespace RetroDevStudio.Documents
         newVD.AddressOffsetStep = GR.Convert.ToI32( editMappingStepOffset.Text );
         newVD.RelevantBitsStep = GR.Convert.ToU8( editMappingStepMask.Text, 16 );
 
-        newVD.AddressOffsetDuration = GR.Convert.ToI32( editMappingDurationOffset.Text );
-        newVD.ShiftBitsLeftDuration = GR.Convert.ToI32( editMappingDurationShiftLeft.Text );
-        newVD.ShiftBitsRightDuration = GR.Convert.ToI32( editMappingDurationShiftRight.Text );
-        newVD.RelevantBitsDuration = GR.Convert.ToU32( editMappingDurationMask.Text, 16 );
-
         _project.ValueDescriptors.Add( newVD );
 
         Item.Tag = newVD;
@@ -950,6 +996,7 @@ namespace RetroDevStudio.Documents
         _project.Paths.Add( (PathProject.Path)Item.Tag );
       }
 
+      RevalidateMappings();
       SetModified();
     }
 
@@ -974,6 +1021,7 @@ namespace RetroDevStudio.Documents
       var vd = (PathProject.ValueDescriptor)Item.Tag;
       _project.ValueDescriptors.Remove( vd );
       SetModified();
+      RevalidateMappings();
     }
 
 
@@ -987,6 +1035,7 @@ namespace RetroDevStudio.Documents
 
         FillMappings();
         SetModified();
+        RevalidateMappings();
       }
     }
 
@@ -1001,6 +1050,7 @@ namespace RetroDevStudio.Documents
 
         FillMappings();
         SetModified();
+        RevalidateMappings();
       }
     }
 
@@ -1024,6 +1074,11 @@ namespace RetroDevStudio.Documents
 
       int offset1 = GR.Image.DPIHandler.AdjustPixelSize( 90 );
       int offset2 = GR.Image.DPIHandler.AdjustPixelSize( 140 );
+
+      if ( _problematicMappings.Contains( item.Index ) )
+      {
+        color = ( color & 0xff00ffff ) | 0x00ff0000;
+      }
 
       renderer.DrawText( GR.EnumHelper.GetDescription( vd.Step ),
                          rect.Left, rect.Top, rect.Width, rect.Height,
