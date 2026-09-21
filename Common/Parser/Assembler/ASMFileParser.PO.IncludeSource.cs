@@ -183,6 +183,11 @@ namespace RetroDevStudio.Parser
             return ParseLineResult.RETURN_NULL;
           }
 
+          if ( m_CompileConfig.LibraryFiles.Count == 0 )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, $"No library paths configured!" );
+            return ParseLineResult.RETURN_NULL;
+          }
           AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching library file for '" + subFilename + "' in line " + ( lineIndex + 1 ) );
           return ParseLineResult.RETURN_NULL;
         }
