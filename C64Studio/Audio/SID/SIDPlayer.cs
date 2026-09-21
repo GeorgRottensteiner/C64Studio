@@ -62,11 +62,11 @@ namespace RetroDevStudio.Audio
         songStartAddress = 2061;
         */
 
-        _player.Stop();
         if ( sidData == null )
         {
           return false;
         }
+        _player.Stop();
         var hex = ByteArrayToHexString( sidData );
         return _player.PlayFromBinary( hex, dataStartAddress, songStartAddress );
       }
