@@ -1918,6 +1918,8 @@ namespace RetroDevStudio
 
     public void AdvanceFrame()
     {
+      QueueRequest( DebugRequestType.ADVANCE_FRAME );
+      /*
       var requData = new RequestData( DebugRequestType.ADD_BREAKPOINT, 0, 0xffff );
       requData.Breakpoint = new Types.Breakpoint()
       {
@@ -1930,6 +1932,7 @@ namespace RetroDevStudio
       requData.Parameter2 = 0xffff;
       QueueRequest( requData );
       m_SendResumeAfterConditionResponse = true;
+      */
       //QueueRequest( DebugRequestType.EXIT );
 
       //QueueRequest( DebugRequestType.ADVANCE_FRAME );
