@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Dialogs;
+using RetroDevStudio.Dialogs;
 using RetroDevStudio.Types;
 using System;
 using System.Windows.Forms;
@@ -48,8 +48,8 @@ namespace RetroDevStudio.Controls
         {
           radioCharColor.Checked = true;
         }
-        comboCharColor.SelectedIndex = _CustomColor & 0x0f;
-        comboBackground.SelectedIndex = ( _CustomColor >> 4 ) & 0x0f;
+        comboCharColor.SelectedIndex = _CustomColor & comboCharColor.Items.Count;
+        comboBackground.SelectedIndex = ( _CustomColor >> 4 ) & comboBackground.Items.Count;
       }
     }
 

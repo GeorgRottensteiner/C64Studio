@@ -34,7 +34,7 @@ namespace RetroDevStudio.Displayer
           {
             colorIndex = BGColor;
           }
-          Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[colorIndex], 
+          Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[colorIndex] ?? System.Drawing.SystemBrushes.ActiveBorder, 
                                           ( i * Context.Bounds.Width ) / Width,
                                           ( j * Context.Bounds.Height ) / Height,
                                           ( ( i + 1 ) * Context.Bounds.Width ) / Width - ( i * Context.Bounds.Width ) / Width,

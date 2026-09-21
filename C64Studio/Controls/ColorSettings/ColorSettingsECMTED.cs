@@ -78,11 +78,11 @@ namespace RetroDevStudio.Controls
         comboMulticolor2.Items.Add( i.ToString( "d2" ) );
         comboBGColor4.Items.Add( i.ToString( "d2" ) );
       }
-      comboBackground.SelectedIndex   = Colors.BackgroundColor;
-      comboMulticolor1.SelectedIndex  = Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex  = Colors.MultiColor2;
-      comboBGColor4.SelectedIndex     = Colors.BGColor4;
-      comboCharColor.SelectedIndex    = CustomColor;
+      comboBackground.SelectedIndex   = Colors.BackgroundColor % comboBackground.Items.Count;
+      comboMulticolor1.SelectedIndex  = Colors.MultiColor1 % comboMulticolor1.Items.Count;
+      comboMulticolor2.SelectedIndex  = Colors.MultiColor2 % comboMulticolor2.Items.Count;
+      comboBGColor4.SelectedIndex     = Colors.BGColor4 % comboBGColor4.Items.Count;
+      comboCharColor.SelectedIndex    = CustomColor % comboCharColor.Items.Count;
 
       radioCharColor.Checked = true;
     }

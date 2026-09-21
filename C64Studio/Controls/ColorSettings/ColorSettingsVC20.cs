@@ -1,4 +1,4 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -89,10 +89,10 @@ namespace RetroDevStudio.Controls
         comboBackground.Items.Add( i.ToString( "d2" ) );
         comboAuxColor.Items.Add( i.ToString( "d2" ) );
       }
-      comboBackground.SelectedIndex = Colors.BackgroundColor;
+      comboBackground.SelectedIndex = Colors.BackgroundColor % comboBackground.Items.Count;
       comboBorderColor.SelectedIndex = Colors.MultiColor1 % 8;
-      comboAuxColor.SelectedIndex = Colors.MultiColor2;
-      comboCharColor.SelectedIndex = CustomColor;
+      comboAuxColor.SelectedIndex = Colors.MultiColor2 % comboAuxColor.Items.Count;
+      comboCharColor.SelectedIndex = CustomColor % comboCharColor.Items.Count;
 
       radioCharColor.Checked = true;
       _CurrentColorType = ColorType.MULTICOLOR_2;

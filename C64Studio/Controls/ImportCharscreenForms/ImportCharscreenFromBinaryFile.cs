@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using GR.Memory;
 using System;
@@ -204,6 +204,12 @@ namespace RetroDevStudio.Controls
                 }
                 continue;
               }
+              else if ( ( dataLine.StartsWith( ";" ) )
+              ||        ( dataLine.StartsWith( "}" ) ) )
+              {
+                // comment, or };
+                continue;
+              }
               int     pos = 0;
               int     commaPos = -1;
 
@@ -230,8 +236,10 @@ namespace RetroDevStudio.Controls
             // border and BG first
 
             if ( ( dataType != "DIRART" )
-            &&   ( dataType != "PET" ) )
+            &&   ( dataType != "PET" )
+            &&   ( screenData.Length == CharScreen.Screens[Editor.CurrentScreenIndex].Width * CharScreen.Screens[Editor.CurrentScreenIndex].Height + 2 ) )
             {
+              // extra bytes for border/bg exist, PETSCII Wizard does not add these!
               CharScreen.CharSet.Colors.BackgroundColor = screenData.ByteAt( 1 );
               screenData = screenData.SubBuffer( 2 );
             }
