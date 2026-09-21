@@ -3083,7 +3083,10 @@ namespace RetroDevStudio
           {
             m_CurrentProject.Settings.BreakPoints.Add( Breakpoint.DocumentFilename, new List<Types.Breakpoint>() );
           }
-          m_CurrentProject.Settings.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
+          if ( !m_CurrentProject.Settings.BreakPoints[Breakpoint.DocumentFilename].Contains( Breakpoint ) )
+          {
+            m_CurrentProject.Settings.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
+          }
         }
       }
       else if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
@@ -3111,7 +3114,7 @@ namespace RetroDevStudio
     private void RemoveBreakpoint( Types.Breakpoint Breakpoint )
     {
       if ( ( AppState == Types.StudioState.NORMAL )
-      || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+      ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
       {
         m_DebugBreakpoints.RemoveBreakpoint( Breakpoint );
         if ( StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
@@ -3121,6 +3124,10 @@ namespace RetroDevStudio
             if ( breakPoint == Breakpoint )
             {
               StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Remove( breakPoint );
+              if ( StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Count == 0 )
+              {
+                StudioCore.Debugging.BreakPoints.Remove( Breakpoint.DocumentFilename );
+              }
               break;
             }
           }
@@ -3183,10 +3190,10 @@ namespace RetroDevStudio
           break;
         case BaseDocument.DocEvent.Type.BREAKPOINT_REMOVED:
           if ( ( AppState == Types.StudioState.NORMAL )
-          || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+          ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             if ( ( m_CurrentProject != null )
-            && ( m_CurrentProject.Settings.BreakPoints.ContainsKey( Event.Breakpoint.DocumentFilename ) ) )
+            &&   ( m_CurrentProject.Settings.BreakPoints.ContainsKey( Event.Breakpoint.DocumentFilename ) ) )
             {
               m_CurrentProject.Settings.BreakPoints[Event.Breakpoint.DocumentFilename].Remove( Event.Breakpoint );
             }
