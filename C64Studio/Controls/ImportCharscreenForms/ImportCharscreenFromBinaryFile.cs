@@ -237,7 +237,8 @@ namespace RetroDevStudio.Controls
 
             if ( ( dataType != "DIRART" )
             &&   ( dataType != "PET" )
-            &&   ( screenData.Length == CharScreen.Screens[Editor.CurrentScreenIndex].Width * CharScreen.Screens[Editor.CurrentScreenIndex].Height + 2 ) )
+            &&   ( ( screenData.Length == CharScreen.Screens[Editor.CurrentScreenIndex].Width * CharScreen.Screens[Editor.CurrentScreenIndex].Height + 2 )
+            ||     ( screenData.Length == 2 * CharScreen.Screens[Editor.CurrentScreenIndex].Width * CharScreen.Screens[Editor.CurrentScreenIndex].Height + 2 ) ) )
             {
               // extra bytes for border/bg exist, PETSCII Wizard does not add these!
               CharScreen.CharSet.Colors.BackgroundColor = screenData.ByteAt( 1 );
