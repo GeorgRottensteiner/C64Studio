@@ -50,6 +50,10 @@ namespace RetroDevStudio.Audio
 
     internal void Play( ByteBuffer playerData )
     {
+      if ( _currentSFXPlayer == null )
+      {
+        return;
+      }
       if ( _sidPlayer == null )
       {
         _sidPlayer = new SIDPlayer();
