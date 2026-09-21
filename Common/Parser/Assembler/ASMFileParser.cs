@@ -5366,10 +5366,13 @@ namespace RetroDevStudio.Parser
           HadFatalError = true;
           return Lines;
         }
-        var handleSeparatorsResult = HandleLineSeparators( ref lineIndex, lineTokenInfos, ref Lines, filename );
-        if ( handleSeparatorsResult == ParseLineResult.CALL_CONTINUE )
+        if ( !ScopeInsideMacroDefinition() )
         {
-          continue;
+          var handleSeparatorsResult = HandleLineSeparators( ref lineIndex, lineTokenInfos, ref Lines, filename );
+          if ( handleSeparatorsResult == ParseLineResult.CALL_CONTINUE )
+          {
+            continue;
+          }
         }
 
         // empty line restarts combined comment
