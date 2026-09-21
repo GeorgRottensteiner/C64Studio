@@ -525,20 +525,17 @@ namespace RetroDevStudio.Documents
       if ( ( doc != null )
       &&   ( doc.Project != null ) )
       {
-        Debug.Log( $"RefillBreakpointList for project" );
         RefillBreakpointList( doc.Project.Settings.BreakPoints );
       }
       else if ( Core.Debugging.Debugger != null )
       {
         // projectless debugging, use watches from debugger
-        Debug.Log( $"RefillBreakpointList from debugger" );
         RefillBreakpointList( Core.Debugging.BreakPoints );
       }
       else if ( ( doc != null )
       &&        ( doc.Type == ProjectElement.ElementType.ASM_SOURCE ) )
       {
         // assembler without project
-        Debug.Log( $"RefillBreakpointList from document" );
         var mappedBreakpoints = ( (SourceASMEx)doc.BaseDoc ).MapBreakpoints();
         RefillBreakpointList( mappedBreakpoints );
       }
@@ -564,7 +561,6 @@ namespace RetroDevStudio.Documents
           listBreakpoints.Items.Add( item );
         }
       }
-      Debug.Log( $"Breakpoints refilled, now {listBreakpoints.Items.Count}" );
     }
 
 
