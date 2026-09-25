@@ -105,9 +105,9 @@ namespace RetroDevStudio.Controls
         popupControl.Size = new Size( 256, 256 );
 
         var popup = new SingleActionPopupControl( popupControl );
+        popup.ClientSize = new Size( 256, 256 );
         var screenPos = panelCharColors.Parent.PointToScreen( panelCharColors.Location );
         popup.Location = new Point( screenPos.X, screenPos.Y - popup.Height + panelCharColors.Height );
-        popup.ClientSize = new Size( 256, 256 );
 
         // build all variations
         for ( byte i = 0; i < 16; ++i )
