@@ -89,8 +89,10 @@ namespace RetroDevStudio.Controls
     private void HandleMouseOnColorChooser( int X, int Y, MouseButtons Buttons )
     {
       if ( ( X < 0 )
+      ||   ( Y < 0 )
       ||   ( m_ColorChooserPopupActive )
-      ||   ( X >= panelCharColors.ClientSize.Width ) )
+      ||   ( X >= panelCharColors.ClientSize.Width )
+      ||   ( Y >= panelCharColors.ClientSize.Height ) )
       {
         return;
       }
@@ -124,7 +126,8 @@ namespace RetroDevStudio.Controls
         m_ColorChooserPopupActive = true;
         return;
       }
-      if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left )
+      if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left
+      &&   ( panelCharColors.ClientRectangle.Contains( X, Y ) ) )
       {
         int colorIndex = (int)( ( 16 * X ) / panelCharColors.ClientSize.Width );
         SelectedColor = (byte)colorIndex;
