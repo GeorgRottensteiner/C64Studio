@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Formats;
 using GR.Memory;
 using System.Windows.Forms;
 using RetroDevStudio.Documents;
@@ -26,7 +26,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleImport( SpriteProject Project, SpriteEditor Editor )
+    public override bool HandleImport( SpriteProject Project, SpriteEditor Editor, int startIndex )
     {
       ByteBuffer    data;
 
@@ -39,7 +39,7 @@ namespace RetroDevStudio.Controls
         data = Util.FromBASIC( editInput.Text );
       }
 
-      Editor.ImportFromData( data );
+      Editor.ImportFromData( data, startIndex );
       return true;
     }
 

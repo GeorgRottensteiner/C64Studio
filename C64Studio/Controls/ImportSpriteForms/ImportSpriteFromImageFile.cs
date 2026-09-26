@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using RetroDevStudio.Documents;
 
@@ -23,7 +23,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleImport( SpriteProject Project, SpriteEditor Editor )
+    public override bool HandleImport( SpriteProject Project, SpriteEditor Editor, int startIndex )
     {
       string filename;
 
@@ -59,11 +59,15 @@ namespace RetroDevStudio.Controls
 
       Editor.ChangeColorSettingsDialog();
 
-      int   currentSpriteIndex = 0;
+      int   currentSpriteIndex = startIndex;
       int   curX = 0;
       int   curY = 0;
       while ( curY < spriteImage.Height )
       {
+        if ( currentSpriteIndex >= Project.Sprites.Count )
+        {
+          break;
+        }
         Editor.ImportSprite( spriteImage.GetImage( curX, curY, Editor.m_SpriteWidth, Editor.m_SpriteHeight ) as GR.Image.FastImage, currentSpriteIndex );
         Editor.SpriteChanged( currentSpriteIndex );
 

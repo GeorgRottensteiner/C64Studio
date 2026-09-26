@@ -6632,7 +6632,7 @@ namespace RetroDevStudio
         openDirectFile = false;
         document = new SpriteEditor( StudioCore );
         document.ShowHint = DockState.Document;
-        ( (SpriteEditor)document ).ImportSprites( Filename, true, true );
+        ( (SpriteEditor)document ).ImportSprites( Filename, true, true, 0 );
       }
       else if ( extension == ".SFXPROJECT" )
       {

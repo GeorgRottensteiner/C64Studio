@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Formats;
 using RetroDevStudio.Documents;
 
 
@@ -22,7 +22,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleImport( SpriteProject Project, SpriteEditor Editor )
+    public override bool HandleImport( SpriteProject Project, SpriteEditor Editor, int startIndex )
     {
       string filename;
       int bytesToSkip = GR.Convert.ToI32( editImportSkipBytes.Text );
@@ -39,7 +39,7 @@ namespace RetroDevStudio.Controls
       {
         AutoHandleDataByExtension( GR.Path.GetExtension( filename ).ToUpper(), ref bytesToSkip );
       }
-      return Editor.ImportSprites( filename, true, true, bytesToSkip, checkImportExpectPadding.Checked );
+      return Editor.ImportSprites( filename, true, true, startIndex, bytesToSkip, checkImportExpectPadding.Checked );
     }
 
 

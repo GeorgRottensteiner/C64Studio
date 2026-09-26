@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Formats;
 using System.Windows.Forms;
 using RetroDevStudio.Documents;
 
@@ -28,7 +28,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public virtual bool HandleImport( SpriteProject Project, SpriteEditor Editor )
+    public virtual bool HandleImport( SpriteProject Project, SpriteEditor Editor, int startIndex )
     {
       return false;
     }

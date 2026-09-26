@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Formats;
 using System.Windows.Forms;
 using RetroDevStudio.Documents;
 
@@ -23,7 +23,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleImport( SpriteProject CharSet, SpriteEditor Editor )
+    public override bool HandleImport( SpriteProject CharSet, SpriteEditor Editor, int startIndex )
     {
       string    binaryText = editInput.Text.Replace( " ", "" ).Replace( "\r", "" ).Replace( "\n", "" );
 
@@ -33,7 +33,7 @@ namespace RetroDevStudio.Controls
         return false;
       }
 
-      Editor.ImportFromData( data );
+      Editor.ImportFromData( data, startIndex );
       return true;
     }
 
