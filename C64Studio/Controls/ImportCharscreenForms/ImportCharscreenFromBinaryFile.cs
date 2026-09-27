@@ -242,11 +242,6 @@ namespace RetroDevStudio.Controls
                   pos = commaPos + 1;
                 }
               }
-              Debug.Log( $"Data is now {screenData.Length} bytes" );
-              if ( screenData.Length == 1000 )
-              {
-                int xx = 2;
-              }
             }
             // border and BG first
 
