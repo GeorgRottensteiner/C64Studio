@@ -208,25 +208,10 @@ namespace RetroDevStudio.Documents
         var finalImage = new MemoryImage( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.Width * mainXFactor, 
                                           m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.Height * mainYFactor, 
                                           m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.PixelFormat );
-        bool firstImage = true;
+        finalImage.Box( 0, 0, finalImage.Width, finalImage.Height, m_SpriteProject.Colors.Palette.ColorValues[m_SpriteProject.Colors.BackgroundColor] );
         foreach ( var layerSprite in m_CurrentLayer.Sprites )
         {
           var sprite = m_SpriteProject.Sprites[layerSprite.Index];
-
-          bool expandX = layerSprite.ExpandX;
-          bool expandY = layerSprite.ExpandY;
-          if ( ( mainSprite.ExpandX )
-          &&   ( expandX ) )
-          {
-            expandX = false;
-          }
-          if ( ( mainSprite.ExpandY )
-          &&   ( expandY ) )
-          {
-            expandY = false;
-          }
-          int localXFactor = expandX ? 2 : 1;
-          int localYFactor = expandY ? 2 : 1;
 
           DrawSpriteImage( finalImage, 
                            ( layerSprite.X - mainSprite.X ) * mainXFactor,
@@ -236,8 +221,7 @@ namespace RetroDevStudio.Documents
                            sprite.Mode,
                            m_SpriteProject.Colors.BackgroundColor,
                            m_SpriteProject.Colors.MultiColor1, m_SpriteProject.Colors.MultiColor2,
-                           layerSprite.ExpandX, layerSprite.ExpandY, !firstImage, sprite.Tile.Colors.PaletteOffset );
-          firstImage = false;
+                           layerSprite.ExpandX, layerSprite.ExpandY, true, sprite.Tile.Colors.PaletteOffset );
         }
 
         pictureEditor.Image = finalImage;
@@ -2238,6 +2222,10 @@ namespace RetroDevStudio.Documents
         {
           sprite.X = newPos;
           listLayerSprites.SelectedItems[0].Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
+          if ( IsSpriteChangeTriggeringARedraw( sprite.Index ) )
+          {
+            RedrawEditor();
+          }
           RedrawPreviewLayer();
           SetModified();
         }
@@ -2257,6 +2245,10 @@ namespace RetroDevStudio.Documents
         {
           sprite.Y = newPos;
           listLayerSprites.SelectedItems[0].Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
+          if ( IsSpriteChangeTriggeringARedraw( sprite.Index ) )
+          {
+            RedrawEditor();
+          }
           RedrawPreviewLayer();
           SetModified();
         }
@@ -2602,7 +2594,7 @@ namespace RetroDevStudio.Documents
     {
       RebuildSpriteImage( SpriteIndex );
       panelSprites.Items[SpriteIndex].MemoryImage = m_SpriteProject.Sprites[SpriteIndex].Tile.Image;
-      if ( m_CurrentSprite == SpriteIndex )
+      if ( IsSpriteChangeTriggeringARedraw( SpriteIndex ) )
       {
         RedrawEditor();
       }
@@ -2635,6 +2627,20 @@ namespace RetroDevStudio.Documents
       }
       CurrentSpriteModified();
       SetModified();
+    }
+
+
+
+    private bool IsSpriteChangeTriggeringARedraw( int spriteIndex )
+    {
+      if ( ( m_CurrentSprite == spriteIndex )
+      ||   ( ( _ShowPreviewAsOverlay )
+      &&     ( m_CurrentLayer != null )
+      &&     ( m_CurrentLayer.Sprites.Any( lsp => lsp.Index == spriteIndex ) ) ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
