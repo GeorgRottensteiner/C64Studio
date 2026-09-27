@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -173,9 +173,12 @@ namespace GR.Forms
           {
             m_DisplayPage.DrawImage( m_MemoryImage, 0, 0 );
           }
-          for ( int i = 0; i < 256; ++i )
+          if ( m_DisplayPage.BitsPerPixel <= 8 )
           {
-            m_DisplayPageBuffer.SetPaletteColor( i, m_DisplayPage.PaletteRed( i ), m_DisplayPage.PaletteGreen( i ), m_DisplayPage.PaletteBlue( i ) );
+            for ( int i = 0; i < 256; ++i )
+            {
+              m_DisplayPageBuffer.SetPaletteColor( i, m_DisplayPage.PaletteRed( i ), m_DisplayPage.PaletteGreen( i ), m_DisplayPage.PaletteBlue( i ) );
+            }
           }
           m_DisplayPage.BlitTo( m_DisplayPageBuffer );
 

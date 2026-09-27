@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Types;
+using RetroDevStudio.Types;
 using RetroDevStudio.Formats;
 using System;
 using System.Collections.Generic;
@@ -313,7 +313,7 @@ namespace RetroDevStudio.Controls
                 if ( !asString )
                 {
                   sb.Append( "\"" );
-                  if ( Info.Area.Width == affectedScreen.Width )
+                  //if ( Info.Area.Width == affectedScreen.Width )
                   {
                     sb.Append( ";" );
                   }
@@ -358,7 +358,7 @@ namespace RetroDevStudio.Controls
           if ( !asString )
           {
             sb.Append( "\"" );
-            if ( Info.Area.Width == affectedScreen.Width )
+            if ( affectedArea.Width == affectedScreen.Width )
             {
               sb.Append( ";" );
             }
@@ -369,7 +369,7 @@ namespace RetroDevStudio.Controls
             // down
             sb.Append( ConstantData.PetSCIIToChar[17].CharValue );
             // left
-            for ( int x = 0; x < Info.Area.Width; ++x )
+            for ( int x = 0; x < affectedArea.Width; ++x )
             {
               sb.Append( ConstantData.PetSCIIToChar[157].CharValue );
             }

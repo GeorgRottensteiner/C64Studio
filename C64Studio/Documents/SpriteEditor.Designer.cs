@@ -434,7 +434,7 @@ namespace RetroDevStudio.Documents
       checkOverlayPreview.Name = "checkOverlayPreview";
       checkOverlayPreview.Size = new System.Drawing.Size( 157, 24 );
       checkOverlayPreview.TabIndex = 12;
-      checkOverlayPreview.Text = "Show as Overlay";
+      checkOverlayPreview.Text = "Show as Overlay in Editor";
       checkOverlayPreview.UseVisualStyleBackColor = true;
       checkOverlayPreview.CheckedChanged +=  checkOverlayPreview_CheckedChanged ;
       // 

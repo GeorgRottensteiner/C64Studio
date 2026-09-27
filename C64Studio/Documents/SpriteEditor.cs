@@ -194,7 +194,60 @@ namespace RetroDevStudio.Documents
 
     private void RedrawEditor()
     {
-      pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image;
+      if ( ( _ShowPreviewAsOverlay )
+      &&   ( m_CurrentLayer != null )
+      &&   ( listLayerSprites.SelectedIndex != -1 ) )
+      {
+        var mainSprite = m_CurrentLayer.Sprites[listLayerSprites.SelectedIndex];
+
+        int mainXFactor = mainSprite.ExpandX ? 2 : 1;
+        int mainYFactor = mainSprite.ExpandY ? 2 : 1;
+
+        pictureEditor.SetImageSize( m_SpriteWidth * mainXFactor, m_SpriteHeight * mainYFactor );
+
+        var finalImage = new MemoryImage( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.Width * mainXFactor, 
+                                          m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.Height * mainYFactor, 
+                                          m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.PixelFormat );
+        bool firstImage = true;
+        foreach ( var layerSprite in m_CurrentLayer.Sprites )
+        {
+          var sprite = m_SpriteProject.Sprites[layerSprite.Index];
+
+          bool expandX = layerSprite.ExpandX;
+          bool expandY = layerSprite.ExpandY;
+          if ( ( mainSprite.ExpandX )
+          &&   ( expandX ) )
+          {
+            expandX = false;
+          }
+          if ( ( mainSprite.ExpandY )
+          &&   ( expandY ) )
+          {
+            expandY = false;
+          }
+          int localXFactor = expandX ? 2 : 1;
+          int localYFactor = expandY ? 2 : 1;
+
+          DrawSpriteImage( finalImage, 
+                           ( layerSprite.X - mainSprite.X ) * mainXFactor,
+                           ( layerSprite.Y - mainSprite.Y ) * mainYFactor,
+                           sprite.Tile.Data, sprite.Tile.Colors.Palette, sprite.Tile.Width, sprite.Tile.Height,
+                           sprite.Tile.CustomColor,
+                           sprite.Mode,
+                           m_SpriteProject.Colors.BackgroundColor,
+                           m_SpriteProject.Colors.MultiColor1, m_SpriteProject.Colors.MultiColor2,
+                           layerSprite.ExpandX, layerSprite.ExpandY, !firstImage, sprite.Tile.Colors.PaletteOffset );
+          firstImage = false;
+        }
+
+        pictureEditor.Image = finalImage;
+      }
+      else
+      {
+        pictureEditor.SetImageSize( m_SpriteWidth, m_SpriteHeight );
+
+        pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image;
+      }
     }
 
 
@@ -2038,6 +2091,11 @@ namespace RetroDevStudio.Documents
         if ( sprite.Color != comboLayerColor.SelectedIndex )
         {
           sprite.Color = comboLayerColor.SelectedIndex;
+          _ColorSettingsDlg?.ColorChanged( ColorType.CUSTOM_COLOR, sprite.Color );
+          if ( _ShowPreviewAsOverlay )
+          {
+            RedrawEditor();
+          }
           RedrawPreviewLayer();
           SetModified();
         }
@@ -2315,6 +2373,10 @@ namespace RetroDevStudio.Documents
         m_CurrentLayer.Sprites.Add( sprite );
       }
       SetModified();
+      if ( _ShowPreviewAsOverlay )
+      {
+        RedrawEditor();
+      }
       RedrawPreviewLayer();
     }
 
@@ -2330,6 +2392,10 @@ namespace RetroDevStudio.Documents
         m_CurrentLayer.Sprites.Add( sprite );
       }
       SetModified();
+      if ( _ShowPreviewAsOverlay )
+      {
+        RedrawEditor();
+      }
       RedrawPreviewLayer();
     }
 
@@ -2366,6 +2432,10 @@ namespace RetroDevStudio.Documents
     {
       var sprite = (Formats.SpriteProject.LayerSprite)Item.Tag;
       SetModified();
+      if ( _ShowPreviewAsOverlay )
+      {
+        RedrawEditor();
+      }
       RedrawPreviewLayer();
     }
 
@@ -2399,6 +2469,7 @@ namespace RetroDevStudio.Documents
         editLayerName.Text = "";
         editLayerDelay.Text = "";
         RedrawPreviewLayer();
+        RedrawEditor();
         return;
       }
       m_CurrentLayer = (Formats.SpriteProject.Layer)Item.Tag;
@@ -2434,6 +2505,7 @@ namespace RetroDevStudio.Documents
       {
         listLayerSprites.SelectedIndex = 0;
       }
+      RedrawEditor();
       RedrawPreviewLayer();
     }
 
@@ -2480,6 +2552,10 @@ namespace RetroDevStudio.Documents
         var layer = (Formats.SpriteProject.Layer)item.Tag;
 
         m_SpriteProject.SpriteLayers.Add( layer );
+      }
+      if ( _ShowPreviewAsOverlay )
+      {
+        RedrawEditor();
       }
       SetModified();
     }
@@ -2629,7 +2705,10 @@ namespace RetroDevStudio.Documents
         if ( sprite.ExpandX != checkExpandX.Checked )
         {
           sprite.ExpandX = checkExpandX.Checked;
-          Modified = true;
+          if ( _ShowPreviewAsOverlay )
+          {
+            RedrawEditor();
+          }
           RedrawPreviewLayer();
           SetModified();
         }
@@ -2647,7 +2726,10 @@ namespace RetroDevStudio.Documents
         if ( sprite.ExpandY != checkExpandY.Checked )
         {
           sprite.ExpandY = checkExpandY.Checked;
-          Modified = true;
+          if ( _ShowPreviewAsOverlay )
+          {
+            RedrawEditor();
+          }
           RedrawPreviewLayer();
           SetModified();
         }
