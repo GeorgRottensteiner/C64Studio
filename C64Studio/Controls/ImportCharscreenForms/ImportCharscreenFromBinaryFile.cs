@@ -3,6 +3,7 @@ using RetroDevStudio.Types;
 using GR.Memory;
 using System;
 using RetroDevStudio.Documents;
+using System.Linq;
 
 
 
@@ -151,6 +152,7 @@ namespace RetroDevStudio.Controls
         }
         else if ( GR.Path.GetExtension( filename ).ToUpper() == ".C" )
         {
+          // there's several variants!
           string cData = GR.IO.File.ReadAllText( filename );
           if ( !string.IsNullOrEmpty( cData ) )
           {
@@ -219,18 +221,31 @@ namespace RetroDevStudio.Controls
                 if ( commaPos == -1 )
                 {
                   // end of line
-                  byte    byteValue = GR.Convert.ToU8( dataLine.Substring( pos ) );
+                  var value = dataLine.Substring( pos ).Trim();
+                  if ( !value.Any( v => !char.IsNumber( v ) ) )
+                  {
+                    byte    byteValue = GR.Convert.ToU8( value );
 
-                  screenData.AppendU8( byteValue );
+                    screenData.AppendU8( byteValue );
+                  }
                   break;
                 }
                 else
                 {
-                  byte    byteValue = GR.Convert.ToU8( dataLine.Substring( pos, commaPos - pos ) );
+                  var value = dataLine.Substring( pos, commaPos - pos ).Trim();
+                  if ( !value.Any( v => !char.IsNumber( v ) ) )
+                  {
+                    byte    byteValue = GR.Convert.ToU8( value );
 
-                  screenData.AppendU8( byteValue );
+                    screenData.AppendU8( byteValue );
+                  }
                   pos = commaPos + 1;
                 }
+              }
+              Debug.Log( $"Data is now {screenData.Length} bytes" );
+              if ( screenData.Length == 1000 )
+              {
+                int xx = 2;
               }
             }
             // border and BG first
