@@ -1,18 +1,19 @@
-using RetroDevStudio.Displayer;
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using RetroDevStudio.Formats;
-using GR.Memory;
-using RetroDevStudio.Types;
-using RetroDevStudio.Converter;
-using RetroDevStudio.Controls;
-using RetroDevStudio.Dialogs;
-using System.Drawing;
+using GR.Collections;
 using GR.Generic;
 using GR.Image;
-using GR.Collections;
+using GR.Memory;
+using RetroDevStudio.Controls;
+using RetroDevStudio.Converter;
+using RetroDevStudio.Dialogs;
+using RetroDevStudio.Displayer;
+using RetroDevStudio.Formats;
+using RetroDevStudio.Types;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace RetroDevStudio.Documents
 {
@@ -67,9 +68,8 @@ namespace RetroDevStudio.Documents
 
       m_IsSaveable = true;
       InitializeComponent();
-      SuspendLayout();
-
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
+      SuspendLayout();
 
       c64HiResMultiColorToolStripMenuItem.Tag = SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC;
       mega65_16x2116ColorsToolStripMenuItem.Tag = SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS;
@@ -195,8 +195,8 @@ namespace RetroDevStudio.Documents
     private void RedrawEditor()
     {
       if ( ( _ShowPreviewAsOverlay )
-      &&   ( m_CurrentLayer != null )
-      &&   ( listLayerSprites.SelectedIndex != -1 ) )
+      && ( m_CurrentLayer != null )
+      && ( listLayerSprites.SelectedIndex != -1 ) )
       {
         var mainSprite = m_CurrentLayer.Sprites[listLayerSprites.SelectedIndex];
 
@@ -205,15 +205,15 @@ namespace RetroDevStudio.Documents
 
         pictureEditor.SetImageSize( m_SpriteWidth * mainXFactor, m_SpriteHeight * mainYFactor );
 
-        var finalImage = new MemoryImage( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.Width * mainXFactor, 
-                                          m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.Height * mainYFactor, 
+        var finalImage = new MemoryImage( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.Width * mainXFactor,
+                                          m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.Height * mainYFactor,
                                           m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.PixelFormat );
         finalImage.Box( 0, 0, finalImage.Width, finalImage.Height, m_SpriteProject.Colors.Palette.ColorValues[m_SpriteProject.Colors.BackgroundColor] );
         foreach ( var layerSprite in m_CurrentLayer.Sprites )
         {
           var sprite = m_SpriteProject.Sprites[layerSprite.Index];
 
-          DrawSpriteImage( finalImage, 
+          DrawSpriteImage( finalImage,
                            ( layerSprite.X - mainSprite.X ) * mainXFactor,
                            ( layerSprite.Y - mainSprite.Y ) * mainYFactor,
                            sprite.Tile.Data, sprite.Tile.Colors.Palette, sprite.Tile.Width, sprite.Tile.Height,
@@ -587,7 +587,7 @@ namespace RetroDevStudio.Documents
 
         _ColorSettingsDlg.PaletteOffset = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.PaletteOffset;
         if ( ( !Lookup.HasCustomPalette( m_SpriteProject.Mode ) )
-        &&   ( !Lookup.HasCustomPalette( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode ) ) )
+        && ( !Lookup.HasCustomPalette( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode ) ) )
         {
           _ColorSettingsDlg.CustomColor = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
           _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
@@ -2634,9 +2634,9 @@ namespace RetroDevStudio.Documents
     private bool IsSpriteChangeTriggeringARedraw( int spriteIndex )
     {
       if ( ( m_CurrentSprite == spriteIndex )
-      ||   ( ( _ShowPreviewAsOverlay )
-      &&     ( m_CurrentLayer != null )
-      &&     ( m_CurrentLayer.Sprites.Any( lsp => lsp.Index == spriteIndex ) ) ) )
+      || ( ( _ShowPreviewAsOverlay )
+      && ( m_CurrentLayer != null )
+      && ( m_CurrentLayer.Sprites.Any( lsp => lsp.Index == spriteIndex ) ) ) )
       {
         return true;
       }
@@ -4131,6 +4131,15 @@ namespace RetroDevStudio.Documents
       RedrawEditor();
     }
 
+
+
+    private void tabEditor_ClientSizeChanged( object sender, EventArgs e )
+    {
+      // Handle anchoring for tabSpriteDetails when DPI > 100% or on resize
+      int newWidth = tabEditor.ClientSize.Width - tabSpriteDetails.Location.X;
+      int newHeight = tabEditor.ClientSize.Height - tabSpriteDetails.Location.Y;
+      tabSpriteDetails.Size = new Size( newWidth, newHeight );
+    }
 
 
   }

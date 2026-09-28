@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -480,7 +480,10 @@ namespace GR.Forms
       int   itemWidth = m_ItemWidth;
       if ( m_DisplayPage.Width != ClientRectangle.Width )
       {
-        itemWidth *= ( ClientRectangle.Width / m_DisplayPage.Width );
+        if ( m_DisplayPage.Width != 0 )
+        {
+          itemWidth *= ( ClientRectangle.Width / m_DisplayPage.Width );
+        }
       }
       m_ItemsPerLine = ClientRectangle.Width / itemWidth;
       if ( m_ItemsPerLine == 0 )
@@ -511,7 +514,8 @@ namespace GR.Forms
         m_ItemWidth = 20;
       }
       int   itemWidth = m_ItemWidth;
-      if ( m_DisplayPage.Width != ClientRectangle.Width )
+      if ( ( m_DisplayPage.Width != ClientRectangle.Width )
+      &&   ( m_DisplayPage.Width != 0 ) )
       {
         itemWidth = ( itemWidth * ClientRectangle.Width / m_DisplayPage.Width );
       }
@@ -917,6 +921,12 @@ namespace GR.Forms
     public System.Drawing.Rectangle ItemRect( int ItemIndex )
     {
       var trueRect = InternalItemRect( ItemIndex );
+
+      if ( ( m_DisplayPage.Width == 0 )
+      ||   ( m_DisplayPage.Height == 0 ) )
+      {
+        return trueRect;
+      }
 
       var x1 = (int)( ( trueRect.X * ClientRectangle.Width ) / m_DisplayPage.Width );
       var y1 = (int)( ( trueRect.Y * ClientRectangle.Height ) / m_DisplayPage.Height );

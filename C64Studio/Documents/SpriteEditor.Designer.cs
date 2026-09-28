@@ -36,15 +36,7 @@ namespace RetroDevStudio.Documents
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
       tabSpriteEditor = new System.Windows.Forms.TabControl();
       tabEditor = new System.Windows.Forms.TabPage();
-      editMoveTargetIndex = new System.Windows.Forms.TextBox();
-      btnMoveSelectionToTarget = new DecentForms.Button();
-      labelSelectionInfo = new System.Windows.Forms.Label();
-      btnHighlightDuplicates = new DecentForms.Button();
-      btnChangeMode = new DecentForms.MenuButton();
-      panelColorSettings = new System.Windows.Forms.Panel();
-      btnToolEdit = new DecentForms.RadioButton();
-      btnToolFill = new DecentForms.RadioButton();
-      label11 = new System.Windows.Forms.Label();
+      panelRightSide = new System.Windows.Forms.Panel();
       tabSpriteDetails = new System.Windows.Forms.TabControl();
       tabPage1 = new System.Windows.Forms.TabPage();
       panelSprites = new GR.Forms.ImageListbox();
@@ -71,6 +63,15 @@ namespace RetroDevStudio.Documents
       comboLayerColor = new System.Windows.Forms.ComboBox();
       comboSprite = new System.Windows.Forms.ComboBox();
       layerPreview = new GR.Forms.FastPictureBox();
+      editMoveTargetIndex = new System.Windows.Forms.TextBox();
+      btnMoveSelectionToTarget = new DecentForms.Button();
+      labelSelectionInfo = new System.Windows.Forms.Label();
+      btnHighlightDuplicates = new DecentForms.Button();
+      btnChangeMode = new DecentForms.MenuButton();
+      panelColorSettings = new System.Windows.Forms.Panel();
+      btnToolEdit = new DecentForms.RadioButton();
+      btnToolFill = new DecentForms.RadioButton();
+      label11 = new System.Windows.Forms.Label();
       btnClearSprite = new DecentForms.Button();
       btnDeleteSprite = new DecentForms.Button();
       btnInvert = new DecentForms.Button();
@@ -162,6 +163,7 @@ namespace RetroDevStudio.Documents
       ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).BeginInit();
       tabSpriteEditor.SuspendLayout();
       tabEditor.SuspendLayout();
+      panelRightSide.SuspendLayout();
       tabSpriteDetails.SuspendLayout();
       tabPage1.SuspendLayout();
       tabPreview.SuspendLayout();
@@ -187,6 +189,7 @@ namespace RetroDevStudio.Documents
       // 
       // tabEditor
       // 
+      tabEditor.Controls.Add( panelRightSide );
       tabEditor.Controls.Add( editMoveTargetIndex );
       tabEditor.Controls.Add( btnMoveSelectionToTarget );
       tabEditor.Controls.Add( labelSelectionInfo );
@@ -196,7 +199,6 @@ namespace RetroDevStudio.Documents
       tabEditor.Controls.Add( btnToolEdit );
       tabEditor.Controls.Add( btnToolFill );
       tabEditor.Controls.Add( label11 );
-      tabEditor.Controls.Add( tabSpriteDetails );
       tabEditor.Controls.Add( btnClearSprite );
       tabEditor.Controls.Add( btnDeleteSprite );
       tabEditor.Controls.Add( btnInvert );
@@ -220,6 +222,368 @@ namespace RetroDevStudio.Documents
       tabEditor.TabIndex = 0;
       tabEditor.Text = "Sprite";
       tabEditor.UseVisualStyleBackColor = true;
+      tabEditor.ClientSizeChanged +=  tabEditor_ClientSizeChanged ;
+      // 
+      // panelRightSide
+      // 
+      panelRightSide.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      panelRightSide.Controls.Add( tabSpriteDetails );
+      panelRightSide.Location = new System.Drawing.Point( 480, 6 );
+      panelRightSide.Name = "panelRightSide";
+      panelRightSide.Size = new System.Drawing.Size( 493, 625 );
+      panelRightSide.TabIndex = 63;
+      // 
+      // tabSpriteDetails
+      // 
+      tabSpriteDetails.Controls.Add( tabPage1 );
+      tabSpriteDetails.Controls.Add( tabPreview );
+      tabSpriteDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+      tabSpriteDetails.Location = new System.Drawing.Point( 0, 0 );
+      tabSpriteDetails.Name = "tabSpriteDetails";
+      tabSpriteDetails.SelectedIndex = 0;
+      tabSpriteDetails.Size = new System.Drawing.Size( 493, 625 );
+      tabSpriteDetails.TabIndex = 18;
+      // 
+      // tabPage1
+      // 
+      tabPage1.Controls.Add( panelSprites );
+      tabPage1.Location = new System.Drawing.Point( 4, 22 );
+      tabPage1.Name = "tabPage1";
+      tabPage1.Padding = new System.Windows.Forms.Padding( 3 );
+      tabPage1.Size = new System.Drawing.Size( 485, 599 );
+      tabPage1.TabIndex = 0;
+      tabPage1.Text = "Sprites";
+      tabPage1.UseVisualStyleBackColor = true;
+      // 
+      // panelSprites
+      // 
+      panelSprites.AllowPopup = false;
+      panelSprites.AutoScroll = true;
+      panelSprites.AutoScrollHorizontalMaximum = 100;
+      panelSprites.AutoScrollHorizontalMinimum = 0;
+      panelSprites.AutoScrollHPos = 0;
+      panelSprites.AutoScrollVerticalMaximum = -23;
+      panelSprites.AutoScrollVerticalMinimum = 0;
+      panelSprites.AutoScrollVPos = 0;
+      panelSprites.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      panelSprites.Dock = System.Windows.Forms.DockStyle.Fill;
+      panelSprites.EnableAutoScrollHorizontal = true;
+      panelSprites.EnableAutoScrollVertical = true;
+      panelSprites.HottrackColor = 2151694591U;
+      panelSprites.ItemHeight = 21;
+      panelSprites.ItemWidth = 24;
+      panelSprites.Location = new System.Drawing.Point( 3, 3 );
+      panelSprites.Name = "panelSprites";
+      panelSprites.PixelFormat = GR.Drawing.PixelFormat.DontCare;
+      panelSprites.Size = new System.Drawing.Size( 479, 593 );
+      panelSprites.TabIndex = 4;
+      panelSprites.TabStop = true;
+      panelSprites.VisibleAutoScrollHorizontal = false;
+      panelSprites.VisibleAutoScrollVertical = false;
+      panelSprites.SelectedIndexChanged +=  panelSprites_SelectedIndexChanged ;
+      panelSprites.SelectionChanged +=  panelSprites_SelectionChanged ;
+      panelSprites.ClientSizeChanged +=  panelSprites_ClientSizeChanged ;
+      // 
+      // tabPreview
+      // 
+      tabPreview.Controls.Add( btnSavePreviewToGIF );
+      tabPreview.Controls.Add( checkOverlayPreview );
+      tabPreview.Controls.Add( checkAutoplayAnim );
+      tabPreview.Controls.Add( label9 );
+      tabPreview.Controls.Add( checkExpandY );
+      tabPreview.Controls.Add( checkExpandX );
+      tabPreview.Controls.Add( listLayerSprites );
+      tabPreview.Controls.Add( listLayers );
+      tabPreview.Controls.Add( editLayerY );
+      tabPreview.Controls.Add( label7 );
+      tabPreview.Controls.Add( label4 );
+      tabPreview.Controls.Add( label10 );
+      tabPreview.Controls.Add( label6 );
+      tabPreview.Controls.Add( editLayerDelay );
+      tabPreview.Controls.Add( editLayerName );
+      tabPreview.Controls.Add( editLayerX );
+      tabPreview.Controls.Add( label5 );
+      tabPreview.Controls.Add( label3 );
+      tabPreview.Controls.Add( comboLayerBGColor );
+      tabPreview.Controls.Add( comboLayerColor );
+      tabPreview.Controls.Add( comboSprite );
+      tabPreview.Controls.Add( layerPreview );
+      tabPreview.Location = new System.Drawing.Point( 4, 24 );
+      tabPreview.Name = "tabPreview";
+      tabPreview.Padding = new System.Windows.Forms.Padding( 3 );
+      tabPreview.Size = new System.Drawing.Size( 485, 556 );
+      tabPreview.TabIndex = 1;
+      tabPreview.Text = "Preview";
+      tabPreview.UseVisualStyleBackColor = true;
+      // 
+      // btnSavePreviewToGIF
+      // 
+      btnSavePreviewToGIF.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnSavePreviewToGIF.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      btnSavePreviewToGIF.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnSavePreviewToGIF.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnSavePreviewToGIF.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnSavePreviewToGIF.DisplayAntiAliased = true;
+      btnSavePreviewToGIF.Image = null;
+      btnSavePreviewToGIF.Location = new System.Drawing.Point( 381, 438 );
+      btnSavePreviewToGIF.Name = "btnSavePreviewToGIF";
+      btnSavePreviewToGIF.Size = new System.Drawing.Size( 75, 23 );
+      btnSavePreviewToGIF.TabIndex = 13;
+      btnSavePreviewToGIF.Text = "Save as GIF";
+      btnSavePreviewToGIF.Click +=  btnSavePreviewToGIF_Click ;
+      // 
+      // checkOverlayPreview
+      // 
+      checkOverlayPreview.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      checkOverlayPreview.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      checkOverlayPreview.Location = new System.Drawing.Point( 215, 523 );
+      checkOverlayPreview.Name = "checkOverlayPreview";
+      checkOverlayPreview.Size = new System.Drawing.Size( 157, 24 );
+      checkOverlayPreview.TabIndex = 12;
+      checkOverlayPreview.Text = "Show as Overlay in Editor";
+      checkOverlayPreview.UseVisualStyleBackColor = true;
+      checkOverlayPreview.CheckedChanged +=  checkOverlayPreview_CheckedChanged ;
+      // 
+      // checkAutoplayAnim
+      // 
+      checkAutoplayAnim.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      checkAutoplayAnim.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      checkAutoplayAnim.Location = new System.Drawing.Point( 215, 493 );
+      checkAutoplayAnim.Name = "checkAutoplayAnim";
+      checkAutoplayAnim.Size = new System.Drawing.Size( 157, 24 );
+      checkAutoplayAnim.TabIndex = 12;
+      checkAutoplayAnim.Text = "Auto-Animation";
+      checkAutoplayAnim.UseVisualStyleBackColor = true;
+      checkAutoplayAnim.CheckedChanged +=  checkAutoplayAnim_CheckedChanged ;
+      // 
+      // label9
+      // 
+      label9.AutoSize = true;
+      label9.Location = new System.Drawing.Point( 3, 274 );
+      label9.Name = "label9";
+      label9.Size = new System.Drawing.Size( 44, 13 );
+      label9.TabIndex = 24;
+      label9.Text = "Frames:";
+      // 
+      // checkExpandY
+      // 
+      checkExpandY.AutoSize = true;
+      checkExpandY.Location = new System.Drawing.Point( 149, 180 );
+      checkExpandY.Name = "checkExpandY";
+      checkExpandY.Size = new System.Drawing.Size( 43, 17 );
+      checkExpandY.TabIndex = 3;
+      checkExpandY.Text = "Y*2";
+      checkExpandY.UseVisualStyleBackColor = true;
+      checkExpandY.CheckedChanged +=  checkExpandY_CheckedChanged ;
+      // 
+      // checkExpandX
+      // 
+      checkExpandX.AutoSize = true;
+      checkExpandX.Location = new System.Drawing.Point( 149, 156 );
+      checkExpandX.Name = "checkExpandX";
+      checkExpandX.Size = new System.Drawing.Size( 43, 17 );
+      checkExpandX.TabIndex = 2;
+      checkExpandX.Text = "X*2";
+      checkExpandX.UseVisualStyleBackColor = true;
+      checkExpandX.CheckedChanged +=  checkExpandX_CheckedChanged ;
+      // 
+      // listLayerSprites
+      // 
+      listLayerSprites.AddButtonEnabled = true;
+      listLayerSprites.AllowClone = true;
+      listLayerSprites.AllowReordering = true;
+      listLayerSprites.DeleteButtonEnabled = false;
+      listLayerSprites.HasOwnerDrawColumn = true;
+      listLayerSprites.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      listLayerSprites.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
+      listLayerSprites.Location = new System.Drawing.Point( 0, 0 );
+      listLayerSprites.MoveDownButtonEnabled = false;
+      listLayerSprites.MoveUpButtonEnabled = false;
+      listLayerSprites.MustHaveOneElement = false;
+      listLayerSprites.Name = "listLayerSprites";
+      listLayerSprites.SelectedIndex = -1;
+      listLayerSprites.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      listLayerSprites.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
+      listLayerSprites.Size = new System.Drawing.Size( 192, 148 );
+      listLayerSprites.TabIndex = 0;
+      listLayerSprites.AddingItem +=  listLayerSprites_AddingItem ;
+      listLayerSprites.CloningItem +=  listLayerSprites_CloningItem ;
+      listLayerSprites.ItemAdded +=  listLayerSprites_ItemAdded ;
+      listLayerSprites.ItemRemoved +=  listLayerSprites_ItemRemoved ;
+      listLayerSprites.MovingItem +=  listLayerSprites_MovingItem ;
+      listLayerSprites.ItemMoved +=  listLayerSprites_ItemMoved ;
+      listLayerSprites.SelectedIndexChanged +=  listLayerSprites_SelectedIndexChanged ;
+      // 
+      // listLayers
+      // 
+      listLayers.AddButtonEnabled = true;
+      listLayers.AllowClone = true;
+      listLayers.AllowReordering = true;
+      listLayers.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left ;
+      listLayers.DeleteButtonEnabled = false;
+      listLayers.HasOwnerDrawColumn = true;
+      listLayers.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      listLayers.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
+      listLayers.Location = new System.Drawing.Point( 0, 290 );
+      listLayers.MoveDownButtonEnabled = false;
+      listLayers.MoveUpButtonEnabled = false;
+      listLayers.MustHaveOneElement = true;
+      listLayers.Name = "listLayers";
+      listLayers.SelectedIndex = -1;
+      listLayers.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
+      listLayers.Size = new System.Drawing.Size( 192, 260 );
+      listLayers.TabIndex = 9;
+      listLayers.AddingItem +=  listLayers_AddingItem ;
+      listLayers.CloningItem +=  listLayers_CloningItem ;
+      listLayers.ItemAdded +=  listLayers_ItemAdded ;
+      listLayers.ItemRemoved +=  listLayers_ItemRemoved ;
+      listLayers.MovingItem +=  listLayers_MovingItem ;
+      listLayers.ItemMoved +=  listLayers_ItemMoved ;
+      listLayers.SelectedIndexChanged +=  listLayers_SelectedIndexChanged ;
+      // 
+      // editLayerY
+      // 
+      editLayerY.Location = new System.Drawing.Point( 91, 208 );
+      editLayerY.Name = "editLayerY";
+      editLayerY.Size = new System.Drawing.Size( 45, 20 );
+      editLayerY.TabIndex = 5;
+      editLayerY.TextChanged +=  editLayerY_TextChanged ;
+      editLayerY.KeyPress +=  editLayerY_KeyPress ;
+      // 
+      // label7
+      // 
+      label7.AutoSize = true;
+      label7.Location = new System.Drawing.Point( 104, 239 );
+      label7.Name = "label7";
+      label7.Size = new System.Drawing.Size( 25, 13 );
+      label7.TabIndex = 8;
+      label7.Text = "BG:";
+      // 
+      // label4
+      // 
+      label4.AutoSize = true;
+      label4.Location = new System.Drawing.Point( 6, 239 );
+      label4.Name = "label4";
+      label4.Size = new System.Drawing.Size( 25, 13 );
+      label4.TabIndex = 6;
+      label4.Text = "Col:";
+      // 
+      // label10
+      // 
+      label10.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      label10.AutoSize = true;
+      label10.Location = new System.Drawing.Point( 216, 470 );
+      label10.Name = "label10";
+      label10.Size = new System.Drawing.Size( 59, 13 );
+      label10.TabIndex = 15;
+      label10.Text = "Delay (ms):";
+      // 
+      // label6
+      // 
+      label6.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      label6.AutoSize = true;
+      label6.Location = new System.Drawing.Point( 216, 443 );
+      label6.Name = "label6";
+      label6.Size = new System.Drawing.Size( 38, 13 );
+      label6.TabIndex = 15;
+      label6.Text = "Name:";
+      // 
+      // editLayerDelay
+      // 
+      editLayerDelay.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      editLayerDelay.Location = new System.Drawing.Point( 281, 467 );
+      editLayerDelay.Name = "editLayerDelay";
+      editLayerDelay.Size = new System.Drawing.Size( 91, 20 );
+      editLayerDelay.TabIndex = 11;
+      editLayerDelay.TextChanged +=  editLayerDelay_TextChanged ;
+      // 
+      // editLayerName
+      // 
+      editLayerName.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
+      editLayerName.Location = new System.Drawing.Point( 281, 440 );
+      editLayerName.Name = "editLayerName";
+      editLayerName.Size = new System.Drawing.Size( 91, 20 );
+      editLayerName.TabIndex = 10;
+      editLayerName.TextChanged +=  editLayerName_TextChanged ;
+      // 
+      // editLayerX
+      // 
+      editLayerX.Location = new System.Drawing.Point( 39, 208 );
+      editLayerX.Name = "editLayerX";
+      editLayerX.Size = new System.Drawing.Size( 45, 20 );
+      editLayerX.TabIndex = 4;
+      editLayerX.TextChanged +=  editLayerX_TextChanged ;
+      editLayerX.KeyPress +=  editLayerX_KeyPress ;
+      // 
+      // label5
+      // 
+      label5.AutoSize = true;
+      label5.Location = new System.Drawing.Point( 6, 170 );
+      label5.Name = "label5";
+      label5.Size = new System.Drawing.Size( 21, 13 );
+      label5.TabIndex = 11;
+      label5.Text = "Nr:";
+      // 
+      // label3
+      // 
+      label3.AutoSize = true;
+      label3.Location = new System.Drawing.Point( 6, 211 );
+      label3.Name = "label3";
+      label3.Size = new System.Drawing.Size( 28, 13 );
+      label3.TabIndex = 12;
+      label3.Text = "Pos:";
+      // 
+      // comboLayerBGColor
+      // 
+      comboLayerBGColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboLayerBGColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboLayerBGColor.FormattingEnabled = true;
+      comboLayerBGColor.Location = new System.Drawing.Point( 135, 236 );
+      comboLayerBGColor.Name = "comboLayerBGColor";
+      comboLayerBGColor.Size = new System.Drawing.Size( 57, 21 );
+      comboLayerBGColor.TabIndex = 8;
+      comboLayerBGColor.DrawItem +=  comboColor_DrawItem ;
+      comboLayerBGColor.SelectedIndexChanged +=  comboLayerBGColor_SelectedIndexChanged ;
+      // 
+      // comboLayerColor
+      // 
+      comboLayerColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboLayerColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboLayerColor.FormattingEnabled = true;
+      comboLayerColor.Location = new System.Drawing.Point( 39, 236 );
+      comboLayerColor.Name = "comboLayerColor";
+      comboLayerColor.Size = new System.Drawing.Size( 59, 21 );
+      comboLayerColor.TabIndex = 7;
+      comboLayerColor.DrawItem +=  comboColor_DrawItem ;
+      comboLayerColor.SelectedIndexChanged +=  comboLayerColor_SelectedIndexChanged ;
+      // 
+      // comboSprite
+      // 
+      comboSprite.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboSprite.DropDownHeight = 320;
+      comboSprite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboSprite.FormattingEnabled = true;
+      comboSprite.IntegralHeight = false;
+      comboSprite.ItemHeight = 42;
+      comboSprite.Location = new System.Drawing.Point( 39, 154 );
+      comboSprite.Name = "comboSprite";
+      comboSprite.Size = new System.Drawing.Size( 97, 48 );
+      comboSprite.TabIndex = 1;
+      comboSprite.DrawItem +=  comboSprite_DrawItem ;
+      comboSprite.SelectedIndexChanged +=  comboSprite_SelectedIndexChanged ;
+      // 
+      // layerPreview
+      // 
+      layerPreview.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      layerPreview.AutoResize = false;
+      layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      layerPreview.Location = new System.Drawing.Point( 208, 3 );
+      layerPreview.Name = "layerPreview";
+      layerPreview.Size = new System.Drawing.Size( 271, 421 );
+      layerPreview.TabIndex = 7;
+      layerPreview.TabStop = false;
+      layerPreview.SizeChanged +=  layerPreview_SizeChanged ;
       // 
       // editMoveTargetIndex
       // 
@@ -326,358 +690,6 @@ namespace RetroDevStudio.Documents
       label11.Size = new System.Drawing.Size( 37, 13 );
       label11.TabIndex = 16;
       label11.Text = "Mode:";
-      // 
-      // tabSpriteDetails
-      // 
-      tabSpriteDetails.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
-      tabSpriteDetails.Controls.Add( tabPage1 );
-      tabSpriteDetails.Controls.Add( tabPreview );
-      tabSpriteDetails.Location = new System.Drawing.Point( 480, 2 );
-      tabSpriteDetails.Name = "tabSpriteDetails";
-      tabSpriteDetails.SelectedIndex = 0;
-      tabSpriteDetails.Size = new System.Drawing.Size( 499, 573 );
-      tabSpriteDetails.TabIndex = 18;
-      // 
-      // tabPage1
-      // 
-      tabPage1.Controls.Add( panelSprites );
-      tabPage1.Location = new System.Drawing.Point( 4, 22 );
-      tabPage1.Name = "tabPage1";
-      tabPage1.Padding = new System.Windows.Forms.Padding( 3 );
-      tabPage1.Size = new System.Drawing.Size( 491, 547 );
-      tabPage1.TabIndex = 0;
-      tabPage1.Text = "Sprites";
-      tabPage1.UseVisualStyleBackColor = true;
-      // 
-      // panelSprites
-      // 
-      panelSprites.AllowPopup = false;
-      panelSprites.AutoScroll = true;
-      panelSprites.AutoScrollHorizontalMaximum = 100;
-      panelSprites.AutoScrollHorizontalMinimum = 0;
-      panelSprites.AutoScrollHPos = 0;
-      panelSprites.AutoScrollVerticalMaximum = -23;
-      panelSprites.AutoScrollVerticalMinimum = 0;
-      panelSprites.AutoScrollVPos = 0;
-      panelSprites.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      panelSprites.Dock = System.Windows.Forms.DockStyle.Fill;
-      panelSprites.EnableAutoScrollHorizontal = true;
-      panelSprites.EnableAutoScrollVertical = true;
-      panelSprites.HottrackColor = 2151694591U;
-      panelSprites.ItemHeight = 21;
-      panelSprites.ItemWidth = 24;
-      panelSprites.Location = new System.Drawing.Point( 3, 3 );
-      panelSprites.Name = "panelSprites";
-      panelSprites.PixelFormat = GR.Drawing.PixelFormat.DontCare;
-      panelSprites.Size = new System.Drawing.Size( 485, 541 );
-      panelSprites.TabIndex = 4;
-      panelSprites.TabStop = true;
-      panelSprites.VisibleAutoScrollHorizontal = false;
-      panelSprites.VisibleAutoScrollVertical = false;
-      panelSprites.SelectedIndexChanged +=  panelSprites_SelectedIndexChanged ;
-      panelSprites.SelectionChanged +=  panelSprites_SelectionChanged ;
-      panelSprites.ClientSizeChanged +=  panelSprites_ClientSizeChanged ;
-      // 
-      // tabPreview
-      // 
-      tabPreview.Controls.Add( btnSavePreviewToGIF );
-      tabPreview.Controls.Add( checkOverlayPreview );
-      tabPreview.Controls.Add( checkAutoplayAnim );
-      tabPreview.Controls.Add( label9 );
-      tabPreview.Controls.Add( checkExpandY );
-      tabPreview.Controls.Add( checkExpandX );
-      tabPreview.Controls.Add( listLayerSprites );
-      tabPreview.Controls.Add( listLayers );
-      tabPreview.Controls.Add( editLayerY );
-      tabPreview.Controls.Add( label7 );
-      tabPreview.Controls.Add( label4 );
-      tabPreview.Controls.Add( label10 );
-      tabPreview.Controls.Add( label6 );
-      tabPreview.Controls.Add( editLayerDelay );
-      tabPreview.Controls.Add( editLayerName );
-      tabPreview.Controls.Add( editLayerX );
-      tabPreview.Controls.Add( label5 );
-      tabPreview.Controls.Add( label3 );
-      tabPreview.Controls.Add( comboLayerBGColor );
-      tabPreview.Controls.Add( comboLayerColor );
-      tabPreview.Controls.Add( comboSprite );
-      tabPreview.Controls.Add( layerPreview );
-      tabPreview.Location = new System.Drawing.Point( 4, 22 );
-      tabPreview.Name = "tabPreview";
-      tabPreview.Padding = new System.Windows.Forms.Padding( 3 );
-      tabPreview.Size = new System.Drawing.Size( 491, 547 );
-      tabPreview.TabIndex = 1;
-      tabPreview.Text = "Preview";
-      tabPreview.UseVisualStyleBackColor = true;
-      // 
-      // btnSavePreviewToGIF
-      // 
-      btnSavePreviewToGIF.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      btnSavePreviewToGIF.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      btnSavePreviewToGIF.BorderStyle = DecentForms.BorderStyle.FLAT;
-      btnSavePreviewToGIF.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      btnSavePreviewToGIF.DialogResult = System.Windows.Forms.DialogResult.OK;
-      btnSavePreviewToGIF.DisplayAntiAliased = true;
-      btnSavePreviewToGIF.Image = null;
-      btnSavePreviewToGIF.Location = new System.Drawing.Point( 381, 429 );
-      btnSavePreviewToGIF.Name = "btnSavePreviewToGIF";
-      btnSavePreviewToGIF.Size = new System.Drawing.Size( 75, 23 );
-      btnSavePreviewToGIF.TabIndex = 13;
-      btnSavePreviewToGIF.Text = "Save as GIF";
-      btnSavePreviewToGIF.Click +=  btnSavePreviewToGIF_Click ;
-      // 
-      // checkOverlayPreview
-      // 
-      checkOverlayPreview.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      checkOverlayPreview.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      checkOverlayPreview.Location = new System.Drawing.Point( 215, 514 );
-      checkOverlayPreview.Name = "checkOverlayPreview";
-      checkOverlayPreview.Size = new System.Drawing.Size( 157, 24 );
-      checkOverlayPreview.TabIndex = 12;
-      checkOverlayPreview.Text = "Show as Overlay in Editor";
-      checkOverlayPreview.UseVisualStyleBackColor = true;
-      checkOverlayPreview.CheckedChanged +=  checkOverlayPreview_CheckedChanged ;
-      // 
-      // checkAutoplayAnim
-      // 
-      checkAutoplayAnim.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      checkAutoplayAnim.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      checkAutoplayAnim.Location = new System.Drawing.Point( 215, 484 );
-      checkAutoplayAnim.Name = "checkAutoplayAnim";
-      checkAutoplayAnim.Size = new System.Drawing.Size( 157, 24 );
-      checkAutoplayAnim.TabIndex = 12;
-      checkAutoplayAnim.Text = "Auto-Animation";
-      checkAutoplayAnim.UseVisualStyleBackColor = true;
-      checkAutoplayAnim.CheckedChanged +=  checkAutoplayAnim_CheckedChanged ;
-      // 
-      // label9
-      // 
-      label9.AutoSize = true;
-      label9.Location = new System.Drawing.Point( 3, 274 );
-      label9.Name = "label9";
-      label9.Size = new System.Drawing.Size( 44, 13 );
-      label9.TabIndex = 24;
-      label9.Text = "Frames:";
-      // 
-      // checkExpandY
-      // 
-      checkExpandY.AutoSize = true;
-      checkExpandY.Location = new System.Drawing.Point( 149, 180 );
-      checkExpandY.Name = "checkExpandY";
-      checkExpandY.Size = new System.Drawing.Size( 43, 17 );
-      checkExpandY.TabIndex = 3;
-      checkExpandY.Text = "Y*2";
-      checkExpandY.UseVisualStyleBackColor = true;
-      checkExpandY.CheckedChanged +=  checkExpandY_CheckedChanged ;
-      // 
-      // checkExpandX
-      // 
-      checkExpandX.AutoSize = true;
-      checkExpandX.Location = new System.Drawing.Point( 149, 156 );
-      checkExpandX.Name = "checkExpandX";
-      checkExpandX.Size = new System.Drawing.Size( 43, 17 );
-      checkExpandX.TabIndex = 2;
-      checkExpandX.Text = "X*2";
-      checkExpandX.UseVisualStyleBackColor = true;
-      checkExpandX.CheckedChanged +=  checkExpandX_CheckedChanged ;
-      // 
-      // listLayerSprites
-      // 
-      listLayerSprites.AddButtonEnabled = true;
-      listLayerSprites.AllowClone = true;
-      listLayerSprites.AllowReordering = true;
-      listLayerSprites.DeleteButtonEnabled = false;
-      listLayerSprites.HasOwnerDrawColumn = true;
-      listLayerSprites.HighlightColor = System.Drawing.SystemColors.HotTrack;
-      listLayerSprites.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
-      listLayerSprites.Location = new System.Drawing.Point( 0, 0 );
-      listLayerSprites.MoveDownButtonEnabled = false;
-      listLayerSprites.MoveUpButtonEnabled = false;
-      listLayerSprites.MustHaveOneElement = false;
-      listLayerSprites.Name = "listLayerSprites";
-      listLayerSprites.SelectedIndex = -1;
-      listLayerSprites.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      listLayerSprites.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      listLayerSprites.Size = new System.Drawing.Size( 192, 148 );
-      listLayerSprites.TabIndex = 0;
-      listLayerSprites.AddingItem +=  listLayerSprites_AddingItem ;
-      listLayerSprites.CloningItem +=  listLayerSprites_CloningItem ;
-      listLayerSprites.ItemAdded +=  listLayerSprites_ItemAdded ;
-      listLayerSprites.ItemRemoved +=  listLayerSprites_ItemRemoved ;
-      listLayerSprites.MovingItem +=  listLayerSprites_MovingItem ;
-      listLayerSprites.ItemMoved +=  listLayerSprites_ItemMoved ;
-      listLayerSprites.SelectedIndexChanged +=  listLayerSprites_SelectedIndexChanged ;
-      // 
-      // listLayers
-      // 
-      listLayers.AddButtonEnabled = true;
-      listLayers.AllowClone = true;
-      listLayers.AllowReordering = true;
-      listLayers.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left ;
-      listLayers.DeleteButtonEnabled = false;
-      listLayers.HasOwnerDrawColumn = true;
-      listLayers.HighlightColor = System.Drawing.SystemColors.HotTrack;
-      listLayers.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
-      listLayers.Location = new System.Drawing.Point( 0, 290 );
-      listLayers.MoveDownButtonEnabled = false;
-      listLayers.MoveUpButtonEnabled = false;
-      listLayers.MustHaveOneElement = true;
-      listLayers.Name = "listLayers";
-      listLayers.SelectedIndex = -1;
-      listLayers.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      listLayers.Size = new System.Drawing.Size( 192, 251 );
-      listLayers.TabIndex = 9;
-      listLayers.AddingItem +=  listLayers_AddingItem ;
-      listLayers.CloningItem +=  listLayers_CloningItem ;
-      listLayers.ItemAdded +=  listLayers_ItemAdded ;
-      listLayers.ItemRemoved +=  listLayers_ItemRemoved ;
-      listLayers.MovingItem +=  listLayers_MovingItem ;
-      listLayers.ItemMoved +=  listLayers_ItemMoved ;
-      listLayers.SelectedIndexChanged +=  listLayers_SelectedIndexChanged ;
-      // 
-      // editLayerY
-      // 
-      editLayerY.Location = new System.Drawing.Point( 91, 208 );
-      editLayerY.Name = "editLayerY";
-      editLayerY.Size = new System.Drawing.Size( 45, 20 );
-      editLayerY.TabIndex = 5;
-      editLayerY.TextChanged +=  editLayerY_TextChanged ;
-      editLayerY.KeyPress +=  editLayerY_KeyPress ;
-      // 
-      // label7
-      // 
-      label7.AutoSize = true;
-      label7.Location = new System.Drawing.Point( 104, 239 );
-      label7.Name = "label7";
-      label7.Size = new System.Drawing.Size( 25, 13 );
-      label7.TabIndex = 8;
-      label7.Text = "BG:";
-      // 
-      // label4
-      // 
-      label4.AutoSize = true;
-      label4.Location = new System.Drawing.Point( 6, 239 );
-      label4.Name = "label4";
-      label4.Size = new System.Drawing.Size( 25, 13 );
-      label4.TabIndex = 6;
-      label4.Text = "Col:";
-      // 
-      // label10
-      // 
-      label10.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      label10.AutoSize = true;
-      label10.Location = new System.Drawing.Point( 216, 461 );
-      label10.Name = "label10";
-      label10.Size = new System.Drawing.Size( 59, 13 );
-      label10.TabIndex = 15;
-      label10.Text = "Delay (ms):";
-      // 
-      // label6
-      // 
-      label6.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      label6.AutoSize = true;
-      label6.Location = new System.Drawing.Point( 216, 434 );
-      label6.Name = "label6";
-      label6.Size = new System.Drawing.Size( 38, 13 );
-      label6.TabIndex = 15;
-      label6.Text = "Name:";
-      // 
-      // editLayerDelay
-      // 
-      editLayerDelay.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      editLayerDelay.Location = new System.Drawing.Point( 281, 458 );
-      editLayerDelay.Name = "editLayerDelay";
-      editLayerDelay.Size = new System.Drawing.Size( 91, 20 );
-      editLayerDelay.TabIndex = 11;
-      editLayerDelay.TextChanged +=  editLayerDelay_TextChanged ;
-      // 
-      // editLayerName
-      // 
-      editLayerName.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      editLayerName.Location = new System.Drawing.Point( 281, 431 );
-      editLayerName.Name = "editLayerName";
-      editLayerName.Size = new System.Drawing.Size( 91, 20 );
-      editLayerName.TabIndex = 10;
-      editLayerName.TextChanged +=  editLayerName_TextChanged ;
-      // 
-      // editLayerX
-      // 
-      editLayerX.Location = new System.Drawing.Point( 39, 208 );
-      editLayerX.Name = "editLayerX";
-      editLayerX.Size = new System.Drawing.Size( 45, 20 );
-      editLayerX.TabIndex = 4;
-      editLayerX.TextChanged +=  editLayerX_TextChanged ;
-      editLayerX.KeyPress +=  editLayerX_KeyPress ;
-      // 
-      // label5
-      // 
-      label5.AutoSize = true;
-      label5.Location = new System.Drawing.Point( 6, 170 );
-      label5.Name = "label5";
-      label5.Size = new System.Drawing.Size( 21, 13 );
-      label5.TabIndex = 11;
-      label5.Text = "Nr:";
-      // 
-      // label3
-      // 
-      label3.AutoSize = true;
-      label3.Location = new System.Drawing.Point( 6, 211 );
-      label3.Name = "label3";
-      label3.Size = new System.Drawing.Size( 28, 13 );
-      label3.TabIndex = 12;
-      label3.Text = "Pos:";
-      // 
-      // comboLayerBGColor
-      // 
-      comboLayerBGColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      comboLayerBGColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      comboLayerBGColor.FormattingEnabled = true;
-      comboLayerBGColor.Location = new System.Drawing.Point( 135, 236 );
-      comboLayerBGColor.Name = "comboLayerBGColor";
-      comboLayerBGColor.Size = new System.Drawing.Size( 57, 21 );
-      comboLayerBGColor.TabIndex = 8;
-      comboLayerBGColor.DrawItem +=  comboColor_DrawItem ;
-      comboLayerBGColor.SelectedIndexChanged +=  comboLayerBGColor_SelectedIndexChanged ;
-      // 
-      // comboLayerColor
-      // 
-      comboLayerColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      comboLayerColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      comboLayerColor.FormattingEnabled = true;
-      comboLayerColor.Location = new System.Drawing.Point( 39, 236 );
-      comboLayerColor.Name = "comboLayerColor";
-      comboLayerColor.Size = new System.Drawing.Size( 59, 21 );
-      comboLayerColor.TabIndex = 7;
-      comboLayerColor.DrawItem +=  comboColor_DrawItem ;
-      comboLayerColor.SelectedIndexChanged +=  comboLayerColor_SelectedIndexChanged ;
-      // 
-      // comboSprite
-      // 
-      comboSprite.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      comboSprite.DropDownHeight = 320;
-      comboSprite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      comboSprite.FormattingEnabled = true;
-      comboSprite.IntegralHeight = false;
-      comboSprite.ItemHeight = 42;
-      comboSprite.Location = new System.Drawing.Point( 39, 154 );
-      comboSprite.Name = "comboSprite";
-      comboSprite.Size = new System.Drawing.Size( 97, 48 );
-      comboSprite.TabIndex = 1;
-      comboSprite.DrawItem +=  comboSprite_DrawItem ;
-      comboSprite.SelectedIndexChanged +=  comboSprite_SelectedIndexChanged ;
-      // 
-      // layerPreview
-      // 
-      layerPreview.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
-      layerPreview.AutoResize = false;
-      layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      layerPreview.Location = new System.Drawing.Point( 208, 3 );
-      layerPreview.Name = "layerPreview";
-      layerPreview.Size = new System.Drawing.Size( 277, 412 );
-      layerPreview.TabIndex = 7;
-      layerPreview.TabStop = false;
-      layerPreview.SizeChanged +=  layerPreview_SizeChanged ;
       // 
       // btnClearSprite
       // 
@@ -1461,6 +1473,7 @@ namespace RetroDevStudio.Documents
       tabSpriteEditor.ResumeLayout( false );
       tabEditor.ResumeLayout( false );
       tabEditor.PerformLayout();
+      panelRightSide.ResumeLayout( false );
       tabSpriteDetails.ResumeLayout( false );
       tabPage1.ResumeLayout( false );
       tabPreview.ResumeLayout( false );
@@ -1606,5 +1619,6 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label labelImportSelInfo;
     private System.Windows.Forms.CheckBox checkOverlayPreview;
+    private System.Windows.Forms.Panel panelRightSide;
   }
 }

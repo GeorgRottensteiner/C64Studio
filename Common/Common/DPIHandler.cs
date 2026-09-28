@@ -56,7 +56,7 @@ namespace GR.Image
       /// </summary>
       LOGPIXELSY = 90
 
-      // Other constants may be founded on pinvoke.net
+      // Other constants may be found on pinvoke.net
     }
 
 
