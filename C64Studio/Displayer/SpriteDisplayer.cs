@@ -1,4 +1,4 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -280,9 +280,10 @@ namespace RetroDevStudio.Displayer
             continue;
           }
 
-          // palette offset only affects colors 0 to 15
+          // palette offset only affects colors 0 to 15 (not for sprites!)
+          /*
           if ( ( pixel < 16 )
-          &&   ( pixel > 0 ) )
+          &&   ( pixel > 0 ) )*/
           {
             pixel = (byte)( pixel + PaletteOffset );
           }
