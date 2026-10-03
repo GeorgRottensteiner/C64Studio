@@ -1482,7 +1482,6 @@ namespace DecentForms
                 uint color = ColorControlText;
                 if ( listControl.Items[itemIndex].Selected )
                 {
-                  //color = ColorControlTextSelected;
                   FillRectangle( rcItem, ColorControlBackgroundSelected );
                 }
                 else if ( listControl.MouseOverItem == itemIndex )
@@ -1490,40 +1489,44 @@ namespace DecentForms
                   color = ColorControlTextMouseOver;
                   FillRectangle( rcItem, ColorControlBackgroundMouseOver );
                 }
-                if ( listControl.Items[itemIndex].GroupHeader )
+
+                if ( !listControl.RaiseDrawSubItem( this, itemIndex, column, rcItem ) )
                 {
-                  if ( column == 0 )
+                  if ( listControl.Items[itemIndex].GroupHeader )
                   {
-                    DrawText( listControl.Items[itemIndex].Text, rcItem.Left, rcItem.Top, _Control.ClientSize.Width, rcItem.Height,
+                    if ( column == 0 )
+                    {
+                      DrawText( listControl.Items[itemIndex].Text, rcItem.Left, rcItem.Top, _Control.ClientSize.Width, rcItem.Height,
+                                listControl.Columns[column].Alignment,
+                                listControl.Columns[column].Format,
+                                color );
+                    }
+                  }
+                  else if ( ( listControl.CheckBoxes )
+                  &&        ( column == 0 ) )
+                  {
+                    var checkRect = listControl.GetItemCheckRect( itemIndex );
+
+                    DrawCheckBox( checkRect, false, listControl.Items[itemIndex].Checked );
+                  }
+                  else if ( ( column == columnIndexWithImage )
+                  &&        ( listControl.ImageList != null )
+                  &&        ( listControl.Items[itemIndex].ImageIndex >= 0 )
+                  &&        ( listControl.Items[itemIndex].ImageIndex < listControl.ImageList.Count ) )
+                  {
+                    if ( !listControl.RaiseDrawItemImage( this, itemIndex, rcItem ) )
+                    {
+                      DrawImageCentered( listControl.ImageList[listControl.Items[itemIndex].ImageIndex],
+                                         rcItem );
+                    }
+                  }
+                  else
+                  {
+                    DrawText( listControl.Items[itemIndex].SubItems[column].Text, rcItem.Left, rcItem.Top, rcItem.Width, rcItem.Height,
                               listControl.Columns[column].Alignment,
                               listControl.Columns[column].Format,
                               color );
                   }
-                }
-                else if ( ( listControl.CheckBoxes )
-                &&        ( column == 0 ) )
-                {
-                  var checkRect = listControl.GetItemCheckRect( itemIndex );
-
-                  DrawCheckBox( checkRect, false, listControl.Items[itemIndex].Checked );
-                }
-                else if ( ( column == columnIndexWithImage )
-                &&        ( listControl.ImageList != null )
-                &&        ( listControl.Items[itemIndex].ImageIndex >= 0 )
-                &&        ( listControl.Items[itemIndex].ImageIndex < listControl.ImageList.Count ) )
-                {
-                  if ( !listControl.RaiseDrawItemImage( this, itemIndex, rcItem ) )
-                  {
-                    DrawImageCentered( listControl.ImageList[listControl.Items[itemIndex].ImageIndex],
-                                       rcItem );
-                  }
-                }
-                else
-                {
-                  DrawText( listControl.Items[itemIndex].SubItems[column].Text, rcItem.Left, rcItem.Top, rcItem.Width, rcItem.Height,
-                            listControl.Columns[column].Alignment,
-                            listControl.Columns[column].Format,
-                            color );
                 }
               }
             }
@@ -1588,6 +1591,13 @@ namespace DecentForms
             break;
         }
       }
+    }
+
+
+
+    public int TextWidth( string text )
+    {
+      return TextRenderer.MeasureText( text, _Control.Font, new Size(int.MaxValue, int.MaxValue ), TextFormatFlags.NoClipping | TextFormatFlags.NoPadding ).Width;
     }
 
 

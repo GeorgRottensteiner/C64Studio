@@ -1,7 +1,8 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static RetroDevStudio.Debugger.MemoryView;
 
 namespace RetroDevStudio
 {
@@ -18,6 +19,7 @@ namespace RetroDevStudio
     public string               Name = "";
     public int                  Address = 0;
     public GR.Memory.ByteBuffer CurrentValue = new GR.Memory.ByteBuffer();
+    public GR.Memory.ByteBuffer PreviousValues = new GR.Memory.ByteBuffer();
     public int                  SizeInBytes = 0;
     public DisplayType          Type = DisplayType.HEX;
     public bool                 DisplayMemory = false;

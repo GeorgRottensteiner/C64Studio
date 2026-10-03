@@ -1,4 +1,6 @@
-﻿using GR.Memory;
+using DecentForms;
+using GR.Memory;
+using RetroDevStudio.Debugger;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using static RetroDevStudio.Types.ClipboardImageList;
 
 
 
@@ -35,7 +38,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void AddWatchEntry( WatchEntry Watch, bool ShowLastValues = false )
+    public void AddWatchEntry( WatchEntry Watch, bool ShowLastValues = false, MemoryView memoryView = null )
     {
       var  item = new DecentForms.ListControlItem();
 
@@ -126,7 +129,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void UpdateValue( string WatchVar, bool IndexedX, bool IndexedY, GR.Memory.ByteBuffer Data )
+    public void UpdateValue( string WatchVar, bool IndexedX, bool IndexedY, GR.Memory.ByteBuffer Data, bool storeCurrentAsPrevious = true )
     {
       foreach ( var item in listWatch.Items )
       {
@@ -136,6 +139,10 @@ namespace RetroDevStudio.Documents
         &&   ( watchEntry.IndexedX == IndexedX )
         &&   ( watchEntry.IndexedY == IndexedY ) )
         {
+          if ( storeCurrentAsPrevious )
+          {
+            watchEntry.PreviousValues = watchEntry.CurrentValue;
+          }
           watchEntry.CurrentValue = Data;
 
           if ( watchEntry.SizeInBytes != watchEntry.CurrentValue.Length )
@@ -252,7 +259,7 @@ namespace RetroDevStudio.Documents
       int     delta = WatchData.AdjustedStartAddress - WatchData.Parameter1;
       int     expectedSize = (int)Data.Length;
       if ( ( WatchData.MemDumpOffsetX )
-      ||   ( WatchData.MemDumpOffsetY ) )
+      || ( WatchData.MemDumpOffsetY ) )
       {
         delta -= WatchData.AppliedOffset;
       }
@@ -302,7 +309,7 @@ namespace RetroDevStudio.Documents
 
         entry.Type = WatchEntry.DisplayType.HEX;
         item.SubItems[1].Text = TypeToString( entry );
-        UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
+        UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue, false );
       }
     }
 
@@ -316,7 +323,7 @@ namespace RetroDevStudio.Documents
 
         entry.Type = WatchEntry.DisplayType.DEZ;
         item.SubItems[1].Text = TypeToString( entry );
-        UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
+        UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue, false );
       }
     }
 
@@ -330,7 +337,7 @@ namespace RetroDevStudio.Documents
 
         entry.Type = WatchEntry.DisplayType.BINARY;
         item.SubItems[1].Text = TypeToString( entry );
-        UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
+        UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue, false );
       }
     }
 
@@ -380,10 +387,10 @@ namespace RetroDevStudio.Documents
       toggleEndiannessToolStripMenuItem.Checked = !entry.BigEndian;
       pinToolStripMenuItem.Visible = false;
 
-      moveToTopToolStripMenuItem.Enabled    = ( listWatch.SelectedIndices[0] > 0 );
+      moveToTopToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] > 0 );
       moveToBottomToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] + 1 < listWatch.Items.Count );
-      moveDownToolStripMenuItem.Enabled     = ( listWatch.SelectedIndices[0] + 1 < listWatch.Items.Count );
-      moveUpToolStripMenuItem.Enabled       = ( listWatch.SelectedIndices[0] > 0 );
+      moveDownToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] + 1 < listWatch.Items.Count );
+      moveUpToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] > 0 );
 
       if ( displayBoundsToolStripMenuItem.Visible )
       {
@@ -729,7 +736,7 @@ namespace RetroDevStudio.Documents
         entry.BigEndian = !toggleEndiannessToolStripMenuItem.Checked;
         item.SubItems[1].Text = TypeToString( entry );
 
-        UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
+        UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue, false );
       }
     }
 
@@ -887,6 +894,103 @@ namespace RetroDevStudio.Documents
     private void pinToolStripMenuItem_Click( object sender, EventArgs e )
     {
 
+    }
+
+
+
+    private bool listWatch_DrawSubItem( DecentForms.ControlBase Sender, DecentForms.ControlRenderer renderer, DecentForms.ListControlItem item, int subItemIndex, GR.Math.Rectangle rcItem )
+    {
+      if ( subItemIndex != 2 )
+      {
+        return false;
+      }
+      WatchEntry entry = (WatchEntry)item.Tag;
+      if ( ( entry.CurrentValue != null )
+      &&   ( entry.PreviousValues != null )
+      &&   ( entry.CurrentValue.Length != 0 )
+      &&   ( entry.CurrentValue.Length == entry.PreviousValues.Length ) )
+      {
+        int x = 0;
+        switch ( entry.Type )
+        {
+          case WatchEntry.DisplayType.HEX:
+            x += DrawText( renderer, "$", rcItem.Left + x, rcItem.Top, rcItem.Width - x, rcItem.Height, ControlRenderer.ColorControlText );
+            break;
+          case WatchEntry.DisplayType.BINARY:
+            x += DrawText( renderer, "%", rcItem.Left + x, rcItem.Top, rcItem.Width - x, rcItem.Height, ControlRenderer.ColorControlText );
+            break;
+        }
+
+        if ( !entry.DisplayMemory )
+        {
+          string  textSnippet = "";
+          switch ( entry.Type )
+          {
+            case WatchEntry.DisplayType.HEX:
+            default:
+              textSnippet = entry.Address.ToString( "X4" );
+              break;
+            case WatchEntry.DisplayType.DEZ:
+              textSnippet = entry.Address.ToString();
+              break;
+            case WatchEntry.DisplayType.BINARY:
+              textSnippet = Convert.ToString( entry.Address, 2 );
+              break;
+          }
+          renderer.DrawText( textSnippet, rcItem.Left + x, rcItem.Top, rcItem.Width - x, rcItem.Height,
+                             DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.CENTERED_V );
+          return true;
+        }
+
+        for ( int i = 0; i < entry.CurrentValue.Length; ++i )
+        {
+          uint color = ControlRenderer.ColorControlText;
+          int byteIndex = entry.BigEndian ?  i : (int)entry.CurrentValue.Length - 1 - i;
+
+          if ( entry.CurrentValue.ByteAt( byteIndex ) != entry.PreviousValues.ByteAt( byteIndex ) )
+          {
+            color = 0xffff0000;
+          }
+          string  textSnippet = "";
+          byte    currentByte = entry.CurrentValue.ByteAt( byteIndex );
+          
+          switch ( entry.Type )
+          {
+            case WatchEntry.DisplayType.HEX:
+            default:
+              textSnippet = currentByte.ToString( "X2" );
+              break;
+            case WatchEntry.DisplayType.DEZ:
+              textSnippet = currentByte.ToString();
+              break;
+            case WatchEntry.DisplayType.BINARY:
+              textSnippet = Convert.ToString( currentByte, 2 );
+              break;
+          }
+
+          x += DrawText( renderer, textSnippet, rcItem.Left + x, rcItem.Top, rcItem.Width - x, rcItem.Height, color );
+          if ( i + 1 < entry.CurrentValue.Length )
+          {
+            x += renderer.TextWidth( " " );
+          }
+        }
+      }
+      else
+      {
+        renderer.DrawText( item.SubItems[subItemIndex].Text, rcItem.Left, rcItem.Top, rcItem.Width, rcItem.Height,
+                           DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.CENTERED_V );
+      }
+      return true;
+    }
+
+
+
+    private int DrawText( ControlRenderer renderer, string text, int x, int y, int width, int height, uint color )
+    {
+      renderer.DrawText( text, x, y, width, height,
+                         DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.CENTERED_V, color );
+
+      return renderer.TextWidth( text );
     }
 
 

@@ -1,4 +1,4 @@
-﻿using GR.Image;
+using GR.Image;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,8 +15,7 @@ namespace DecentForms
   public partial class ListControl : ControlBase
   {
     public delegate void ListControlDrawItemImageHandler( DecentForms.ControlBase Sender, ControlRenderer renderer, int x, int y, DecentForms.ListControlItem item );
-
-
+    public delegate bool ListControlDrawSubItemHandler( DecentForms.ControlBase Sender, ControlRenderer renderer, DecentForms.ListControlItem item, int subItemIndex, GR.Math.Rectangle rcItem );
 
     private VScrollBar    _ScrollBarV = new VScrollBar();
     private HScrollBar    _ScrollBarH = new HScrollBar();
@@ -52,6 +51,7 @@ namespace DecentForms
     public event EventHandler       ColumnClicked;
     public new event DecentForms.EventHandlerWithEvent MouseClick;
     public event ListControlDrawItemImageHandler    DrawItemImage;
+    public event ListControlDrawSubItemHandler      DrawSubItem;
 
 
 
@@ -1542,6 +1542,26 @@ namespace DecentForms
         _ScrollBarV.Value = Math.Max( 0, index - VisibleItemCount + 1 );
         Invalidate();
       }
+    }
+
+
+
+    public bool RaiseDrawSubItem( ControlRenderer renderer, int itemIndex, int subItemIndex, GR.Math.Rectangle rcItem )
+    {
+      if ( DrawSubItem == null )
+      {
+        return false;
+      }
+      foreach ( ListControlDrawSubItemHandler handler in DrawSubItem.GetInvocationList() )
+      {
+        if ( !handler( this, renderer, Items[itemIndex], subItemIndex, rcItem ) )
+        {
+          return false;
+        }
+      }
+
+      DrawSubItem.Invoke( this, renderer, Items[itemIndex], subItemIndex, rcItem );
+      return true;
     }
 
 

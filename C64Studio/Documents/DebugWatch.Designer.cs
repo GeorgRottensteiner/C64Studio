@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio.Documents
+namespace RetroDevStudio.Documents
 {
   partial class DebugWatch
   {
@@ -28,282 +28,257 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
+      components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugWatch));
-      this.listWatch = new DecentForms.ListControl();
-      this.contextDebugItem = new System.Windows.Forms.ContextMenuStrip(this.components);
-      this.displayAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.hexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.decimalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.binaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.petSCIIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.displayBoundsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.bytes1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.bytes2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.bytes4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.bytes8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.bytes16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.bytes32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.watchReadFromMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toggleEndiannessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-      this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-      this.removeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.removeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-      this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.copySelectedValuesToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.moveToTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.moveToBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.pinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
-      this.contextDebugItem.SuspendLayout();
-      this.SuspendLayout();
+      listWatch = new DecentForms.ListControl();
+      contextDebugItem = new System.Windows.Forms.ContextMenuStrip( components );
+      displayAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      hexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      decimalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      binaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      petSCIIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      displayBoundsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      bytes1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      bytes2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      bytes4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      bytes8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      bytes16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      bytes32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      watchReadFromMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      toggleEndiannessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+      pinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      moveToTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      moveToBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+      removeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      removeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+      copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      copySelectedValuesToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).BeginInit();
+      contextDebugItem.SuspendLayout();
+      SuspendLayout();
       // 
       // listWatch
       // 
-      this.listWatch.BorderStyle = DecentForms.BorderStyle.SUNKEN;
-      this.listWatch.ContextMenuStrip = this.contextDebugItem;
-      this.listWatch.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.listWatch.FirstVisibleItemIndex = 0;
-      this.listWatch.HasHeader = true;
-      this.listWatch.HeaderHeight = 24;
-      this.listWatch.ItemHeight = 15;
-      this.listWatch.ListViewItemSorter = null;
-      this.listWatch.Location = new System.Drawing.Point(0, 0);
-      this.listWatch.Name = "listWatch";
-      this.listWatch.ScrollAlwaysVisible = false;
-      this.listWatch.SelectedIndex = -1;
-      this.listWatch.SelectedItem = null;
-      this.listWatch.SelectionMode = DecentForms.SelectionMode.ONE;
-      this.listWatch.Size = new System.Drawing.Size(608, 195);
-      this.listWatch.SortColumn = 0;
-      this.listWatch.SortOrder = DecentForms.SortOrder.NONE;
-      this.listWatch.TabIndex = 0;
-      this.listWatch.ColumnClicked += new DecentForms.EventHandler(this.listWatch_ColumnClicked);
-      this.listWatch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listWatch_KeyDown);
+      listWatch.BorderStyle = DecentForms.BorderStyle.SUNKEN;
+      listWatch.CheckBoxes = false;
+      listWatch.ContextMenuStrip = contextDebugItem;
+      listWatch.DisplayAntiAliased = true;
+      listWatch.Dock = System.Windows.Forms.DockStyle.Fill;
+      listWatch.HasHeader = true;
+      listWatch.HeaderHeight = 24;
+      listWatch.ImageList = null;
+      listWatch.ItemHeight = 15;
+      listWatch.Location = new System.Drawing.Point( 0, 0 );
+      listWatch.MultiSelected = false;
+      listWatch.Name = "listWatch";
+      listWatch.ScrollAlwaysVisible = false;
+      listWatch.SelectionMode = DecentForms.SelectionMode.ONE;
+      listWatch.Size = new System.Drawing.Size( 608, 195 );
+      listWatch.SortColumn = 0;
+      listWatch.SortOrder = DecentForms.SortOrder.NONE;
+      listWatch.TabIndex = 0;
+      listWatch.ColumnClicked +=  listWatch_ColumnClicked ;
+      listWatch.DrawSubItem +=  listWatch_DrawSubItem ;
+      listWatch.KeyDown +=  listWatch_KeyDown ;
       // 
       // contextDebugItem
       // 
-      this.contextDebugItem.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.displayAsToolStripMenuItem,
-            this.displayBoundsToolStripMenuItem,
-            this.watchReadFromMemoryToolStripMenuItem,
-            this.toggleEndiannessToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.pinToolStripMenuItem,
-            this.moveToTopToolStripMenuItem,
-            this.moveUpToolStripMenuItem,
-            this.moveDownToolStripMenuItem,
-            this.moveToBottomToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.removeEntryToolStripMenuItem,
-            this.removeAllToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.copyToClipboardToolStripMenuItem,
-            this.copySelectedValuesToClipboardToolStripMenuItem});
-      this.contextDebugItem.Name = "contextDebugItem";
-      this.contextDebugItem.Size = new System.Drawing.Size(264, 330);
-      this.contextDebugItem.Opening += new System.ComponentModel.CancelEventHandler(this.contextDebugItem_Opening);
+      contextDebugItem.Items.AddRange( new System.Windows.Forms.ToolStripItem[] { displayAsToolStripMenuItem, displayBoundsToolStripMenuItem, watchReadFromMemoryToolStripMenuItem, toggleEndiannessToolStripMenuItem, toolStripSeparator1, pinToolStripMenuItem, moveToTopToolStripMenuItem, moveUpToolStripMenuItem, moveDownToolStripMenuItem, moveToBottomToolStripMenuItem, toolStripSeparator2, removeEntryToolStripMenuItem, removeAllToolStripMenuItem, toolStripSeparator3, copyToClipboardToolStripMenuItem, copySelectedValuesToClipboardToolStripMenuItem } );
+      contextDebugItem.Name = "contextDebugItem";
+      contextDebugItem.Size = new System.Drawing.Size( 264, 308 );
+      contextDebugItem.Opening +=  contextDebugItem_Opening ;
       // 
       // displayAsToolStripMenuItem
       // 
-      this.displayAsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.hexToolStripMenuItem,
-            this.decimalToolStripMenuItem,
-            this.binaryToolStripMenuItem,
-            this.petSCIIToolStripMenuItem});
-      this.displayAsToolStripMenuItem.Name = "displayAsToolStripMenuItem";
-      this.displayAsToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.displayAsToolStripMenuItem.Text = "Display as";
+      displayAsToolStripMenuItem.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] { hexToolStripMenuItem, decimalToolStripMenuItem, binaryToolStripMenuItem, petSCIIToolStripMenuItem } );
+      displayAsToolStripMenuItem.Name = "displayAsToolStripMenuItem";
+      displayAsToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      displayAsToolStripMenuItem.Text = "Display as";
       // 
       // hexToolStripMenuItem
       // 
-      this.hexToolStripMenuItem.Name = "hexToolStripMenuItem";
-      this.hexToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.hexToolStripMenuItem.Text = "Hex";
-      this.hexToolStripMenuItem.Click += new System.EventHandler(this.hexToolStripMenuItem_Click);
+      hexToolStripMenuItem.Name = "hexToolStripMenuItem";
+      hexToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      hexToolStripMenuItem.Text = "Hex";
+      hexToolStripMenuItem.Click +=  hexToolStripMenuItem_Click ;
       // 
       // decimalToolStripMenuItem
       // 
-      this.decimalToolStripMenuItem.Name = "decimalToolStripMenuItem";
-      this.decimalToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.decimalToolStripMenuItem.Text = "Decimal";
-      this.decimalToolStripMenuItem.Click += new System.EventHandler(this.decimalToolStripMenuItem_Click);
+      decimalToolStripMenuItem.Name = "decimalToolStripMenuItem";
+      decimalToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      decimalToolStripMenuItem.Text = "Decimal";
+      decimalToolStripMenuItem.Click +=  decimalToolStripMenuItem_Click ;
       // 
       // binaryToolStripMenuItem
       // 
-      this.binaryToolStripMenuItem.Name = "binaryToolStripMenuItem";
-      this.binaryToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.binaryToolStripMenuItem.Text = "Binary";
-      this.binaryToolStripMenuItem.Click += new System.EventHandler(this.binaryToolStripMenuItem_Click);
+      binaryToolStripMenuItem.Name = "binaryToolStripMenuItem";
+      binaryToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      binaryToolStripMenuItem.Text = "Binary";
+      binaryToolStripMenuItem.Click +=  binaryToolStripMenuItem_Click ;
       // 
       // petSCIIToolStripMenuItem
       // 
-      this.petSCIIToolStripMenuItem.Name = "petSCIIToolStripMenuItem";
-      this.petSCIIToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.petSCIIToolStripMenuItem.Text = "PetSCII";
+      petSCIIToolStripMenuItem.Name = "petSCIIToolStripMenuItem";
+      petSCIIToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      petSCIIToolStripMenuItem.Text = "PetSCII";
       // 
       // displayBoundsToolStripMenuItem
       // 
-      this.displayBoundsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.bytes1ToolStripMenuItem,
-            this.bytes2ToolStripMenuItem,
-            this.bytes4ToolStripMenuItem,
-            this.bytes8ToolStripMenuItem,
-            this.bytes16ToolStripMenuItem,
-            this.bytes32ToolStripMenuItem});
-      this.displayBoundsToolStripMenuItem.Name = "displayBoundsToolStripMenuItem";
-      this.displayBoundsToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.displayBoundsToolStripMenuItem.Text = "Display Bounds";
-      this.displayBoundsToolStripMenuItem.Visible = false;
+      displayBoundsToolStripMenuItem.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] { bytes1ToolStripMenuItem, bytes2ToolStripMenuItem, bytes4ToolStripMenuItem, bytes8ToolStripMenuItem, bytes16ToolStripMenuItem, bytes32ToolStripMenuItem } );
+      displayBoundsToolStripMenuItem.Name = "displayBoundsToolStripMenuItem";
+      displayBoundsToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      displayBoundsToolStripMenuItem.Text = "Display Bounds";
+      displayBoundsToolStripMenuItem.Visible = false;
       // 
       // bytes1ToolStripMenuItem
       // 
-      this.bytes1ToolStripMenuItem.Name = "bytes1ToolStripMenuItem";
-      this.bytes1ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.bytes1ToolStripMenuItem.Text = "1 byte";
-      this.bytes1ToolStripMenuItem.Click += new System.EventHandler(this.bytes1ToolStripMenuItem_Click);
+      bytes1ToolStripMenuItem.Name = "bytes1ToolStripMenuItem";
+      bytes1ToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      bytes1ToolStripMenuItem.Text = "1 byte";
+      bytes1ToolStripMenuItem.Click +=  bytes1ToolStripMenuItem_Click ;
       // 
       // bytes2ToolStripMenuItem
       // 
-      this.bytes2ToolStripMenuItem.Name = "bytes2ToolStripMenuItem";
-      this.bytes2ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.bytes2ToolStripMenuItem.Text = "2 bytes";
-      this.bytes2ToolStripMenuItem.Click += new System.EventHandler(this.bytes2ToolStripMenuItem_Click);
+      bytes2ToolStripMenuItem.Name = "bytes2ToolStripMenuItem";
+      bytes2ToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      bytes2ToolStripMenuItem.Text = "2 bytes";
+      bytes2ToolStripMenuItem.Click +=  bytes2ToolStripMenuItem_Click ;
       // 
       // bytes4ToolStripMenuItem
       // 
-      this.bytes4ToolStripMenuItem.Name = "bytes4ToolStripMenuItem";
-      this.bytes4ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.bytes4ToolStripMenuItem.Text = "4 bytes";
-      this.bytes4ToolStripMenuItem.Click += new System.EventHandler(this.bytes4ToolStripMenuItem_Click);
+      bytes4ToolStripMenuItem.Name = "bytes4ToolStripMenuItem";
+      bytes4ToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      bytes4ToolStripMenuItem.Text = "4 bytes";
+      bytes4ToolStripMenuItem.Click +=  bytes4ToolStripMenuItem_Click ;
       // 
       // bytes8ToolStripMenuItem
       // 
-      this.bytes8ToolStripMenuItem.Name = "bytes8ToolStripMenuItem";
-      this.bytes8ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.bytes8ToolStripMenuItem.Text = "8 bytes";
-      this.bytes8ToolStripMenuItem.Click += new System.EventHandler(this.bytes8ToolStripMenuItem_Click);
+      bytes8ToolStripMenuItem.Name = "bytes8ToolStripMenuItem";
+      bytes8ToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      bytes8ToolStripMenuItem.Text = "8 bytes";
+      bytes8ToolStripMenuItem.Click +=  bytes8ToolStripMenuItem_Click ;
       // 
       // bytes16ToolStripMenuItem
       // 
-      this.bytes16ToolStripMenuItem.Name = "bytes16ToolStripMenuItem";
-      this.bytes16ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.bytes16ToolStripMenuItem.Text = "16 bytes";
-      this.bytes16ToolStripMenuItem.Click += new System.EventHandler(this.bytes16ToolStripMenuItem_Click);
+      bytes16ToolStripMenuItem.Name = "bytes16ToolStripMenuItem";
+      bytes16ToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      bytes16ToolStripMenuItem.Text = "16 bytes";
+      bytes16ToolStripMenuItem.Click +=  bytes16ToolStripMenuItem_Click ;
       // 
       // bytes32ToolStripMenuItem
       // 
-      this.bytes32ToolStripMenuItem.Name = "bytes32ToolStripMenuItem";
-      this.bytes32ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-      this.bytes32ToolStripMenuItem.Text = "32 bytes";
-      this.bytes32ToolStripMenuItem.Click += new System.EventHandler(this.bytes32ToolStripMenuItem_Click);
+      bytes32ToolStripMenuItem.Name = "bytes32ToolStripMenuItem";
+      bytes32ToolStripMenuItem.Size = new System.Drawing.Size( 117, 22 );
+      bytes32ToolStripMenuItem.Text = "32 bytes";
+      bytes32ToolStripMenuItem.Click +=  bytes32ToolStripMenuItem_Click ;
       // 
       // watchReadFromMemoryToolStripMenuItem
       // 
-      this.watchReadFromMemoryToolStripMenuItem.Name = "watchReadFromMemoryToolStripMenuItem";
-      this.watchReadFromMemoryToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.watchReadFromMemoryToolStripMenuItem.Text = "Read from memory";
-      this.watchReadFromMemoryToolStripMenuItem.Click += new System.EventHandler(this.watchReadFromMemoryToolStripMenuItem_Click);
+      watchReadFromMemoryToolStripMenuItem.Name = "watchReadFromMemoryToolStripMenuItem";
+      watchReadFromMemoryToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      watchReadFromMemoryToolStripMenuItem.Text = "Read from memory";
+      watchReadFromMemoryToolStripMenuItem.Click +=  watchReadFromMemoryToolStripMenuItem_Click ;
       // 
       // toggleEndiannessToolStripMenuItem
       // 
-      this.toggleEndiannessToolStripMenuItem.Name = "toggleEndiannessToolStripMenuItem";
-      this.toggleEndiannessToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.toggleEndiannessToolStripMenuItem.Text = "Little Endian";
-      this.toggleEndiannessToolStripMenuItem.Click += new System.EventHandler(this.toggleEndiannessToolStripMenuItem_Click);
+      toggleEndiannessToolStripMenuItem.Name = "toggleEndiannessToolStripMenuItem";
+      toggleEndiannessToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      toggleEndiannessToolStripMenuItem.Text = "Little Endian";
+      toggleEndiannessToolStripMenuItem.Click +=  toggleEndiannessToolStripMenuItem_Click ;
       // 
       // toolStripSeparator1
       // 
-      this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(260, 6);
-      // 
-      // moveUpToolStripMenuItem
-      // 
-      this.moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
-      this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.moveUpToolStripMenuItem.Text = "Move Up";
-      this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
-      // 
-      // moveDownToolStripMenuItem
-      // 
-      this.moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
-      this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.moveDownToolStripMenuItem.Text = "Move Down";
-      this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
-      // 
-      // toolStripSeparator2
-      // 
-      this.toolStripSeparator2.Name = "toolStripSeparator2";
-      this.toolStripSeparator2.Size = new System.Drawing.Size(260, 6);
-      // 
-      // removeEntryToolStripMenuItem
-      // 
-      this.removeEntryToolStripMenuItem.Name = "removeEntryToolStripMenuItem";
-      this.removeEntryToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.removeEntryToolStripMenuItem.Text = "&Remove entry";
-      this.removeEntryToolStripMenuItem.Click += new System.EventHandler(this.removeEntryToolStripMenuItem_Click);
-      // 
-      // removeAllToolStripMenuItem
-      // 
-      this.removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
-      this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.removeAllToolStripMenuItem.Text = "Remove all";
-      this.removeAllToolStripMenuItem.Click += new System.EventHandler(this.removeAllToolStripMenuItem_Click);
-      // 
-      // toolStripSeparator3
-      // 
-      this.toolStripSeparator3.Name = "toolStripSeparator3";
-      this.toolStripSeparator3.Size = new System.Drawing.Size(260, 6);
-      // 
-      // copyToClipboardToolStripMenuItem
-      // 
-      this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
-      this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.copyToClipboardToolStripMenuItem.Text = "Copy selected watches to Clipboard";
-      this.copyToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyToClipboardToolStripMenuItem_Click);
-      // 
-      // copySelectedValuesToClipboardToolStripMenuItem
-      // 
-      this.copySelectedValuesToClipboardToolStripMenuItem.Name = "copySelectedValuesToClipboardToolStripMenuItem";
-      this.copySelectedValuesToClipboardToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.copySelectedValuesToClipboardToolStripMenuItem.Text = "Copy selected values to Clipboard";
-      this.copySelectedValuesToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySelectedValuesToClipboardToolStripMenuItem_Click);
-      // 
-      // moveToTopToolStripMenuItem
-      // 
-      this.moveToTopToolStripMenuItem.Name = "moveToTopToolStripMenuItem";
-      this.moveToTopToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.moveToTopToolStripMenuItem.Text = "Move to Top";
-      this.moveToTopToolStripMenuItem.Click += new System.EventHandler(this.moveToTopToolStripMenuItem_Click);
-      // 
-      // moveToBottomToolStripMenuItem
-      // 
-      this.moveToBottomToolStripMenuItem.Name = "moveToBottomToolStripMenuItem";
-      this.moveToBottomToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.moveToBottomToolStripMenuItem.Text = "Move to Bottom";
-      this.moveToBottomToolStripMenuItem.Click += new System.EventHandler(this.moveToBottomToolStripMenuItem_Click);
+      toolStripSeparator1.Name = "toolStripSeparator1";
+      toolStripSeparator1.Size = new System.Drawing.Size( 260, 6 );
       // 
       // pinToolStripMenuItem
       // 
-      this.pinToolStripMenuItem.Name = "pinToolStripMenuItem";
-      this.pinToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-      this.pinToolStripMenuItem.Text = "Pin";
-      this.pinToolStripMenuItem.Click += new System.EventHandler(this.pinToolStripMenuItem_Click);
+      pinToolStripMenuItem.Name = "pinToolStripMenuItem";
+      pinToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      pinToolStripMenuItem.Text = "Pin";
+      pinToolStripMenuItem.Click +=  pinToolStripMenuItem_Click ;
+      // 
+      // moveToTopToolStripMenuItem
+      // 
+      moveToTopToolStripMenuItem.Name = "moveToTopToolStripMenuItem";
+      moveToTopToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      moveToTopToolStripMenuItem.Text = "Move to Top";
+      moveToTopToolStripMenuItem.Click +=  moveToTopToolStripMenuItem_Click ;
+      // 
+      // moveUpToolStripMenuItem
+      // 
+      moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
+      moveUpToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      moveUpToolStripMenuItem.Text = "Move Up";
+      moveUpToolStripMenuItem.Click +=  moveUpToolStripMenuItem_Click ;
+      // 
+      // moveDownToolStripMenuItem
+      // 
+      moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
+      moveDownToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      moveDownToolStripMenuItem.Text = "Move Down";
+      moveDownToolStripMenuItem.Click +=  moveDownToolStripMenuItem_Click ;
+      // 
+      // moveToBottomToolStripMenuItem
+      // 
+      moveToBottomToolStripMenuItem.Name = "moveToBottomToolStripMenuItem";
+      moveToBottomToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      moveToBottomToolStripMenuItem.Text = "Move to Bottom";
+      moveToBottomToolStripMenuItem.Click +=  moveToBottomToolStripMenuItem_Click ;
+      // 
+      // toolStripSeparator2
+      // 
+      toolStripSeparator2.Name = "toolStripSeparator2";
+      toolStripSeparator2.Size = new System.Drawing.Size( 260, 6 );
+      // 
+      // removeEntryToolStripMenuItem
+      // 
+      removeEntryToolStripMenuItem.Name = "removeEntryToolStripMenuItem";
+      removeEntryToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      removeEntryToolStripMenuItem.Text = "&Remove entry";
+      removeEntryToolStripMenuItem.Click +=  removeEntryToolStripMenuItem_Click ;
+      // 
+      // removeAllToolStripMenuItem
+      // 
+      removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
+      removeAllToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      removeAllToolStripMenuItem.Text = "Remove all";
+      removeAllToolStripMenuItem.Click +=  removeAllToolStripMenuItem_Click ;
+      // 
+      // toolStripSeparator3
+      // 
+      toolStripSeparator3.Name = "toolStripSeparator3";
+      toolStripSeparator3.Size = new System.Drawing.Size( 260, 6 );
+      // 
+      // copyToClipboardToolStripMenuItem
+      // 
+      copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
+      copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      copyToClipboardToolStripMenuItem.Text = "Copy selected watches to Clipboard";
+      copyToClipboardToolStripMenuItem.Click +=  copyToClipboardToolStripMenuItem_Click ;
+      // 
+      // copySelectedValuesToClipboardToolStripMenuItem
+      // 
+      copySelectedValuesToClipboardToolStripMenuItem.Name = "copySelectedValuesToClipboardToolStripMenuItem";
+      copySelectedValuesToClipboardToolStripMenuItem.Size = new System.Drawing.Size( 263, 22 );
+      copySelectedValuesToClipboardToolStripMenuItem.Text = "Copy selected values to Clipboard";
+      copySelectedValuesToClipboardToolStripMenuItem.Click +=  copySelectedValuesToClipboardToolStripMenuItem_Click ;
       // 
       // DebugWatch
       // 
-      this.ClientSize = new System.Drawing.Size(608, 195);
-      this.Controls.Add(this.listWatch);
-      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-      this.Name = "DebugWatch";
-      this.Text = "Watch";
-      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
-      this.contextDebugItem.ResumeLayout(false);
-      this.ResumeLayout(false);
+      ClientSize = new System.Drawing.Size( 608, 195 );
+      Controls.Add( listWatch );
+      Icon = (System.Drawing.Icon)resources.GetObject( "$this.Icon" );
+      Name = "DebugWatch";
+      Text = "Watch";
+      ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).EndInit();
+      contextDebugItem.ResumeLayout( false );
+      ResumeLayout( false );
 
     }
 
