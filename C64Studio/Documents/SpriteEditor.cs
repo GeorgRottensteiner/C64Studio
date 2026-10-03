@@ -486,7 +486,7 @@ namespace RetroDevStudio.Documents
       &&   ( ( Buttons & MouseButtons.Right ) != 0 ) )
       {
         Buttons = MouseButtons.Left;
-        newColor.Type = ColorType.BACKGROUND;
+        newColor = new ColorEntry( ColorType.BACKGROUND, (byte)m_SpriteProject.Colors.BackgroundColor );
       }
       if ( newColor.Type == ColorType.BACKGROUND )
       {
