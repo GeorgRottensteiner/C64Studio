@@ -1,4 +1,4 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -28,37 +28,6 @@ namespace RetroDevStudio.Controls
         {
           comboCustomColor.SelectedIndex = value;
         }
-      }
-    }
-
-
-
-    public override ColorType SelectedColor
-    {
-      get
-      {
-        return _CurrentColorType;
-      }
-      set
-      {
-        switch ( value )
-        {
-          case ColorType.BACKGROUND:
-            radioBackground.Checked = true;
-            break;
-          case ColorType.MULTICOLOR_1:
-            radioMultiColor1.Checked = true;
-            break;
-          case ColorType.MULTICOLOR_2:
-            radioMultiColor2.Checked = true;
-            break;
-          case ColorType.CUSTOM_COLOR:
-            radioCustomColor.Checked = true;
-            break;
-          default:
-            return;
-        }
-        _CurrentColorType = value;
       }
     }
 
@@ -105,11 +74,7 @@ namespace RetroDevStudio.Controls
       comboMulticolor2.SelectedIndex = Colors.MultiColor2 % comboMulticolor2.Items.Count;
       comboCustomColor.SelectedIndex = CustomColor % comboCustomColor.Items.Count;
 
-      radioCustomColor.Checked = true;
-
       checkMulticolor.Checked = MulticolorEnabled;
-      radioMultiColor1.Enabled = MulticolorEnabled;
-      radioMultiColor2.Enabled = MulticolorEnabled;
     }
 
 
@@ -126,7 +91,6 @@ namespace RetroDevStudio.Controls
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.BackgroundColor = comboBackground.SelectedIndex;
-      radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.BACKGROUND );
     }
 
@@ -135,10 +99,6 @@ namespace RetroDevStudio.Controls
     private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
-      if ( radioMultiColor1.Enabled )
-      {
-        radioMultiColor1.Checked = true;
-      }
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_1 );
     }
 
@@ -147,10 +107,6 @@ namespace RetroDevStudio.Controls
     private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
-      if ( radioMultiColor2.Enabled )
-      {
-        radioMultiColor2.Checked = true;
-      }
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_2 );
     }
 
@@ -159,7 +115,6 @@ namespace RetroDevStudio.Controls
     private void comboColor_SelectedIndexChanged( object sender, EventArgs e )
     {
       CustomColor = (byte)comboCustomColor.SelectedIndex;
-      radioCustomColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
 
@@ -168,48 +123,6 @@ namespace RetroDevStudio.Controls
     private void btnExchangeColors_Click( DecentForms.ControlBase Sender )
     {
       contextMenuExchangeColors.Show( btnExchangeColors, new Point( 0, btnExchangeColors.Height ) );
-    }
-
-
-
-    private void radioBackground_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.BACKGROUND;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioMultiColor1_CheckedChanged( object sender, EventArgs e )
-    {
-      if ( !checkMulticolor.Checked )
-      {
-        radioCustomColor.Checked = true;
-        return;
-      }
-      _CurrentColorType = ColorType.MULTICOLOR_1;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioMulticolor2_CheckedChanged( object sender, EventArgs e )
-    {
-      if ( !checkMulticolor.Checked )
-      {
-        radioCustomColor.Checked = true;
-        return;
-      }
-      _CurrentColorType = ColorType.MULTICOLOR_2;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioCharColor_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.CUSTOM_COLOR;
-      RaiseColorSelectedEvent();
     }
 
 
@@ -279,17 +192,14 @@ namespace RetroDevStudio.Controls
 
     private void checkMulticolor_CheckedChanged( object sender, EventArgs e )
     {
-      radioMultiColor1.Enabled = checkMulticolor.Checked;
-      radioMultiColor2.Enabled = checkMulticolor.Checked;
+      labelMulticolor1.Enabled = checkMulticolor.Checked;
+      labelMulticolor2.Enabled = checkMulticolor.Checked;
+      comboMulticolor1.Enabled = checkMulticolor.Checked;
+      comboMulticolor2.Enabled = checkMulticolor.Checked;
       if ( !checkMulticolor.Checked )
       {
         _AvailableColors.Remove( ColorType.MULTICOLOR_1 );
         _AvailableColors.Remove( ColorType.MULTICOLOR_2 );
-        if ( ( radioMultiColor1.Checked )
-        ||   ( radioMultiColor2.Checked ) )
-        {
-          radioCustomColor.Checked = true;
-        }
       }
       else
       {

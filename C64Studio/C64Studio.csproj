@@ -30,6 +30,12 @@
     <Compile Update="Controls\ColorChooser\ColorChooserCommodoreMultiColor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorPalette\ColorPaletteBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorPalette\ColorPaletteRaster.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ColorPickerChars\ColorPickerCharsBase.cs">
       <SubType>UserControl</SubType>
     </Compile>

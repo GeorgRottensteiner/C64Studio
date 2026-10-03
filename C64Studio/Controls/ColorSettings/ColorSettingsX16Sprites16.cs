@@ -9,24 +9,6 @@ namespace RetroDevStudio.Controls
 {
   public partial class ColorSettingsX16Sprites16 : ColorSettingsBase
   {
-    public override byte SelectedCustomColor
-    {
-      get
-      {
-        return _SelectedCustomColor;
-      }
-      set
-      {
-        _SelectedCustomColor = value;
-        if ( comboCharColor != null )
-        {
-          comboCharColor.SelectedIndex = _SelectedCustomColor;
-        }
-      }
-    }
-
-
-
     public override int PaletteOffset 
     {
       get
@@ -38,28 +20,6 @@ namespace RetroDevStudio.Controls
         base.PaletteOffset = value;
 
         comboPaletteOffset.SelectedIndex = PaletteOffset / 16;
-      }
-    }
-
-
-
-    public override ColorType SelectedColor
-    {
-      get
-      {
-        return _CurrentColorType;
-      }
-      set
-      {
-        if ( value == ColorType.BACKGROUND )
-        {
-          radioBackground.Checked = true;
-          _CurrentColorType = value;
-          return;
-        }
-
-        radioCharColor.Checked = true;
-        _CurrentColorType = ColorType.CUSTOM_COLOR;
       }
     }
 
@@ -98,15 +58,11 @@ namespace RetroDevStudio.Controls
       // we only use 16 colors of the full palette! TODO - offset!
       for ( int i = 0; i < 16; ++i )
       {
-        comboCharColor.Items.Add( i.ToString( "d2" ) );
         comboBackground.Items.Add( i.ToString( "d2" ) );
         comboPaletteOffset.Items.Add( ( i * 16 ).ToString() );
       }
       comboBackground.SelectedIndex = Colors.BackgroundColor % comboBackground.Items.Count;
-      comboCharColor.SelectedIndex = CustomColor % comboCharColor.Items.Count;
       comboPaletteOffset.SelectedIndex = 0;
-
-      radioCharColor.Checked = true;
 
       foreach ( var pal in Colors.Palettes )
       {
@@ -138,17 +94,7 @@ namespace RetroDevStudio.Controls
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.BackgroundColor = comboBackground.SelectedIndex;
-      radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.BACKGROUND );
-    }
-
-
-
-    private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      _SelectedCustomColor = (byte)comboCharColor.SelectedIndex;
-      radioCharColor.Checked = true;
-      RaiseCustomColorSelectedEvent();
     }
 
 
@@ -169,25 +115,7 @@ namespace RetroDevStudio.Controls
         }
         comboActivePalette.SelectedIndex = Colors.ActivePalette;
         comboActivePalette.EndUpdate();
-
-        comboCharColor.Invalidate();
       }
-    }
-
-
-
-    private void radioBackground_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.BACKGROUND;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioCharColor_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.CUSTOM_COLOR;
-      RaiseColorSelectedEvent();
     }
 
 
@@ -198,9 +126,6 @@ namespace RetroDevStudio.Controls
       {
         case ColorType.BACKGROUND:
           comboBackground.SelectedIndex = Value;
-          break;
-        case ColorType.CUSTOM_COLOR:
-          comboCharColor.SelectedIndex = Value;
           break;
       }
     }
@@ -241,7 +166,6 @@ namespace RetroDevStudio.Controls
       {
         PaletteOffset = comboPaletteOffset.SelectedIndex * 16;
         Colors.PaletteOffset = comboPaletteOffset.SelectedIndex * 16;
-        comboCharColor.Invalidate();
         RaisePaletteSelectedEvent();
       }
     }

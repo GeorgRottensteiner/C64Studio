@@ -3951,8 +3951,8 @@ namespace RetroDevStudio.Documents
       int   numCharsX   = Image.Width / charWidth;
       int   numCharsY   = Image.Height / charHeight;
 
-      var   customColor = new GR.Generic.Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, 1 );
-      var   bgColor = new GR.Generic.Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+      var   customColor = new ColorEntry( ColorType.CUSTOM_COLOR, 1 );
+      var   bgColor = new ColorEntry( ColorType.BACKGROUND, 0 );
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {

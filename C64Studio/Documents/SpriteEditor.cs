@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -49,8 +50,10 @@ namespace RetroDevStudio.Documents
 
     private int                         m_SpriteEditorOrigWidth = -1;
     private int                         m_SpriteEditorOrigHeight = -1;
+    private int                         m_ColorPaletteOffset = 0;
 
     private ColorSettingsBase           _ColorSettingsDlg = null;
+    private ColorPaletteBase            _ColorPalette = null;
 
     private System.Drawing.Font         m_DefaultOutputFont = null;
     private ExportSpriteFormBase        m_ExportForm = null;
@@ -127,6 +130,7 @@ namespace RetroDevStudio.Documents
 
       m_SpriteEditorOrigWidth = pictureEditor.ClientSize.Width;
       m_SpriteEditorOrigHeight = pictureEditor.ClientSize.Height;
+      m_ColorPaletteOffset = panelColorPalette.Location.X - pictureEditor.Right;
 
       listLayers.ItemAdded += new ArrangedItemList.ItemModifiedEventHandler( listLayers_ItemAdded );
 
@@ -183,6 +187,7 @@ namespace RetroDevStudio.Documents
       RedrawEditor();
 
       panelSprites_SelectedIndexChanged( null, null );
+      ChangeColorPalette();
 
       m_AnimTimer.Tick += animTimer_Tick;
       AdjustSpriteSizes();
@@ -475,22 +480,22 @@ namespace RetroDevStudio.Documents
 
       var affectedSprite = m_SpriteProject.Sprites[m_CurrentSprite];
 
-      var     newColor = new Tupel<ColorType,byte>( _ColorSettingsDlg.SelectedColor, _ColorSettingsDlg.SelectedCustomColor );
+      var     newColor = _ColorPalette.SelectedColor;
 
       if ( ( Core.Settings.BehaviourRightClickIsBGColorPaint )
-      && ( ( Buttons & MouseButtons.Right ) != 0 ) )
+      &&   ( ( Buttons & MouseButtons.Right ) != 0 ) )
       {
         Buttons = MouseButtons.Left;
-        newColor.first = ColorType.BACKGROUND;
+        newColor.Type = ColorType.BACKGROUND;
       }
-      if ( newColor.first == ColorType.BACKGROUND )
+      if ( newColor.Type == ColorType.BACKGROUND )
       {
-        newColor.second = 0;
+        newColor.ColorIndex = 0;
       }
 
       if ( ( ( Buttons & MouseButtons.Middle ) != 0 )
-      || ( ( ( Buttons & MouseButtons.Left ) != 0 )
-      && ( ( Control.ModifierKeys & Keys.Shift ) != 0 ) ) )
+      ||   ( ( ( Buttons & MouseButtons.Left ) != 0 )
+      &&     ( ( Control.ModifierKeys & Keys.Shift ) != 0 ) ) )
       {
         Buttons &= ~MouseButtons.Left;
 
@@ -543,11 +548,7 @@ namespace RetroDevStudio.Documents
       {
         var pickedColor = affectedSprite.Tile.GetPixel( charX, charY );
 
-        _ColorSettingsDlg.SelectedColor = pickedColor.first;
-        if ( pickedColor.first == ColorType.CUSTOM_COLOR )
-        {
-          _ColorSettingsDlg.SelectedCustomColor = pickedColor.second;
-        }
+        _ColorPalette.SelectedColor = pickedColor;
       }
     }
 
@@ -587,7 +588,7 @@ namespace RetroDevStudio.Documents
 
         _ColorSettingsDlg.PaletteOffset = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.PaletteOffset;
         if ( ( !Lookup.HasCustomPalette( m_SpriteProject.Mode ) )
-        && ( !Lookup.HasCustomPalette( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode ) ) )
+        &&   ( !Lookup.HasCustomPalette( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode ) ) )
         {
           _ColorSettingsDlg.CustomColor = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
           _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
@@ -597,6 +598,7 @@ namespace RetroDevStudio.Documents
           _ColorSettingsDlg.ActivePalette = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.ActivePalette;
           m_SpriteProject.Colors.ActivePalette = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.ActivePalette;
         }
+        ChangeColorPalette();
         DoNotUpdateFromControls = false;
 
         RedrawEditor();
@@ -709,14 +711,15 @@ namespace RetroDevStudio.Documents
           }
         }
         ChangeColorSettingsDialog();
+        ChangeColorPalette();
         OnPaletteChanged();
 
         editSpriteFrom.Text = "0";
         editSpriteCount.Text = spritePad.NumSprites.ToString();
 
         if ( ( m_SpriteProject.ExportStartIndex != 0 )
-        || ( ( m_SpriteProject.ExportSpriteCount != 256 )
-        && ( m_SpriteProject.ExportSpriteCount != 0 ) ) )
+        ||   ( ( m_SpriteProject.ExportSpriteCount != 256 )
+        &&     ( m_SpriteProject.ExportSpriteCount != 0 ) ) )
         {
           comboExportRange.SelectedIndex = 2;
         }
@@ -797,6 +800,7 @@ namespace RetroDevStudio.Documents
         }
 
         ChangeColorSettingsDialog();
+        ChangeColorPalette();
         OnPaletteChanged();
         RedrawPreviewLayer();
 
@@ -845,6 +849,7 @@ namespace RetroDevStudio.Documents
           panelSprites.Items[startIndex + i].MemoryImage = m_SpriteProject.Sprites[startIndex + i].Tile.Image;
         }
         ChangeColorSettingsDialog();
+        ChangeColorPalette();
         OnPaletteChanged();
         comboSprite.SelectedIndex = 0;
         panelSprites.Invalidate();
@@ -877,12 +882,13 @@ namespace RetroDevStudio.Documents
       btnChangeMode.Text = GR.EnumHelper.GetDescription( m_SpriteProject.Mode );
 
       ChangeColorSettingsDialog();
+      ChangeColorPalette();
 
       editSpriteFrom.Text = m_SpriteProject.ExportStartIndex.ToString();
       editSpriteCount.Text = m_SpriteProject.ExportSpriteCount.ToString();
       if ( ( m_SpriteProject.ExportStartIndex != 0 )
-      || ( ( m_SpriteProject.ExportSpriteCount != 256 )
-      && ( m_SpriteProject.ExportSpriteCount != 0 ) ) )
+      ||   ( ( m_SpriteProject.ExportSpriteCount != 256 )
+      &&     ( m_SpriteProject.ExportSpriteCount != 0 ) ) )
       {
         comboExportRange.SelectedIndex = 2;
       }
@@ -1627,7 +1633,7 @@ namespace RetroDevStudio.Documents
               m_ImportError = $"Encountered color index >= 16 ({colorIndex}) at {x},{y}";
               return false;
             }
-            m_SpriteProject.Sprites[SpriteIndex].Tile.SetPixel( x, y, new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, colorIndex ) );
+            m_SpriteProject.Sprites[SpriteIndex].Tile.SetPixel( x, y, new ColorEntry( ColorType.CUSTOM_COLOR, colorIndex ) );
           }
         }
       }
@@ -1642,7 +1648,7 @@ namespace RetroDevStudio.Documents
           for ( int x = 0; x < Image.Width; ++x )
           {
             byte colorIndex = (byte)Image.GetPixelData( x, y );
-            m_SpriteProject.Sprites[SpriteIndex].Tile.SetPixel( x, y, new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, colorIndex ) );
+            m_SpriteProject.Sprites[SpriteIndex].Tile.SetPixel( x, y, new ColorEntry( ColorType.CUSTOM_COLOR, colorIndex ) );
           }
         }
       }
@@ -1941,7 +1947,7 @@ namespace RetroDevStudio.Documents
           {
             for ( int j = 0; j < m_SpriteHeight; ++j )
             {
-              resultTile.SetPixel( i, j, new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 ) );
+              resultTile.SetPixel( i, j, new ColorEntry( ColorType.BACKGROUND, 0 ) );
             }
           }
         }
@@ -1951,7 +1957,7 @@ namespace RetroDevStudio.Documents
           {
             for ( int j = side; j < m_SpriteHeight; ++j )
             {
-              resultTile.SetPixel( i, j, new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 ) );
+              resultTile.SetPixel( i, j, new ColorEntry( ColorType.BACKGROUND, 0 ) );
             }
           }
         }
@@ -2006,7 +2012,7 @@ namespace RetroDevStudio.Documents
           {
             for ( int j = 0; j < m_SpriteHeight; ++j )
             {
-              resultTile.SetPixel( i, j, new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 ) );
+              resultTile.SetPixel( i, j, new ColorEntry( ColorType.BACKGROUND, 0 ) );
             }
           }
         }
@@ -2016,7 +2022,7 @@ namespace RetroDevStudio.Documents
           {
             for ( int j = side; j < m_SpriteHeight; ++j )
             {
-              resultTile.SetPixel( i, j, new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 ) );
+              resultTile.SetPixel( i, j, new ColorEntry( ColorType.BACKGROUND, 0 ) );
             }
           }
         }
@@ -2649,7 +2655,6 @@ namespace RetroDevStudio.Documents
     {
       btnChangeMode.Text = GR.EnumHelper.GetDescription( m_SpriteProject.Mode );
       AdjustSpriteSizes();
-      ChangeColorSettingsDialog();
       OnPaletteChanged();
 
       for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
@@ -2667,6 +2672,8 @@ namespace RetroDevStudio.Documents
       }
       pictureEditor.Invalidate();
       panelSprites.Invalidate();
+      ChangeColorSettingsDialog();
+      ChangeColorPalette();
 
       SetModified();
     }
@@ -2800,14 +2807,14 @@ namespace RetroDevStudio.Documents
       {
         for ( int x = 0; x < m_SpriteWidth; x += Lookup.PixelWidth( Sprite.Tile.Mode ) )
         {
-          ColorType color = Sprite.Tile.GetPixel( x, y ).first;
+          ColorType color = Sprite.Tile.GetPixel( x, y ).Type;
           if ( color == Color1 )
           {
-            Sprite.Tile.SetPixel( x, y, new Tupel<ColorType, byte>( Color2, 0 ) );
+            Sprite.Tile.SetPixel( x, y, new ColorEntry( Color2, 0 ) );
           }
           else if ( color == Color2 )
           {
-            Sprite.Tile.SetPixel( x, y, new Tupel<ColorType, byte>( Color1, 0 ) );
+            Sprite.Tile.SetPixel( x, y, new ColorEntry( Color1, 0 ) );
           }
         }
       }
@@ -2921,28 +2928,28 @@ namespace RetroDevStudio.Documents
 
     private void MultiColor2()
     {
-      _ColorSettingsDlg.SelectedColor = ColorType.MULTICOLOR_2;
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.MULTICOLOR_2 );
     }
 
 
 
     private void BackgroundColor()
     {
-      _ColorSettingsDlg.SelectedColor = ColorType.BACKGROUND;
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.BACKGROUND );
     }
 
 
 
     private void MultiColor1()
     {
-      _ColorSettingsDlg.SelectedColor = ColorType.MULTICOLOR_1;
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.MULTICOLOR_1 );
     }
 
 
 
     private void CustomColor()
     {
-      _ColorSettingsDlg.SelectedColor = ColorType.CUSTOM_COLOR;
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.CUSTOM_COLOR );
     }
 
 
@@ -3228,6 +3235,8 @@ namespace RetroDevStudio.Documents
                                                           m_SpriteHeight * gridCellSize );
 
       pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, GR.Drawing.PixelFormat.Format32bppRgb );
+
+      panelColorPalette.Location = new Point( pictureEditor.Right + m_ColorPaletteOffset, panelColorPalette.Location.Y );
     }
 
 
@@ -3365,6 +3374,132 @@ namespace RetroDevStudio.Documents
 
 
 
+    public void ChangeColorPalette()
+    {
+      var previousSelectedColor = new ColorEntry();
+
+      if ( _ColorPalette != null )
+      {
+        previousSelectedColor = _ColorPalette.SelectedColor;
+        panelColorPalette.Controls.Remove( _ColorPalette );
+        _ColorPalette.Dispose();
+        _ColorPalette = null;
+      }
+
+      switch ( m_SpriteProject.Mode )
+      {
+        case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
+          if ( ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
+          ||   ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.MEGA65_64_X_21_16_HIRES ) )
+          {
+            var entries = new List<ColorEntry>()
+                    {
+                      new ColorEntry( ColorType.BACKGROUND, (byte)m_SpriteProject.Colors.BackgroundColor ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, (byte)m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor )
+                    };
+            _ColorPalette = new ColorPaletteRaster( Core, m_SpriteProject.Colors, entries, DetermineListIndex( entries, previousSelectedColor ) );
+          }
+          else
+          {
+            var entries = new List<ColorEntry>()
+                    {
+                      new ColorEntry( ColorType.BACKGROUND, (byte)m_SpriteProject.Colors.BackgroundColor ),
+                      new ColorEntry( ColorType.MULTICOLOR_1, (byte)m_SpriteProject.Colors.MultiColor1 ),
+                      new ColorEntry( ColorType.MULTICOLOR_2, (byte)m_SpriteProject.Colors.MultiColor2 ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, (byte)m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor )
+                    };
+            _ColorPalette = new ColorPaletteRaster( Core, m_SpriteProject.Colors, entries, DetermineListIndex( entries, previousSelectedColor ) );
+          }
+          break;
+        case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+          {
+            var entries = new List<ColorEntry>();
+            for ( int i = 0; i < 16; ++i )
+            {
+              entries.Add( new ColorEntry( ColorType.CUSTOM_COLOR, (byte)i ) );
+            }
+            _ColorPalette = new ColorPaletteRaster( Core, m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors, entries, DetermineListIndex( entries, previousSelectedColor ), 2 );
+          }
+          break;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+          {
+            var entries = new List<ColorEntry>();
+            for ( int i = 0; i < 256; ++i )
+            {
+              entries.Add( new ColorEntry( ColorType.CUSTOM_COLOR, (byte)i ) );
+            }
+            _ColorPalette = new ColorPaletteRaster( Core, m_SpriteProject.Colors, entries, DetermineListIndex( entries, previousSelectedColor ), 8 );
+          }
+          break;
+        default:
+          Debug.Log( "ChangeColorSettingsDialog unsupported mode " + m_SpriteProject.Mode );
+          break;
+      }
+      _ColorPalette.SelectedColorChanged += _ColorPalette_SelectedColorChanged;
+      //_ColorPalette.Size = panelColorPalette.ClientSize;
+      panelColorPalette.Size = _ColorPalette.Size;
+      panelColorPalette.Controls.Add( _ColorPalette );
+      _ColorPalette.Redraw();
+    }
+
+
+
+    private byte DetermineListIndex( List<ColorEntry> entries, ColorEntry previousSelectedColor )
+    {
+      var entry = entries.FirstOrDefault( e => ( e.Type == previousSelectedColor.Type ) && ( e.ColorIndex == previousSelectedColor.ColorIndex ) );
+      if ( entry == null )
+      {
+        entry = entries.FirstOrDefault( e => e.Type == previousSelectedColor.Type );
+        if ( entry == null )
+        {
+          entry = entries.FirstOrDefault( e => e.Type == ColorType.CUSTOM_COLOR );
+        }
+      }
+      return (byte)entries.IndexOf( entry );
+    }
+
+
+
+    private void _ColorPalette_SelectedColorChanged( ColorEntry color )
+    {
+      _ColorSettingsDlg.SelectedColor       = color.Type;
+      _ColorSettingsDlg.SelectedCustomColor = color.ColorIndex;
+    }
+
+
+
     private void _ColorSettingsDlg_PaletteSelected( ColorSettings Colors )
     {
       if ( DoNotUpdateFromControls )
@@ -3378,7 +3513,7 @@ namespace RetroDevStudio.Documents
       foreach ( var i in selectedSprites )
       {
         if ( ( m_SpriteProject.Sprites[i].Tile.Colors.PaletteOffset != Colors.PaletteOffset )
-        || ( m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette != Colors.ActivePalette ) )
+        ||   ( m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette != Colors.ActivePalette ) )
         {
           DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
           Modified = true;
@@ -3392,6 +3527,7 @@ namespace RetroDevStudio.Documents
           panelSprites.InvalidateItemRect( i );
         }
       }
+      ChangeColorPalette();
     }
 
 
@@ -3427,6 +3563,7 @@ namespace RetroDevStudio.Documents
           }
         }
       }
+      ChangeColorPalette();
     }
 
 
@@ -3434,22 +3571,22 @@ namespace RetroDevStudio.Documents
     private void SetMulticolorMode( ref SpriteMode Mode, bool MultiColorEnabled )
     {
       if ( ( MultiColorEnabled )
-      && ( Mode == SpriteMode.COMMODORE_24_X_21_HIRES ) )
+      &&   ( Mode == SpriteMode.COMMODORE_24_X_21_HIRES ) )
       {
         Mode = SpriteMode.COMMODORE_24_X_21_MULTICOLOR;
       }
       if ( ( MultiColorEnabled )
-      && ( Mode == SpriteMode.MEGA65_64_X_21_16_HIRES ) )
+      &&   ( Mode == SpriteMode.MEGA65_64_X_21_16_HIRES ) )
       {
         Mode = SpriteMode.MEGA65_64_X_21_16_MULTICOLOR;
       }
       if ( ( !MultiColorEnabled )
-      && ( Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) )
+      &&   ( Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) )
       {
         Mode = SpriteMode.COMMODORE_24_X_21_HIRES;
       }
       if ( ( !MultiColorEnabled )
-      && ( Mode == SpriteMode.MEGA65_64_X_21_16_MULTICOLOR ) )
+      &&   ( Mode == SpriteMode.MEGA65_64_X_21_16_MULTICOLOR ) )
       {
         Mode = SpriteMode.MEGA65_64_X_21_16_HIRES;
       }
@@ -3618,6 +3755,7 @@ namespace RetroDevStudio.Documents
         default:
           throw new NotImplementedException();
       }
+      ChangeColorPalette();
     }
 
 
@@ -3646,7 +3784,7 @@ namespace RetroDevStudio.Documents
         {
           for ( int j = 0; j < m_SpriteProject.Sprites[spriteIndex].Tile.Height; ++j )
           {
-            m_SpriteProject.Sprites[spriteIndex].Tile.SetPixel( i, j, new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 ) );
+            m_SpriteProject.Sprites[spriteIndex].Tile.SetPixel( i, j, new ColorEntry( ColorType.BACKGROUND, 0 ) );
           }
         }
         SpriteChanged( spriteIndex );
@@ -3778,9 +3916,6 @@ namespace RetroDevStudio.Documents
       AdjustSpriteSizes();
 
       m_SpriteProject.Colors.Palette = PaletteManager.PaletteFromMode( m_SpriteProject.Mode );
-      ChangeColorSettingsDialog();
-
-      //OnPaletteChanged();
 
       panelSprites.Items.Clear();
 
@@ -3818,6 +3953,8 @@ namespace RetroDevStudio.Documents
         panelSprites.Items.Add( i.ToString(), m_SpriteProject.Sprites[i].Tile.Image );
       }
 
+      ChangeColorSettingsDialog();
+      ChangeColorPalette();
       panelSprites.Invalidate();
       SetModified();
       pictureEditor.Invalidate();
@@ -4140,6 +4277,19 @@ namespace RetroDevStudio.Documents
       int newHeight = tabEditor.ClientSize.Height - tabSpriteDetails.Location.Y;
       tabSpriteDetails.Size = new Size( newWidth, newHeight );
     }
+
+
+
+    public void SpriteChangedExternally( int spriteIndex )
+    {
+      SpriteChanged( spriteIndex );
+      if ( spriteIndex == m_CurrentSprite )
+      {
+        ChangeColorSettingsDialog();
+        ChangeColorPalette();
+      }
+    }
+
 
 
   }

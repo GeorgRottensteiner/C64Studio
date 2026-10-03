@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Documents;
 using RetroDevStudio.Formats;
 
 
@@ -51,7 +51,10 @@ namespace RetroDevStudio.Undo
       Project.Sprites[SpriteIndex] = new SpriteProject.SpriteData( Sprite );
       Project.Sprites[SpriteIndex].Tile.Colors.ActivePalette = ActivePalette;
 
-      Editor.SpriteChanged( SpriteIndex );
+      Editor.SpriteChangedExternally( SpriteIndex );
     }
+
+
+
   }
 }

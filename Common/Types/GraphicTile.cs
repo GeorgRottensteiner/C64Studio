@@ -55,7 +55,7 @@ namespace RetroDevStudio.Types
 
 
 
-    public bool SetPixel( int X, int Y, Tupel<ColorType,byte> Color )
+    public bool SetPixel( int X, int Y, ColorEntry Color )
     {
       if ( !IsInside( X, Y ) )
       {
@@ -75,13 +75,13 @@ namespace RetroDevStudio.Types
             int   byteValue = Data.ByteAt( bytePos );
             if ( ( byteValue & ( 1 << ( 7 - ( X % 8 ) ) ) ) == 0 )
             {
-              if ( Color.first != ColorType.BACKGROUND )
+              if ( Color.Type != ColorType.BACKGROUND )
               {
                 Data.SetU8At( bytePos, (byte)( byteValue | ( 1 << ( 7 - ( X % 8 ) ) ) ) );
                 return true;
               }
             }
-            else if ( Color.first == ColorType.BACKGROUND )
+            else if ( Color.Type == ColorType.BACKGROUND )
             {
               Data.SetU8At( bytePos, (byte)( byteValue & ~( 1 << ( 7 - ( X % 8 ) ) ) ) );
               return true;
@@ -102,7 +102,7 @@ namespace RetroDevStudio.Types
 
             int     replacementBytes = 0;
 
-            switch ( Color.first )
+            switch ( Color.Type )
             {
               case ColorType.CUSTOM_COLOR:
                 replacementBytes = 3;
@@ -135,7 +135,7 @@ namespace RetroDevStudio.Types
 
             int     replacementBytes = 0;
 
-            switch ( Color.first )
+            switch ( Color.Type )
             {
               case ColorType.CUSTOM_COLOR:
                 replacementBytes = 2;
@@ -166,11 +166,11 @@ namespace RetroDevStudio.Types
 
             // plane 1
             int   byteValue = Data.ByteAt( bytePos );
-            if ( ( Color.second & 0x01 ) != ( ( byteValue & bitValue ) >> bitShift ) )
+            if ( ( Color.ColorIndex & 0x01 ) != ( ( byteValue & bitValue ) >> bitShift ) )
             {
               changed = true;
               byteValue &= ~bitValue;
-              if ( ( Color.second & 0x01 ) != 0 )
+              if ( ( Color.ColorIndex & 0x01 ) != 0 )
               {
                 byteValue |= bitValue;
               }
@@ -179,11 +179,11 @@ namespace RetroDevStudio.Types
             // plane 1
             bytePos += Lookup.NumBytesOfSingleCharacterBitmap( TextCharMode.NES ) / 2;
             byteValue = Data.ByteAt( bytePos );
-            if ( ( ( Color.second & 0x02 ) >> 1 ) != ( ( byteValue & bitValue ) >> bitShift ) )
+            if ( ( ( Color.ColorIndex & 0x02 ) >> 1 ) != ( ( byteValue & bitValue ) >> bitShift ) )
             {
               changed = true;
               byteValue &= ~bitValue;
-              if ( ( Color.second & 0x02 ) != 0 )
+              if ( ( Color.ColorIndex & 0x02 ) != 0 )
               {
                 byteValue |= bitValue;
               }
@@ -194,7 +194,7 @@ namespace RetroDevStudio.Types
         case GraphicTileMode.MEGA65_NCM_CHARACTERS:
           {
             // Mega65 NCM char mode has nybbles swapped
-            byte    newColor = Color.second;
+            byte    newColor = Color.ColorIndex;
 
             int     bytePos = X / 2 + Y * ( ( Width + 1 ) / 2 );
             byte pixelValue = Data.ByteAt( bytePos );
@@ -225,7 +225,7 @@ namespace RetroDevStudio.Types
         case GraphicTileMode.COMMANDERX16_16_COLORS:
         case GraphicTileMode.MEGA65_NCM_SPRITES:
           {
-            byte    newColor = Color.second;
+            byte    newColor = Color.ColorIndex;
 
             int     bytePos = X / 2 + Y * ( ( Width + 1 ) / 2 );
             byte pixelValue = Data.ByteAt( bytePos );
@@ -255,9 +255,9 @@ namespace RetroDevStudio.Types
           }
         case GraphicTileMode.COMMANDERX16_256_COLORS:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
-          if ( Data.ByteAt( X + Y * Width ) != Color.second )
+          if ( Data.ByteAt( X + Y * Width ) != Color.ColorIndex )
           {
-            Data.SetU8At( X + Y * Width, Color.second );
+            Data.SetU8At( X + Y * Width, Color.ColorIndex );
             return true;
           }
           break;
@@ -270,11 +270,11 @@ namespace RetroDevStudio.Types
 
 
 
-    public Tupel<ColorType,byte> GetPixel( int X, int Y )
+    public ColorEntry GetPixel( int X, int Y )
     {
       if ( !IsInside( X, Y ) )
       {
-        return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+        return new ColorEntry( ColorType.BACKGROUND, 0 );
       }
       switch ( Mode )
       {
@@ -287,9 +287,9 @@ namespace RetroDevStudio.Types
           {
             if ( ( Data.ByteAt( Y * ( ( Width + 7 ) / 8 ) + X / 8 ) & ( 1 << ( 7 - ( X % 8 ) ) ) ) != 0 )
             {
-              return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, 1 );
+              return new ColorEntry( ColorType.CUSTOM_COLOR, 1 );
             }
-            return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+            return new ColorEntry( ColorType.BACKGROUND, 0 );
           }
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16:
@@ -305,14 +305,14 @@ namespace RetroDevStudio.Types
             switch ( bitPattern )
             {
               case 0x00:
-                return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+                return new ColorEntry( ColorType.BACKGROUND, 0 );
               case 0x01:
-                return new Tupel<ColorType, byte>( ColorType.MULTICOLOR_1, 1 );
+                return new ColorEntry( ColorType.MULTICOLOR_1, 1 );
               case 0x02:
-                return new Tupel<ColorType, byte>( ColorType.MULTICOLOR_2, 2 );
+                return new ColorEntry( ColorType.MULTICOLOR_2, 2 );
               case 0x03:
               default:
-                return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, 3 );
+                return new ColorEntry( ColorType.CUSTOM_COLOR, 3 );
             }
           }
         case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
@@ -327,14 +327,14 @@ namespace RetroDevStudio.Types
             switch ( bitPattern )
             {
               case 0x00:
-                return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+                return new ColorEntry( ColorType.BACKGROUND, 0 );
               case 0x01:
-                return new Tupel<ColorType, byte>( ColorType.MULTICOLOR_1, 1 );
+                return new ColorEntry( ColorType.MULTICOLOR_1, 1 );
               case 0x03:
-                return new Tupel<ColorType, byte>( ColorType.MULTICOLOR_2, 3 );
+                return new ColorEntry( ColorType.MULTICOLOR_2, 3 );
               case 0x02:
               default:
-                return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, 2 );
+                return new ColorEntry( ColorType.CUSTOM_COLOR, 2 );
             }
           }
         case GraphicTileMode.NES:
@@ -348,7 +348,7 @@ namespace RetroDevStudio.Types
             bytePos += Lookup.NumBytesOfSingleCharacterBitmap( TextCharMode.NES ) / 2;
             colValue |= (byte)( ( ( Data.ByteAt( bytePos ) & bitValue ) >> bitShift ) * 2 );
 
-            return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, colValue );
+            return new ColorEntry( ColorType.CUSTOM_COLOR, colValue );
           }
         case GraphicTileMode.MEGA65_NCM_CHARACTERS:
           {
@@ -364,9 +364,9 @@ namespace RetroDevStudio.Types
 
             if ( color == 0 )
             {
-              return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+              return new ColorEntry( ColorType.BACKGROUND, 0 );
             }
-            return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, color );
+            return new ColorEntry( ColorType.CUSTOM_COLOR, color );
           }
         case GraphicTileMode.COMMANDERX16_16_COLORS:
         case GraphicTileMode.MEGA65_NCM_SPRITES:
@@ -383,9 +383,9 @@ namespace RetroDevStudio.Types
 
             if ( color == 0 )
             {
-              return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+              return new ColorEntry( ColorType.BACKGROUND, 0 );
             }
-            return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, color );
+            return new ColorEntry( ColorType.CUSTOM_COLOR, color );
           }
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
         case GraphicTileMode.COMMANDERX16_256_COLORS:
@@ -393,13 +393,13 @@ namespace RetroDevStudio.Types
             byte  colorPixel = Data.ByteAt( X + Y * Width );
             if ( colorPixel == 0 )
             {
-              return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+              return new ColorEntry( ColorType.BACKGROUND, 0 );
             }
-            return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, colorPixel );
+            return new ColorEntry( ColorType.CUSTOM_COLOR, colorPixel );
           }
         default:
           Debug.Log( "GraphicTile.GetPixel, unsupported mode " + Mode );
-          return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+          return new ColorEntry( ColorType.BACKGROUND, 0 );
       }
     }
 
@@ -426,7 +426,7 @@ namespace RetroDevStudio.Types
 
 
 
-    public Tupel<ColorType,byte> MapPixelColor( int X, int Y, GraphicTile TargetTile )
+    public ColorEntry MapPixelColor( int X, int Y, GraphicTile TargetTile )
     {
       var     pixelValue = GetPixel( X, Y );
       if ( Mode == TargetTile.Mode )
@@ -434,7 +434,7 @@ namespace RetroDevStudio.Types
         return pixelValue;
       }
       // now things are getting funny
-      uint  pixelColor = GetColorFromValue( pixelValue.second );
+      uint  pixelColor = GetColorFromValue( pixelValue.ColorIndex );
 
       var potentialColors = new List<uint>();
       var potentialColorTypes =new List<ColorType>();
@@ -485,7 +485,7 @@ namespace RetroDevStudio.Types
 
       int bestMatch = FindClosestEntryInPalette( pixelColor, potentialColorTypes, potentialColors );
 
-      return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, (byte)bestMatch );
+      return new ColorEntry( ColorType.CUSTOM_COLOR, (byte)bestMatch );
     }
 
 
@@ -533,7 +533,7 @@ namespace RetroDevStudio.Types
 
 
 
-    public bool Fill( int X, int Y, Tupel<ColorType,byte> NewColor )
+    public bool Fill( int X, int Y, ColorEntry NewColor )
     {
       if ( ( X < 0 )
       ||   ( X >= Width )
@@ -591,13 +591,13 @@ namespace RetroDevStudio.Types
 
 
 
-    private bool IsSameColor( Tupel<ColorType, byte> Color1, Tupel<ColorType, byte> Color2 )
+    private bool IsSameColor( ColorEntry Color1, ColorEntry Color2 )
     {
       if ( Lookup.HasCustomPalette( Mode ) )
       {
         return Color1 == Color2;
       }
-      return Color1.first == Color2.first;
+      return Color1.Type == Color2.Type;
     }
 
 

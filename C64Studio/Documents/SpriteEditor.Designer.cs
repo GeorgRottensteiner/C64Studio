@@ -36,6 +36,7 @@ namespace RetroDevStudio.Documents
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
       tabSpriteEditor = new System.Windows.Forms.TabControl();
       tabEditor = new System.Windows.Forms.TabPage();
+      panelColorPalette = new System.Windows.Forms.Panel();
       panelRightSide = new System.Windows.Forms.Panel();
       tabSpriteDetails = new System.Windows.Forms.TabControl();
       tabPage1 = new System.Windows.Forms.TabPage();
@@ -189,6 +190,7 @@ namespace RetroDevStudio.Documents
       // 
       // tabEditor
       // 
+      tabEditor.Controls.Add( panelColorPalette );
       tabEditor.Controls.Add( panelRightSide );
       tabEditor.Controls.Add( editMoveTargetIndex );
       tabEditor.Controls.Add( btnMoveSelectionToTarget );
@@ -224,13 +226,20 @@ namespace RetroDevStudio.Documents
       tabEditor.UseVisualStyleBackColor = true;
       tabEditor.ClientSizeChanged +=  tabEditor_ClientSizeChanged ;
       // 
+      // panelColorPalette
+      // 
+      panelColorPalette.Location = new System.Drawing.Point( 396, 6 );
+      panelColorPalette.Name = "panelColorPalette";
+      panelColorPalette.Size = new System.Drawing.Size( 20, 353 );
+      panelColorPalette.TabIndex = 64;
+      // 
       // panelRightSide
       // 
       panelRightSide.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
       panelRightSide.Controls.Add( tabSpriteDetails );
-      panelRightSide.Location = new System.Drawing.Point( 480, 6 );
+      panelRightSide.Location = new System.Drawing.Point( 501, 6 );
       panelRightSide.Name = "panelRightSide";
-      panelRightSide.Size = new System.Drawing.Size( 493, 625 );
+      panelRightSide.Size = new System.Drawing.Size( 472, 625 );
       panelRightSide.TabIndex = 63;
       // 
       // tabSpriteDetails
@@ -241,7 +250,7 @@ namespace RetroDevStudio.Documents
       tabSpriteDetails.Location = new System.Drawing.Point( 0, 0 );
       tabSpriteDetails.Name = "tabSpriteDetails";
       tabSpriteDetails.SelectedIndex = 0;
-      tabSpriteDetails.Size = new System.Drawing.Size( 493, 625 );
+      tabSpriteDetails.Size = new System.Drawing.Size( 472, 625 );
       tabSpriteDetails.TabIndex = 18;
       // 
       // tabPage1
@@ -250,7 +259,7 @@ namespace RetroDevStudio.Documents
       tabPage1.Location = new System.Drawing.Point( 4, 22 );
       tabPage1.Name = "tabPage1";
       tabPage1.Padding = new System.Windows.Forms.Padding( 3 );
-      tabPage1.Size = new System.Drawing.Size( 485, 599 );
+      tabPage1.Size = new System.Drawing.Size( 464, 599 );
       tabPage1.TabIndex = 0;
       tabPage1.Text = "Sprites";
       tabPage1.UseVisualStyleBackColor = true;
@@ -275,7 +284,7 @@ namespace RetroDevStudio.Documents
       panelSprites.Location = new System.Drawing.Point( 3, 3 );
       panelSprites.Name = "panelSprites";
       panelSprites.PixelFormat = GR.Drawing.PixelFormat.DontCare;
-      panelSprites.Size = new System.Drawing.Size( 479, 593 );
+      panelSprites.Size = new System.Drawing.Size( 458, 593 );
       panelSprites.TabIndex = 4;
       panelSprites.TabStop = true;
       panelSprites.VisibleAutoScrollHorizontal = false;
@@ -311,7 +320,7 @@ namespace RetroDevStudio.Documents
       tabPreview.Location = new System.Drawing.Point( 4, 24 );
       tabPreview.Name = "tabPreview";
       tabPreview.Padding = new System.Windows.Forms.Padding( 3 );
-      tabPreview.Size = new System.Drawing.Size( 485, 556 );
+      tabPreview.Size = new System.Drawing.Size( 464, 597 );
       tabPreview.TabIndex = 1;
       tabPreview.Text = "Preview";
       tabPreview.UseVisualStyleBackColor = true;
@@ -325,7 +334,7 @@ namespace RetroDevStudio.Documents
       btnSavePreviewToGIF.DialogResult = System.Windows.Forms.DialogResult.OK;
       btnSavePreviewToGIF.DisplayAntiAliased = true;
       btnSavePreviewToGIF.Image = null;
-      btnSavePreviewToGIF.Location = new System.Drawing.Point( 381, 438 );
+      btnSavePreviewToGIF.Location = new System.Drawing.Point( 381, 479 );
       btnSavePreviewToGIF.Name = "btnSavePreviewToGIF";
       btnSavePreviewToGIF.Size = new System.Drawing.Size( 75, 23 );
       btnSavePreviewToGIF.TabIndex = 13;
@@ -336,7 +345,7 @@ namespace RetroDevStudio.Documents
       // 
       checkOverlayPreview.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
       checkOverlayPreview.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      checkOverlayPreview.Location = new System.Drawing.Point( 215, 523 );
+      checkOverlayPreview.Location = new System.Drawing.Point( 215, 564 );
       checkOverlayPreview.Name = "checkOverlayPreview";
       checkOverlayPreview.Size = new System.Drawing.Size( 157, 24 );
       checkOverlayPreview.TabIndex = 12;
@@ -348,7 +357,7 @@ namespace RetroDevStudio.Documents
       // 
       checkAutoplayAnim.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
       checkAutoplayAnim.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      checkAutoplayAnim.Location = new System.Drawing.Point( 215, 493 );
+      checkAutoplayAnim.Location = new System.Drawing.Point( 215, 534 );
       checkAutoplayAnim.Name = "checkAutoplayAnim";
       checkAutoplayAnim.Size = new System.Drawing.Size( 157, 24 );
       checkAutoplayAnim.TabIndex = 12;
@@ -432,7 +441,7 @@ namespace RetroDevStudio.Documents
       listLayers.SelectedIndex = -1;
       listLayers.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      listLayers.Size = new System.Drawing.Size( 192, 260 );
+      listLayers.Size = new System.Drawing.Size( 192, 301 );
       listLayers.TabIndex = 9;
       listLayers.AddingItem +=  listLayers_AddingItem ;
       listLayers.CloningItem +=  listLayers_CloningItem ;
@@ -473,7 +482,7 @@ namespace RetroDevStudio.Documents
       // 
       label10.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
       label10.AutoSize = true;
-      label10.Location = new System.Drawing.Point( 216, 470 );
+      label10.Location = new System.Drawing.Point( 216, 511 );
       label10.Name = "label10";
       label10.Size = new System.Drawing.Size( 59, 13 );
       label10.TabIndex = 15;
@@ -483,7 +492,7 @@ namespace RetroDevStudio.Documents
       // 
       label6.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
       label6.AutoSize = true;
-      label6.Location = new System.Drawing.Point( 216, 443 );
+      label6.Location = new System.Drawing.Point( 216, 484 );
       label6.Name = "label6";
       label6.Size = new System.Drawing.Size( 38, 13 );
       label6.TabIndex = 15;
@@ -492,7 +501,7 @@ namespace RetroDevStudio.Documents
       // editLayerDelay
       // 
       editLayerDelay.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      editLayerDelay.Location = new System.Drawing.Point( 281, 467 );
+      editLayerDelay.Location = new System.Drawing.Point( 281, 508 );
       editLayerDelay.Name = "editLayerDelay";
       editLayerDelay.Size = new System.Drawing.Size( 91, 20 );
       editLayerDelay.TabIndex = 11;
@@ -501,7 +510,7 @@ namespace RetroDevStudio.Documents
       // editLayerName
       // 
       editLayerName.Anchor =  System.Windows.Forms.AnchorStyles.Bottom  |  System.Windows.Forms.AnchorStyles.Left ;
-      editLayerName.Location = new System.Drawing.Point( 281, 440 );
+      editLayerName.Location = new System.Drawing.Point( 281, 481 );
       editLayerName.Name = "editLayerName";
       editLayerName.Size = new System.Drawing.Size( 91, 20 );
       editLayerName.TabIndex = 10;
@@ -580,7 +589,7 @@ namespace RetroDevStudio.Documents
       layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       layerPreview.Location = new System.Drawing.Point( 208, 3 );
       layerPreview.Name = "layerPreview";
-      layerPreview.Size = new System.Drawing.Size( 271, 421 );
+      layerPreview.Size = new System.Drawing.Size( 250, 462 );
       layerPreview.TabIndex = 7;
       layerPreview.TabStop = false;
       layerPreview.SizeChanged +=  layerPreview_SizeChanged ;
@@ -915,7 +924,7 @@ namespace RetroDevStudio.Documents
       pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       pictureEditor.Location = new System.Drawing.Point( 40, 6 );
       pictureEditor.Name = "pictureEditor";
-      pictureEditor.Size = new System.Drawing.Size( 434, 353 );
+      pictureEditor.Size = new System.Drawing.Size( 350, 353 );
       pictureEditor.TabIndex = 0;
       pictureEditor.TabStop = false;
       pictureEditor.MouseDown +=  pictureEditor_MouseDown ;
@@ -1620,5 +1629,6 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.Label labelImportSelInfo;
     private System.Windows.Forms.CheckBox checkOverlayPreview;
     private System.Windows.Forms.Panel panelRightSide;
+    private System.Windows.Forms.Panel panelColorPalette;
   }
 }

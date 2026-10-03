@@ -1,6 +1,6 @@
-<Sample Name="16 color sprites BASIC"
+<Sample Name="256 color sprites BASIC"
   Machine="Commander X16"
-  ShortDescription="4 sizes of 16 color sprites"
+  ShortDescription="4 sizes of 256 color sprites"
   Tags="BASIC,Commander X16,Sprites"
   Desc="Displays 4 different sized 16 color sprites. Showcases usage of sprite projects, sets up VERA and enables four sprites using BASIC.">
 </Sample>

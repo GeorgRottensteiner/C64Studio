@@ -1,4 +1,4 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
@@ -73,13 +73,13 @@ namespace RetroDevStudio.Controls
           for ( int x = 0; x < Lookup.SpriteWidth( Info.Project.Mode ); ++x )
           {
             var  pixel = Info.Project.Sprites[index].Tile.GetPixel( x, y );
-            if ( pixel.second == 0 )
+            if ( pixel.ColorIndex == 0 )
             {
               sb.Append( '.' );
             }
             else
             {
-              sb.Append( pixel.second.ToString( "X" ) );
+              sb.Append( pixel.ColorIndex.ToString( "X" ) );
             }
           }
           sb.AppendLine( "\"" );

@@ -1251,14 +1251,14 @@ namespace RetroDevStudio.Controls
         affectedChar = m_Project.Characters[affectedCharIndex];
       }
 
-      var newColor = new Tupel<ColorType,byte>( _ColorSettingsDlg.SelectedColor, _ColorSettingsDlg.SelectedCustomColor );
+      var newColor = new ColorEntry( _ColorSettingsDlg.SelectedColor, _ColorSettingsDlg.SelectedCustomColor );
 
       if ( ( Core.Settings.BehaviourRightClickIsBGColorPaint )
       &&   ( ( Buttons & MouseButtons.Right ) != 0 ) )
       {
         Buttons = MouseButtons.Left;
-        newColor.first  = ColorType.BACKGROUND;
-        newColor.second = 0;
+        newColor.Type  = ColorType.BACKGROUND;
+        newColor.ColorIndex = 0;
       }
 
       if ( ( ( Buttons & MouseButtons.Middle ) != 0 )
@@ -1299,8 +1299,8 @@ namespace RetroDevStudio.Controls
       {
         var   pickedColor = affectedChar.Tile.GetPixel( charX, charY );
 
-        _ColorSettingsDlg.SelectedColor       = pickedColor.first;
-        _ColorSettingsDlg.SelectedCustomColor = pickedColor.second;
+        _ColorSettingsDlg.SelectedColor       = pickedColor.Type;
+        _ColorSettingsDlg.SelectedCustomColor = pickedColor.ColorIndex;
 
         RedrawColorPicker();
       }
@@ -2256,15 +2256,15 @@ namespace RetroDevStudio.Controls
         {
           for ( int x = 0; x < charInfo.Tile.Width; x += Lookup.PixelWidth( charInfo.Tile.Mode ) )
           {
-            ColorType pixel = charInfo.Tile.GetPixel( x, y ).first;
+            ColorType pixel = charInfo.Tile.GetPixel( x, y ).Type;
 
             if ( pixel == Color1 )
             {
-              charInfo.Tile.SetPixel( x, y, new Tupel<ColorType, byte>( Color2, 0 ) );
+              charInfo.Tile.SetPixel( x, y, new ColorEntry( Color2, 0 ) );
             }
             else if ( pixel == Color2 )
             {
-              charInfo.Tile.SetPixel( x, y, new Tupel<ColorType, byte>( Color1, 0 ) );
+              charInfo.Tile.SetPixel( x, y, new ColorEntry( Color1, 0 ) );
             }
           }
         }

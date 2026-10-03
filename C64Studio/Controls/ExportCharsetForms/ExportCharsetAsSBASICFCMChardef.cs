@@ -1,4 +1,4 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
@@ -65,7 +65,7 @@ namespace RetroDevStudio.Controls
 
           for ( int j = 0; j < Info.Charset.Characters[index].Tile.Width; ++j )
           {
-            sb.Append( Info.Charset.Characters[index].Tile.GetPixel( j, i ).second.ToString( "X2" ) );
+            sb.Append( Info.Charset.Characters[index].Tile.GetPixel( j, i ).ColorIndex.ToString( "X2" ) );
           }
           sb.AppendLine( "\"" );
 
