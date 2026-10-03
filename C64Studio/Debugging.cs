@@ -866,12 +866,9 @@ namespace RetroDevStudio
           if ( ramByte != memoryView.RAM.ByteAt( Offset + i ) )
           {
             // only mark as changed when we knew the orig value
-            if ( ( memoryView.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_KNOWN ) == 0 )
-            {
-              memoryView.Flags[Offset + i] |= MemoryView.RAMFlag.VALUE_CHANGED;
-            }
+            memoryView.Flags[Offset + i] |= MemoryView.RAMFlag.VALUE_CHANGED;
           }
-          else if ( ( memoryView.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_KNOWN ) == 0 )
+          else if ( ( memoryView.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_KNOWN ) != 0 )
           {
             memoryView.Flags[Offset + i] &= ~MemoryView.RAMFlag.VALUE_CHANGED;
           }
@@ -882,7 +879,7 @@ namespace RetroDevStudio
 
       foreach ( var debugView in MemoryViews )
       {
-        debugView.UpdateMemory( Request, Data );
+        debugView.UpdateMemory( Request, Data, memoryView );
       }
     }
 

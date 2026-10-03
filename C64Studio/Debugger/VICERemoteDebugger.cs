@@ -70,6 +70,13 @@ namespace RetroDevStudio
 
 
 
+    private void LogDebuggerInterface( string message )
+    {
+      //Debug.Log( message );
+    }
+
+
+
     public bool ConnectToEmulator( bool IsCartridge, string externalImageToOpen )
     {
       if ( State != DebuggerState.NOT_CONNECTED )
@@ -111,7 +118,7 @@ namespace RetroDevStudio
         // connected, force reset plus add break points now
         if ( _IsCartridge )
         {
-          Debug.Log( "Connected - force break" );
+          LogDebuggerInterface( "Connected - force break" );
           QueueRequest( DebugRequestType.STEP );
         }
       }
@@ -142,7 +149,7 @@ namespace RetroDevStudio
     {
       m_ReceivedDataBin.Append( data, Offset, Length );
 
-      //Debug.Log( "OnDataReceived " + m_ReceivedDataBin.ToString( Offset, Length ) );
+      //LogDebuggerInterface( "OnDataReceived " + m_ReceivedDataBin.ToString( Offset, Length ) );
 
       do
       {
@@ -175,12 +182,12 @@ namespace RetroDevStudio
               // byte 5: error code
               // byte 6 - (answer length+6): the binary answer
 
-              //Debug.Log( "Got MemDump data as " + m_ReceivedDataBin.SubBuffer( 0, 6 + (int)answerLength ).ToString() );
+              //new ColorEntry( ColorType.BACKGROUND, (byte)m_SpriteProject.Colors.BackgroundColor ),( "Got MemDump data as " + m_ReceivedDataBin.SubBuffer( 0, 6 + (int)answerLength ).ToString() );
               // 0201010000 00 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
               byte    resultCode = m_ReceivedDataBin.ByteAt( 5 );
               if ( resultCode != 0 )
               {
-                Debug.Log( "Error receiving data: " + resultCode );
+                LogDebuggerInterface( "Error receiving data: " + resultCode );
               }
               else
               {
@@ -245,7 +252,7 @@ namespace RetroDevStudio
             bool processed = false;
             while ( linePos != -1 )
             {
-              //Debug.Log( "Cut at " + ( linePos + 1 ).ToString() );
+              //LogDebuggerInterface( "Cut at " + ( linePos + 1 ).ToString() );
               string line = stringData.Substring( 0, linePos );
               //stringData = stringData.Substring( linePos + 1 );
 
@@ -368,7 +375,7 @@ namespace RetroDevStudio
 
         if ( sent != m_BytesToSend )
         {
-          Debug.Log( "Not all " + m_BytesToSend + " bytes were sent! (only " + sent + ")" );
+          LogDebuggerInterface( "Not all " + m_BytesToSend + " bytes were sent! (only " + sent + ")" );
           if ( sent > 0 )
           {
             m_BytesToSend -= sent;
@@ -378,7 +385,7 @@ namespace RetroDevStudio
         }
         else
         {
-          //Debug.Log( "Sent " + sent + " bytes (expected " + m_BytesToSend + ")" );
+          //LogDebuggerInterface( "Sent " + sent + " bytes (expected " + m_BytesToSend + ")" );
         }
 
         Core.Debugging.ForceEmulatorRefresh();
@@ -455,7 +462,7 @@ namespace RetroDevStudio
       try
       {
         var bufferData = new GR.Memory.ByteBuffer( m_DataToSend );
-        InterfaceLog( "Debugger>" + Command + "/" + bufferData.ToString() );
+        LogDebuggerInterface( "Debugger>" + Command + "/" + bufferData.ToString() );
         m_BytesToSend = m_DataToSend.Length;
 
         // sync send
@@ -466,7 +473,7 @@ namespace RetroDevStudio
           int bytesSent = client.Send( m_DataToSend, totalBytesSent, m_BytesToSend, System.Net.Sockets.SocketFlags.None );
           if ( bytesSent == 0 )
           {
-            InterfaceLog( "Could not send " + m_BytesToSend + " bytes" );
+            LogDebuggerInterface( "Could not send " + m_BytesToSend + " bytes" );
             break;
           }
           m_BytesToSend -= bytesSent;
@@ -478,13 +485,6 @@ namespace RetroDevStudio
         Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
       }
       return true;
-    }
-
-
-
-    private void InterfaceLog( string Text )
-    {
-      Debug.Log( Text );
     }
 
 
@@ -506,7 +506,7 @@ namespace RetroDevStudio
 
       try
       {
-        Debug.Log( "Debugger>" + Command.ToString() + ", " + m_DataToSend.Length + " bytes" );
+        LogDebuggerInterface( "Debugger>" + Command.ToString() + ", " + m_DataToSend.Length + " bytes" );
         m_BytesToSend = m_DataToSend.Length;
         int totalBytesSent = 0;
 
@@ -515,10 +515,10 @@ namespace RetroDevStudio
           int bytesSent = client.Send( m_DataToSend, totalBytesSent, m_BytesToSend, System.Net.Sockets.SocketFlags.None );
           if ( bytesSent == 0 )
           {
-            Debug.Log( "Could not send " + m_BytesToSend + " bytes" );
+            LogDebuggerInterface( "Could not send " + m_BytesToSend + " bytes" );
             break;
           }
-          Debug.Log( "Sent " + bytesSent + " bytes" );
+          LogDebuggerInterface( "Sent " + bytesSent + " bytes" );
           m_BytesToSend -= bytesSent;
           totalBytesSent += bytesSent;
         }
@@ -626,11 +626,11 @@ namespace RetroDevStudio
           {
             if ( !int.TryParse( m_ResponseLines[0].Substring( hashPos + 1, spacePos - hashPos - 1 ), out breakpointToRemove ) )
             {
-              Debug.Log( "Failed to parse breakpoint ID" );
+              LogDebuggerInterface( "Failed to parse breakpoint ID" );
             }
             else
             {
-              Debug.Log( "Break point ID = " + breakpointToRemove );
+              LogDebuggerInterface( "Break point ID = " + breakpointToRemove );
             }
           }
         }
@@ -647,19 +647,19 @@ namespace RetroDevStudio
 
     private void ProcessResponse()
     {
-      Debug.Log( "ProcessResponse for Request " + m_Request.Type.ToString() + ", lines " + m_ResponseLines.Count.ToString() );
+      LogDebuggerInterface( "ProcessResponse for Request " + m_Request.Type.ToString() + ", lines " + m_ResponseLines.Count.ToString() );
       string    total = "";
       foreach ( var line in m_ResponseLines )
       {
         total += "\r\n" + line;
       }
-      Debug.Log( "Responselines are:" + total );
+      LogDebuggerInterface( "Responselines are:" + total );
 
       if ( ( total.ToUpper().Contains( "AN ERROR OCCURRED" ) )
       &&   ( total.ToUpper().Contains( "JAM" ) ) )
       {
-        InterfaceLog( "CPU JAM encountered: " + total );
-        InterfaceLog( "Disconnecting from VICE" );
+        LogDebuggerInterface( "CPU JAM encountered: " + total );
+        LogDebuggerInterface( "Disconnecting from VICE" );
         DisconnectFromEmulator();
         return;
       }
@@ -756,7 +756,7 @@ namespace RetroDevStudio
           if ( ( !m_InitialBreakCompleted )
           &&   ( m_ResponseLines.Count > 0 ) )
           {
-            Debug.Log( "Initial break encountered" );
+            LogDebuggerInterface( "Initial break encountered" );
             // our first break
             m_InitialBreakCompleted = true;
             m_ResponseLines.Clear();
@@ -797,23 +797,23 @@ namespace RetroDevStudio
               {
                 if ( !int.TryParse( m_ResponseLines[0].Substring( hashPos + 1, spacePos - hashPos - 1 ), out m_BrokenAtBreakPoint ) )
                 {
-                  Debug.Log( "Failed to parse breakpoint ID" );
+                  LogDebuggerInterface( "Failed to parse breakpoint ID" );
                 }
                 else
                 {
-                  //Debug.Log( "Break point ID = " + m_BrokenAtBreakPoint );
+                  //LogDebuggerInterface( "Break point ID = " + m_BrokenAtBreakPoint );
                 }
               }
               else
               {
-                Debug.Log( "Could not deduce breakpoint ID" );
+                LogDebuggerInterface( "Could not deduce breakpoint ID" );
               }
             }
             else
             {
-              Debug.Log( "Could not deduce breakpoint ID 2" );
+              LogDebuggerInterface( "Could not deduce breakpoint ID 2" );
             }
-            Debug.Log( "Last line, should be (C:$xxxx): " + m_ResponseLines[m_ResponseLines.Count - 1] );
+            LogDebuggerInterface( "Last line, should be (C:$xxxx): " + m_ResponseLines[m_ResponseLines.Count - 1] );
             m_ResponseLines.Clear();
 
             OnBreakpointHit();
@@ -876,7 +876,7 @@ namespace RetroDevStudio
                 int.TryParse( breakID, out breakpointID );
               }
             }
-            //Debug.Log( "Breakpoint ID = " + breakpointID.ToString() );
+            //LogDebuggerInterface( "Breakpoint ID = " + breakpointID.ToString() );
             if ( ( breakpointID != 0 )
             &&   ( m_Request.Breakpoint != null ) )
             {
@@ -892,7 +892,7 @@ namespace RetroDevStudio
         case DebugRequestType.TRACE_MEM_DUMP:
           {
             int expectedLines = 1 + ( m_Request.Parameter2 - m_Request.Parameter1 ) / 16;
-            Debug.Log( "Expected lines:" + expectedLines );
+            LogDebuggerInterface( "Expected lines:" + expectedLines );
 
             if ( m_ResponseLines.Count == expectedLines )
             {
@@ -934,7 +934,7 @@ namespace RetroDevStudio
           RefreshRegistersAndWatches();
           break;
         default:
-          Debug.Log( "Unknown request state! " + m_Request.Type.ToString() );
+          LogDebuggerInterface( "Unknown request state! " + m_Request.Type.ToString() );
           m_ResponseLines.Clear();
           break;
       }
@@ -948,7 +948,7 @@ namespace RetroDevStudio
 
     private void OnMemoryDumpReceived( ByteBuffer DumpData )
     {
-      //Debug.Log( "Got MemDump data as " + DumpData.ToString() );
+      //LogDebuggerInterface( "Got MemDump data as " + DumpData.ToString() );
       if ( m_Request.Type == DebugRequestType.TRACE_MEM_DUMP )
       {
         string    traceText = "Trace " + m_Request.Info + " from $" + m_Request.Parameter1.ToString( "X4" ) + " as $" + DumpData.ToString() + "/" + DumpData.ByteAt( 0 ) + System.Environment.NewLine;
@@ -964,12 +964,12 @@ namespace RetroDevStudio
           if ( !m_Request.Breakpoint.HasNonVirtual() )
           {
             // and auto-go on with debugging
-            //Debug.Log( "Virtual only, go on" );
+            //LogDebuggerInterface( "Virtual only, go on" );
             QueueRequest( DebugRequestType.EXIT );
           }
           else
           {
-            //Debug.Log( "Has non virtual bp" );
+            //LogDebuggerInterface( "Has non virtual bp" );
             QueueRequest( DebugRequestType.REFRESH_VALUES );
             RefreshMemorySections();
           }
@@ -997,7 +997,7 @@ namespace RetroDevStudio
     {
       m_State = DebuggerState.PAUSED;
 
-      //Debug.Log( "Breakpoint " + m_BrokenAtBreakPoint + " hit" );
+      //LogDebuggerInterface( "Breakpoint " + m_BrokenAtBreakPoint + " hit" );
       // TODO - only remove if auto startup breakpoint
       int breakAddress = -1;
       Types.Breakpoint  brokenBP = null;
@@ -1009,7 +1009,7 @@ namespace RetroDevStudio
           breakAddress = (int)breakPoint.Address;
           if ( breakPoint.Temporary )
           {
-            Debug.Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
+            LogDebuggerInterface( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
             QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint ).Breakpoint = breakPoint;
             brokenBP = null;
             break;
@@ -1123,7 +1123,7 @@ namespace RetroDevStudio
  	    if ( ( m_RequestQueue.Count != 0 )
       &&   ( m_ReceivedDataBin.Length == 0 ) )
       {
-        Debug.Log( "------> StartNextRequest:" + m_RequestQueue[0].Type );
+        LogDebuggerInterface( "------> StartNextRequest:" + m_RequestQueue[0].Type );
         RequestData nextRequest = m_RequestQueue[0];
         m_RequestQueue.RemoveAt( 0 );
 
@@ -1137,10 +1137,10 @@ namespace RetroDevStudio
     {
       if ( m_Request.Type != DebugRequestType.NONE )
       {
-        Debug.Log( "====> Trying to send request while processing another! (" + m_Request.Type + ")" );
+        LogDebuggerInterface( "====> Trying to send request while processing another! (" + m_Request.Type + ")" );
         return false;
       }
-      //Debug.Log( "Set request data to " + Data.Type.ToString() );
+      //LogDebuggerInterface( "Set request data to " + Data.Type.ToString() );
       m_Request = Data;
       m_ResponseLines.Clear();
 
@@ -1227,7 +1227,7 @@ namespace RetroDevStudio
               request += " if " + m_Request.Breakpoint.Conditions;
             }
 
-            Debug.Log( "Add breakpoint request " + request );
+            LogDebuggerInterface( "Add breakpoint request " + request );
 
             return SendCommand( request );
           }
@@ -1414,7 +1414,7 @@ namespace RetroDevStudio
             QueueRequest( requData );
           }
         }
-        Debug.Log( "Request " + gnu + " watch values" );
+        LogDebuggerInterface( "Request " + gnu + " watch values" );
         return;
       }
       else if ( Data.Type == DebugRequestType.REFRESH_MEMORY )
@@ -1463,16 +1463,16 @@ namespace RetroDevStudio
       }
 
       // queue if there is an active request or queued incoming data
-      Debug.Log( "QueueRequest - sending data directly? Queue has " + m_RequestQueue.Count + " entries, request is " + Data.Type + ", current request type is " + m_Request.Type + ", current incoming data is " + m_ReceivedDataBin.ToString() );
+      LogDebuggerInterface( "QueueRequest - sending data directly? Queue has " + m_RequestQueue.Count + " entries, request is " + Data.Type + ", current request type is " + m_Request.Type + ", current incoming data is " + m_ReceivedDataBin.ToString() );
       if ( ( m_Request.Type != DebugRequestType.NONE )
       ||   ( m_RequestQueue.Count > 0 )
       ||   ( m_ReceivedDataBin.Length > 0 ) )
       {
-        Debug.Log( "-no" );
+        LogDebuggerInterface( "-no" );
         m_RequestQueue.Add( Data );
         return;
       }
-      Debug.Log( "-yes" );
+      LogDebuggerInterface( "-yes" );
       SendRequest( Data );
     }
 
@@ -1572,7 +1572,7 @@ namespace RetroDevStudio
           // there is already a breakpoint here
           breakPoint.Virtual.Add( BreakPoint );
           added = true;
-          Debug.Log( "Virtual bp!" );
+          LogDebuggerInterface( "Virtual bp!" );
           break;
         }
       }
@@ -1602,7 +1602,7 @@ namespace RetroDevStudio
           if ( ( client != null )
           &&   ( client.Connected ) )
           {
-            Debug.Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
+            LogDebuggerInterface( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
             RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
             QueueRequest( requData );
           }
@@ -1620,7 +1620,7 @@ namespace RetroDevStudio
         if ( ( client != null )
         &&   ( client.Connected ) )
         {
-          Debug.Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
+          LogDebuggerInterface( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
           RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
           QueueRequest( requData );
         }
@@ -1643,7 +1643,7 @@ namespace RetroDevStudio
             if ( ( client != null )
             &&   ( client.Connected ) )
             {
-              Debug.Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
+              LogDebuggerInterface( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
               RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
               QueueRequest( requData );
             }

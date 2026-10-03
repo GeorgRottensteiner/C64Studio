@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -462,7 +462,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void UpdateMemory( RequestData Request, GR.Memory.ByteBuffer Data )
+    public void UpdateMemory( RequestData Request, GR.Memory.ByteBuffer Data, MemoryView memoryView )
     {
       int Offset = Request.Parameter1;
 
@@ -473,38 +473,22 @@ namespace RetroDevStudio.Documents
         Debug.Log( "UpdateMemory: discarding out of range update, offset " + Offset + ", length " + Data.Length + ", limit " + hexView.ByteProvider.Length );
         return;
       }
-
       for ( int i = 0; i < Data.Length; ++i )
       {
         byte    ramByte = Data.ByteAt( i );
 
         if ( Request.Reason != RequestReason.MEMORY_FETCH )
         {
-          /*
-          if ( ramByte != Core.Debugging.ActiveMemory.RAM.ByteAt( Offset + i ) )
-          {
-            Core.Debugging.ActiveMemory.RAMChanged[Offset + i] = true;
-
-            hexView.SelectedByteProvider.SetByteSelectionState( Offset + i, true );
-          }
-          else
-          {
-            Core.Debugging.ActiveMemory.RAMChanged[Offset + i] = false;
-
-            hexView.SelectedByteProvider.SetByteSelectionState( Offset + i, false );
-          }*/
-          bool    markAsChanged = ( Core.Debugging.ActiveMemory.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_CHANGED ) != 0;
-          if ( ( Core.Debugging.ActiveMemory.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_KNOWN ) == 0 )
+          bool    markAsChanged = ( memoryView.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_CHANGED ) != 0;
+          if ( ( memoryView.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_KNOWN ) == 0 )
           {
             markAsChanged = false;
           }
 
           hexView.SelectedByteProvider.SetByteSelectionState( Offset + i, markAsChanged );
         }
-        //Core.Debugging.ActiveMemory.RAM.SetU8At( Offset + i, ramByte );
         hexView.ByteProvider.WriteByte( Offset + i, ramByte );
       }
-      //ValidateMemory( Offset, (int)Data.Length );
 
       hexView.Invalidate();
     }
