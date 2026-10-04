@@ -2729,8 +2729,6 @@ namespace RetroDevStudio.Documents
         entry.DisplayMemory = DisplayMemory;
         entry.LiteralValue  = true;
 
-        Debug.Log( "Address for " + wordBelow + " determined as " + entry.Address );
-
         Core.MainForm.AddWatchEntry( entry );
         return;
       }
@@ -2746,8 +2744,6 @@ namespace RetroDevStudio.Documents
         entry.IndexedX    = indexedX;
         entry.IndexedY    = indexedY;
         entry.DisplayMemory = DisplayMemory;
-
-        Debug.Log( "Address for " + wordBelow + " determined as " + entry.Address );
 
         Core.MainForm.AddWatchEntry( entry );
       }

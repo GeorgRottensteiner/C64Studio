@@ -259,7 +259,7 @@ namespace RetroDevStudio.Documents
       int     delta = WatchData.AdjustedStartAddress - WatchData.Parameter1;
       int     expectedSize = (int)Data.Length;
       if ( ( WatchData.MemDumpOffsetX )
-      || ( WatchData.MemDumpOffsetY ) )
+      ||   ( WatchData.MemDumpOffsetY ) )
       {
         delta -= WatchData.AppliedOffset;
       }

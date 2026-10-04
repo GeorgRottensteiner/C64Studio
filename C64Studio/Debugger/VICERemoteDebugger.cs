@@ -1716,8 +1716,8 @@ namespace RetroDevStudio
     public void Break()
     {
       StepOver();
-      RefreshRegistersAndWatches();
-      RefreshMemorySections();
+      //RefreshRegistersAndWatches();
+      //RefreshMemorySections();
       m_State = DebuggerState.PAUSED;
     }
 
