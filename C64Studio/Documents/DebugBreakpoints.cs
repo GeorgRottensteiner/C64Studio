@@ -52,7 +52,6 @@ namespace RetroDevStudio.Documents
       item.Tag = Breakpoint;
 
       listBreakpoints.Items.Add( item );
-      Debug.Log( $"Breakpoint added, now {listBreakpoints.Items.Count}" );
     }
 
 
