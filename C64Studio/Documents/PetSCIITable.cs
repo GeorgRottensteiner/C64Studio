@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using RetroDevStudio.Types;
 using GR.Image;
@@ -32,6 +32,7 @@ namespace RetroDevStudio.Documents
       listPETSCII.DisplayPage.Create( 120, 120, GR.Drawing.PixelFormat.Format24bppRgb );
       listPETSCII.PixelFormat = GR.Drawing.PixelFormat.Format24bppRgb;
       listPETSCII.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+      listPETSCII.SelectionDisplayedAsFrame = Core.Settings.BehaviourImageSelectionAsFrame;
 
       var keys = ConstantData.PetSCIIToChar.Values.OrderBy( p => p.NativeValue ).Distinct();
       foreach ( Types.SingleKeyInfo character in keys )
@@ -201,6 +202,14 @@ namespace RetroDevStudio.Documents
       }
     }
 
+
+
+    public override void RefreshDisplayOptions()
+    {
+      base.RefreshDisplayOptions();
+
+      listPETSCII.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+    }
 
 
   }

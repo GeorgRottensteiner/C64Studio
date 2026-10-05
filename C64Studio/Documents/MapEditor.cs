@@ -143,6 +143,7 @@ namespace RetroDevStudio.Documents
       panelCharacters.PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb;
       panelCharacters.SetDisplaySize( 128, 128 );
       panelCharacters.DisplayPage.Create( 128, 128, GR.Drawing.PixelFormat.Format32bppRgb );
+      panelCharacters.SelectionDisplayedAsFrame = Core.Settings.BehaviourImageSelectionAsFrame;
 
       panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
 
@@ -4269,15 +4270,8 @@ namespace RetroDevStudio.Documents
         {
           m_Project.Tiles[i] = origCharData[charMapNewToOld[i]].Clone();
         }
-        /*
-        panelCharacters.Items[i] = new ImageListbox.ImageListItem( panelCharacters )
-        {
-          MemoryImage = new MemoryImage( origListItems[charMapNewToOld[i]].MemoryImage ),
-          Value = origListItems[charMapNewToOld[i]].Value
-        };*/
         RebuildCharImage( i );
       }
-      //panelCharacters.Invalidate();
 
       RedrawMap();
       SetModified();

@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Controls;
+using RetroDevStudio.Controls;
 using RetroDevStudio.Types;
 using RetroDevStudio;
 using System;
@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.Diagnostics;
+using GR.Forms;
 
 namespace RetroDevStudio.CustomRenderer
 {
@@ -188,6 +189,21 @@ namespace RetroDevStudio.CustomRenderer
             tabControl.DrawItem += TabControl_DrawItem;
           }
         }
+        if ( control is ImageListbox )
+        {
+          var lb = control as ImageListbox;
+          lb.SelectionDisplayedAsFrame = Core.Settings.BehaviourImageSelectionAsFrame;
+          if ( !lb.SelectionDisplayedAsFrame )
+          {
+            // 804040FF
+            lb.HottrackColor = 0x80000000 | ( Core.Settings.FGColor( ColorableElement.SELECTION_FRAME ) & 0x00FFFFFF );
+          }
+          else
+          {
+            lb.HottrackColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
+          }
+        }
+
         if ( control is CSListView )
         {
           var lv = control as CSListView;

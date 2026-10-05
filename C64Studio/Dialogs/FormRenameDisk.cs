@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Types;
+using RetroDevStudio.Types;
 using RetroDevStudio;
 using System;
 using System.Windows.Forms;

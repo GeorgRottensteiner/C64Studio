@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio.Documents
+namespace RetroDevStudio.Documents
 {
   partial class MapEditor
   {
@@ -140,17 +140,6 @@
       this.btnImport = new DecentForms.Button();
       this.comboImportMethod = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.tabPage1 = new System.Windows.Forms.TabPage();
-      this.label7 = new System.Windows.Forms.Label();
-      this.label8 = new System.Windows.Forms.Label();
-      this.label9 = new System.Windows.Forms.Label();
-      this.imageListbox1 = new GR.Forms.ImageListbox();
-      this.checkBox1 = new System.Windows.Forms.CheckBox();
-      this.comboBox1 = new System.Windows.Forms.ComboBox();
-      this.comboBox2 = new System.Windows.Forms.ComboBox();
-      this.comboBox3 = new System.Windows.Forms.ComboBox();
-      this.fastPictureBox1 = new GR.Forms.FastPictureBox();
-      this.fastPictureBox2 = new GR.Forms.FastPictureBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
@@ -165,9 +154,6 @@
       this.tabCharset.SuspendLayout();
       this.tabExport.SuspendLayout();
       this.tabImport.SuspendLayout();
-      this.tabPage1.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox1)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox2)).BeginInit();
       this.SuspendLayout();
       // 
       // menuStrip1
@@ -1438,145 +1424,6 @@
       this.label2.TabIndex = 35;
       this.label2.Text = "Import Method:";
       // 
-      // tabPage1
-      // 
-      this.tabPage1.Controls.Add(this.label7);
-      this.tabPage1.Controls.Add(this.label8);
-      this.tabPage1.Controls.Add(this.label9);
-      this.tabPage1.Controls.Add(this.imageListbox1);
-      this.tabPage1.Controls.Add(this.checkBox1);
-      this.tabPage1.Controls.Add(this.comboBox1);
-      this.tabPage1.Controls.Add(this.comboBox2);
-      this.tabPage1.Controls.Add(this.comboBox3);
-      this.tabPage1.Controls.Add(this.fastPictureBox1);
-      this.tabPage1.Controls.Add(this.fastPictureBox2);
-      this.tabPage1.Location = new System.Drawing.Point(4, 22);
-      this.tabPage1.Name = "tabPage1";
-      this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage1.Size = new System.Drawing.Size(956, 475);
-      this.tabPage1.TabIndex = 0;
-      this.tabPage1.Text = "Screen";
-      this.tabPage1.UseVisualStyleBackColor = true;
-      // 
-      // label7
-      // 
-      this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(658, 65);
-      this.label7.Name = "label7";
-      this.label7.Size = new System.Drawing.Size(64, 13);
-      this.label7.TabIndex = 22;
-      this.label7.Text = "Multicolor 2:";
-      // 
-      // label8
-      // 
-      this.label8.AutoSize = true;
-      this.label8.Location = new System.Drawing.Point(658, 38);
-      this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(64, 13);
-      this.label8.TabIndex = 22;
-      this.label8.Text = "Multicolor 1:";
-      // 
-      // label9
-      // 
-      this.label9.AutoSize = true;
-      this.label9.Location = new System.Drawing.Point(658, 11);
-      this.label9.Name = "label9";
-      this.label9.Size = new System.Drawing.Size(68, 13);
-      this.label9.TabIndex = 22;
-      this.label9.Text = "Background:";
-      // 
-      // imageListbox1
-      // 
-      this.imageListbox1.AllowPopup = false;
-      this.imageListbox1.AutoScroll = true;
-      this.imageListbox1.AutoScrollHorizontalMaximum = 100;
-      this.imageListbox1.AutoScrollHorizontalMinimum = 0;
-      this.imageListbox1.AutoScrollHPos = 0;
-      this.imageListbox1.AutoScrollVerticalMaximum = -23;
-      this.imageListbox1.AutoScrollVerticalMinimum = 0;
-      this.imageListbox1.AutoScrollVPos = 0;
-      this.imageListbox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.imageListbox1.EnableAutoScrollHorizontal = true;
-      this.imageListbox1.EnableAutoScrollVertical = true;
-      this.imageListbox1.HottrackColor = ((uint)(2151694591u));
-      this.imageListbox1.ItemHeight = 8;
-      this.imageListbox1.ItemWidth = 8;
-      this.imageListbox1.Location = new System.Drawing.Point(658, 124);
-      this.imageListbox1.Name = "imageListbox1";
-      this.imageListbox1.PixelFormat = GR.Drawing.PixelFormat.DontCare;
-      this.imageListbox1.SelectedIndex = -1;
-      this.imageListbox1.Size = new System.Drawing.Size(260, 260);
-      this.imageListbox1.TabIndex = 21;
-      this.imageListbox1.TabStop = true;
-      this.imageListbox1.VisibleAutoScrollHorizontal = false;
-      this.imageListbox1.VisibleAutoScrollVertical = false;
-      // 
-      // checkBox1
-      // 
-      this.checkBox1.AutoSize = true;
-      this.checkBox1.Location = new System.Drawing.Point(658, 94);
-      this.checkBox1.Name = "checkBox1";
-      this.checkBox1.Size = new System.Drawing.Size(71, 17);
-      this.checkBox1.TabIndex = 3;
-      this.checkBox1.Text = "Multicolor";
-      this.checkBox1.UseVisualStyleBackColor = true;
-      // 
-      // comboBox1
-      // 
-      this.comboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBox1.FormattingEnabled = true;
-      this.comboBox1.Location = new System.Drawing.Point(765, 62);
-      this.comboBox1.Name = "comboBox1";
-      this.comboBox1.Size = new System.Drawing.Size(121, 21);
-      this.comboBox1.TabIndex = 1;
-      // 
-      // comboBox2
-      // 
-      this.comboBox2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBox2.FormattingEnabled = true;
-      this.comboBox2.Location = new System.Drawing.Point(765, 35);
-      this.comboBox2.Name = "comboBox2";
-      this.comboBox2.Size = new System.Drawing.Size(121, 21);
-      this.comboBox2.TabIndex = 1;
-      // 
-      // comboBox3
-      // 
-      this.comboBox3.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBox3.FormattingEnabled = true;
-      this.comboBox3.Location = new System.Drawing.Point(765, 8);
-      this.comboBox3.Name = "comboBox3";
-      this.comboBox3.Size = new System.Drawing.Size(121, 21);
-      this.comboBox3.TabIndex = 1;
-      // 
-      // fastPictureBox1
-      // 
-      this.fastPictureBox1.AutoResize = false;
-      this.fastPictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      fastImage4.FixedScaleFactor = 1;
-      this.fastPictureBox1.DisplayPage = fastImage4;
-      this.fastPictureBox1.Image = null;
-      this.fastPictureBox1.Location = new System.Drawing.Point(658, 390);
-      this.fastPictureBox1.Name = "fastPictureBox1";
-      this.fastPictureBox1.Size = new System.Drawing.Size(260, 20);
-      this.fastPictureBox1.TabIndex = 0;
-      this.fastPictureBox1.TabStop = false;
-      // 
-      // fastPictureBox2
-      // 
-      this.fastPictureBox2.AutoResize = false;
-      this.fastPictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      fastImage5.FixedScaleFactor = 1;
-      this.fastPictureBox2.DisplayPage = fastImage5;
-      this.fastPictureBox2.Image = null;
-      this.fastPictureBox2.Location = new System.Drawing.Point(8, 6);
-      this.fastPictureBox2.Name = "fastPictureBox2";
-      this.fastPictureBox2.Size = new System.Drawing.Size(644, 404);
-      this.fastPictureBox2.TabIndex = 0;
-      this.fastPictureBox2.TabStop = false;
-      // 
       // MapEditor
       // 
       this.ClientSize = new System.Drawing.Size(1064, 525);
@@ -1606,10 +1453,6 @@
       this.tabExport.PerformLayout();
       this.tabImport.ResumeLayout(false);
       this.tabImport.PerformLayout();
-      this.tabPage1.ResumeLayout(false);
-      this.tabPage1.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox1)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox2)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1635,17 +1478,6 @@
     private System.Windows.Forms.ComboBox comboTileBackground;
     private GR.Forms.FastPictureBox panelCharColors;
     private GR.Forms.FastPictureBox pictureTileDisplay;
-    private System.Windows.Forms.TabPage tabPage1;
-    private System.Windows.Forms.Label label7;
-    private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.Label label9;
-    private GR.Forms.ImageListbox imageListbox1;
-    private System.Windows.Forms.CheckBox checkBox1;
-    private System.Windows.Forms.ComboBox comboBox1;
-    private System.Windows.Forms.ComboBox comboBox2;
-    private System.Windows.Forms.ComboBox comboBox3;
-    private GR.Forms.FastPictureBox fastPictureBox1;
-    private GR.Forms.FastPictureBox fastPictureBox2;
     private DecentForms.VScrollBar mapVScroll;
     private DecentForms.HScrollBar mapHScroll;
     private System.Windows.Forms.GroupBox groupSize;

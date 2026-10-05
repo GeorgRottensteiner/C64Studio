@@ -284,6 +284,7 @@ namespace RetroDevStudio.Documents
       panelSprites.Location = new System.Drawing.Point( 3, 3 );
       panelSprites.Name = "panelSprites";
       panelSprites.PixelFormat = GR.Drawing.PixelFormat.DontCare;
+      panelSprites.SelectionDisplayedAsFrame = false;
       panelSprites.Size = new System.Drawing.Size( 458, 593 );
       panelSprites.TabIndex = 4;
       panelSprites.TabStop = true;

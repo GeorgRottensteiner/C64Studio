@@ -138,6 +138,7 @@ namespace RetroDevStudio.Documents
       pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
       panelCharacters.PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb;
       panelCharacters.SetDisplaySize( 128, 128 );
+      panelCharacters.SelectionDisplayedAsFrame = Core.Settings.BehaviourImageSelectionAsFrame;
       m_Image.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
 
       DPIHandler.ResizeControlsForDPI( this );

@@ -1,4 +1,4 @@
-﻿using GR.Strings;
+using GR.Strings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +24,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public DlgPrefEditorBehaviour( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "editor", "paint", "draw" } );
+      _Keywords.AddRange( new string[] { "editor", "paint", "draw", "select", "selection" } );
 
       InitializeComponent();
     }
@@ -34,6 +34,7 @@ namespace RetroDevStudio.Dialogs.Preferences
     public override void ApplySettingsToControls()
     {
       checkRightClickIsBGColor.Checked = Core.Settings.BehaviourRightClickIsBGColorPaint;
+      checkImageSelectionAsFrame.Checked = Core.Settings.BehaviourImageSelectionAsFrame;
     }
 
 
@@ -41,6 +42,7 @@ namespace RetroDevStudio.Dialogs.Preferences
     public override void ExportSettings( GR.Strings.XMLElement SettingsRoot )
     {
       SettingsRoot.AddChild( "Editor.Behaviour", new GR.Strings.XMLElement( "RightButton", Core.Settings.BehaviourRightClickIsBGColorPaint ? "PaintBackground" : "PickColor" ) );
+      SettingsRoot.AddChild( "Editor.Behaviour", new GR.Strings.XMLElement( "ImageSelectionAsFrame", Core.Settings.BehaviourImageSelectionAsFrame.ToString().ToLower() ) );
     }
 
 
@@ -59,6 +61,11 @@ namespace RetroDevStudio.Dialogs.Preferences
           Core.Settings.BehaviourRightClickIsBGColorPaint = false;
         }
       }
+      var imageSelection = SettingsRoot.FindByType( "Editor.Behaviour.ImageSelectionAsFrame" );
+      if ( imageSelection != null )
+      {
+        Core.Settings.BehaviourImageSelectionAsFrame = GR.Convert.ToBoolean( imageSelection.Content );
+      }
     }
 
 
@@ -66,6 +73,14 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void checkRightClickIsBGColor_CheckedChanged( object sender, EventArgs e )
     {
       Core.Settings.BehaviourRightClickIsBGColorPaint = checkRightClickIsBGColor.Checked;
+    }
+
+
+
+    private void checkImageSelectionAsFrame_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.BehaviourImageSelectionAsFrame = checkImageSelectionAsFrame.Checked;
+      RefreshDisplayOnDocuments();
     }
 
 

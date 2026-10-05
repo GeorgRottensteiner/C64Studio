@@ -200,6 +200,7 @@ namespace RetroDevStudio
     public int                                  BASICShowMaxLineLengthIndicatorLength = 80;
 
     public bool                                 BehaviourRightClickIsBGColorPaint = false;
+    public bool                                 BehaviourImageSelectionAsFrame = false;
 
     public List<string>                         FindArguments = new List<string>();
     public List<string>                         ReplaceArguments = new List<string>();
@@ -550,7 +551,6 @@ namespace RetroDevStudio
 
       Core.Theming.ApplyThemeToToolStripItems( Core.MainForm.MainMenuStrip, Core.MainForm.MainMenuStrip.Items );
 
-      //foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Documents )
       foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Contents )
       {
         if ( doc is BaseDocument )
@@ -813,6 +813,7 @@ namespace RetroDevStudio
 
       GR.IO.FileChunk chunkEditorBehaviours = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_EDITOR_BEHAVIOURS );
       chunkEditorBehaviours.AppendI32( BehaviourRightClickIsBGColorPaint ? 1 : 0 );
+      chunkEditorBehaviours.AppendI32( BehaviourImageSelectionAsFrame ? 1 : 0 );
       SettingsData.Append( chunkEditorBehaviours.ToBuffer() );
 
       
@@ -1376,6 +1377,7 @@ namespace RetroDevStudio
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
               BehaviourRightClickIsBGColorPaint = ( binIn.ReadInt32() == 1 );
+              BehaviourImageSelectionAsFrame = ( binIn.ReadInt32() == 1 );  
             }
             break;
           case FileChunkConstants.SETTINGS_WARNINGS_AS_ERRORS:

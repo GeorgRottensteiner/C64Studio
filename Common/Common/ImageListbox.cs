@@ -204,6 +204,7 @@ namespace GR.Forms
     private List<uint>            m_HighlightColors = new List<uint>();
     private List<int>             m_SelectedIndices = new List<int>();
     private Size                  m_ActiveClientSize = new Size();
+    private bool                  m_SelectionDisplayedAsFrame = false; 
 
 
     public event System.Windows.Forms.DrawItemEventHandler    DrawItem;
@@ -220,6 +221,25 @@ namespace GR.Forms
     {
       get;
       set;
+    }
+
+
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
+    public bool SelectionDisplayedAsFrame
+    {
+      get
+      {
+        return m_SelectionDisplayedAsFrame;
+      }
+      set
+      {
+        if ( m_SelectionDisplayedAsFrame != value )
+        {
+          m_SelectionDisplayedAsFrame = value;
+          Invalidate();
+        }
+      }
     }
 
 
@@ -968,7 +988,13 @@ namespace GR.Forms
         return;
       }
 
-      var hottrackBrush = new SolidBrush( GR.Color.Helper.FromARGB( HottrackColor ) );
+      SolidBrush hottrackBrush = new SolidBrush( GR.Color.Helper.FromARGB( HottrackColor ) );
+      Pen hottrackPen = null;
+
+      if ( m_SelectionDisplayedAsFrame )
+      {
+        hottrackPen = new Pen( GR.Color.Helper.FromARGB( HottrackColor ), 2 );
+      }
 
       int     itemIndex = m_Offset * m_ItemsPerLine;
       int     itemInLine = 0;
@@ -1048,20 +1074,31 @@ namespace GR.Forms
 
         int     xoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) % m_ItemsPerLine;
         int     yoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) / m_ItemsPerLine;
-        itemRect = new System.Drawing.Rectangle( xoffset * m_ItemWidth, yoffset * m_ItemHeight, m_ItemWidth, m_ItemHeight );
+        itemRect = ItemRect( itemIndex );// new System.Drawing.Rectangle( xoffset * m_ItemWidth, yoffset * m_ItemHeight, m_ItemWidth, m_ItemHeight );
 
         if ( Items[itemIndex].Highlighted )
         {
           using ( System.Drawing.SolidBrush highlightColorBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( m_HighlightColors[Items[itemIndex].HighlightGroup % m_HighlightColors.Count] ) ) )
           {
-            e.Graphics.FillRectangle( highlightColorBrush, ItemRect( itemIndex ) );
+            e.Graphics.FillRectangle( highlightColorBrush, itemRect );
           }
         }
         if ( m_SelectedIndices.Contains( itemIndex ) )
         {
-          e.Graphics.FillRectangle( hottrackBrush, ItemRect( itemIndex ) );
+          if ( m_SelectionDisplayedAsFrame )
+          {
+            ++itemRect.X;
+            ++itemRect.Y;
+            itemRect.Width -= 2;
+            itemRect.Height -= 2;
+            e.Graphics.DrawRectangle( hottrackPen, itemRect );
+          }
+          else
+          {
+            e.Graphics.FillRectangle( hottrackBrush, itemRect );
+          }
         }
-          ++itemIndex;
+        ++itemIndex;
         itemInLine = ( ( itemInLine + 1 ) % m_ItemsPerLine );
       }
 
@@ -1128,7 +1165,9 @@ namespace GR.Forms
           e.Graphics.FillRectangle( hottrackBrush, ItemRect( m_SelectedItem ) );
         }
       }*/
-      hottrackBrush.Dispose();
+
+      hottrackBrush?.Dispose();
+      hottrackPen?.Dispose();
     }
 
 
