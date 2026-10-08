@@ -107,7 +107,7 @@ namespace RetroDevStudio.Dialogs
       DiskID = Util.ToPETSCII( editDiskID.Text );
 
       while ( ( DiskID.Length > 0 )
-      &&      ( DiskID.ByteAt( (int)DiskName.Length - 1 ) == 32 ) )
+      &&      ( DiskID.ByteAt( (int)DiskID.Length - 1 ) == 32 ) )
       {
         DiskID.Truncate( 1 );
       }
