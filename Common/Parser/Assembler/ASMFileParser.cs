@@ -14021,7 +14021,8 @@ namespace RetroDevStudio.Parser
                 break;
               case Opcode.OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST:
                 if ( ( matchParam.Count < potentialExpression.ValidValues[0].ValidValues.Count )
-                ||   ( matchParam.Count < potentialExpression.ValidValues[2].ValidValues.Count ) )
+                ||   ( matchParam.Count < potentialExpression.ValidValues[2].ValidValues.Count )
+                ||   ( matchParam.Count <= potentialExpression.ValidValues[0].ValidValues.Count + potentialExpression.ValidValues[2].ValidValues.Count ) )
                 {
                   isMatch = false;
                 }
@@ -14151,7 +14152,8 @@ namespace RetroDevStudio.Parser
               case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT:
               case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT:
                 if ( ( matchParam.Count < potentialExpression.ValidValues[0].ValidValues.Count )
-                ||   ( matchParam.Count < potentialExpression.ValidValues.Last().ValidValues.Count ) )
+                ||   ( matchParam.Count < potentialExpression.ValidValues.Last().ValidValues.Count )
+                ||   ( matchParam.Count <= potentialExpression.ValidValues[0].ValidValues.Count + potentialExpression.ValidValues.Last().ValidValues.Count ) )
                 {
                   isMatch = false;
                 }
