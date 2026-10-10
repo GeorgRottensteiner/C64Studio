@@ -110,24 +110,24 @@ namespace GR.Image
       {
         for ( int i = 0; i < CountColors; ++i )
         {
-          result.AppendU8( (byte)( ( ColorValues[i] & 0x00ff0000 ) >> 16 ) );
+          result.AppendU8( (byte)( ( ColorValues[StartIndex + i] & 0x00ff0000 ) >> 16 ) );
         }
         for ( int i = 0; i < CountColors; ++i )
         {
-          result.AppendU8( (byte)( ( ColorValues[i] & 0x0000ff00 ) >> 8 ) );
+          result.AppendU8( (byte)( ( ColorValues[StartIndex + i] & 0x0000ff00 ) >> 8 ) );
         }
         for ( int i = 0; i < CountColors; ++i )
         {
-          result.AppendU8( (byte)( ( ColorValues[i] & 0x000000ff ) ) );
+          result.AppendU8( (byte)( ( ColorValues[StartIndex + i] & 0x000000ff ) ) );
         }
       }
       else
       {
         for ( int i = 0; i < CountColors; ++i )
         {
-          result.AppendU8( (byte)( ( ColorValues[i] & 0x00ff0000 ) >> 16 ) );
-          result.AppendU8( (byte)( ( ColorValues[i] & 0x0000ff00 ) >> 8 ) );
-          result.AppendU8( (byte)( ( ColorValues[i] & 0x000000ff ) ) );
+          result.AppendU8( (byte)( ( ColorValues[StartIndex + i] & 0x00ff0000 ) >> 16 ) );
+          result.AppendU8( (byte)( ( ColorValues[StartIndex + i] & 0x0000ff00 ) >> 8 ) );
+          result.AppendU8( (byte)( ( ColorValues[StartIndex + i] & 0x000000ff ) ) );
         }
       }
       if ( Swizzled )
