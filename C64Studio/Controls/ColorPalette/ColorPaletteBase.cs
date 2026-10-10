@@ -45,7 +45,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public byte DetermineListIndex( ColorEntry previousSelectedColor )
+    public int DetermineListIndex( ColorEntry previousSelectedColor )
     {
       var entry = _ColorIndices.FirstOrDefault( e => ( e.Type == previousSelectedColor.Type ) && ( e.ColorIndex == previousSelectedColor.ColorIndex ) );
       if ( entry == null )
@@ -56,7 +56,7 @@ namespace RetroDevStudio.Controls
           entry = _ColorIndices.FirstOrDefault( e => e.Type == ColorType.CUSTOM_COLOR );
         }
       }
-      return (byte)_ColorIndices.IndexOf( entry );
+      return _ColorIndices.IndexOf( entry );
     }
 
 
@@ -71,7 +71,7 @@ namespace RetroDevStudio.Controls
       {
         int index = DetermineListIndex( value );
           //_ColorIndices.IndexOf( value );
-        if ( index == -1 )
+        if ( ( index < 0 ) || ( index >= _ColorIndices.Count ) )
         {
           index = 0;
         }
