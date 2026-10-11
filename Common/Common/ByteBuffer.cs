@@ -612,12 +612,12 @@ namespace GR
           }
           else
           {
-            byte[] bTemp = new byte[m_Data.Length + NumBytes];
+            byte[] bTemp = new byte[(int)m_UsedBytes + NumBytes];
 
-            m_Data.CopyTo( bTemp, 0 );
-            System.Array.Copy( Array, StartIndex, bTemp, m_Data.Length, NumBytes );
+            System.Array.Copy( m_Data, 0, bTemp, 0, (int)m_UsedBytes );
+            System.Array.Copy( Array, StartIndex, bTemp, (int)m_UsedBytes, NumBytes );
             m_Data = bTemp;
-            m_UsedBytes = (UInt32)m_Data.Length;
+            m_UsedBytes += (UInt32)NumBytes;
           }
         }
       }
