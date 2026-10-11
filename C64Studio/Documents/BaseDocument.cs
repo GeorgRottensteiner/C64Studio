@@ -657,6 +657,7 @@ namespace RetroDevStudio.Documents
       }
       m_FileWatcher.Filter = GR.Path.GetFileName( fullPath );
       m_FileWatcher.NotifyFilter = System.IO.NotifyFilters.LastWrite;
+      m_FileWatcher.Changed -= new System.IO.FileSystemEventHandler( m_FileWatcher_Changed );
       m_FileWatcher.Changed += new System.IO.FileSystemEventHandler( m_FileWatcher_Changed );
     }
 
@@ -666,6 +667,11 @@ namespace RetroDevStudio.Documents
     {
       DisableFileWatcher();
       m_FileWatcher.Changed -= new System.IO.FileSystemEventHandler( m_FileWatcher_Changed );
+      m_FileWatcher.EnableRaisingEvents = false;
+      m_FileWatcher.Dispose();
+      // the document owns the watcher, a disposed watcher can not be used again, and DisposeWatcher()
+      // is called from OnFormClosing as well as from OnFormClosed
+      m_FileWatcher = new System.IO.FileSystemWatcher();
     }
 
 
