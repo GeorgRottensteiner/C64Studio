@@ -2827,14 +2827,14 @@ namespace RetroDevStudio.Controls
       }
       UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedChars ) );
 
-      int[]   charMapNewToOld = new int[256];
-      int[]   charMapOldToNew = new int[256];
+      int[]   charMapNewToOld = new int[m_Project.TotalNumberOfCharacters];
+      int[]   charMapOldToNew = new int[m_Project.TotalNumberOfCharacters];
 
       // resorts characters by category
       List<Formats.CharData>    newList = new List<RetroDevStudio.Formats.CharData>();
       for ( int j = 0; j < m_Project.Categories.Count; ++j )
       {
-        for ( int i = 0; i < 256; ++i )
+        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
         {
           if ( m_Project.Characters[i].Category == j )
           {
