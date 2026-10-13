@@ -119,8 +119,9 @@ namespace DecentForms
         {
           for ( int i = 0; i < Count;  ++i )
           {
+            var item = _Items[Index + Count - i - 1];
             _Items.RemoveAt( Index + Count - i - 1 );
-            _Items[Index + Count - i - 1].Selected = false;
+            item.Selected = false;
           }
           _Owner.ItemsModified();
         }

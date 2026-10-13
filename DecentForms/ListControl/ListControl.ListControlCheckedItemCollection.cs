@@ -118,9 +118,9 @@ namespace DecentForms
         {
           for ( int i = 0; i < Count;  ++i )
           {
-            _Items.RemoveAt( Index + Count - i - 1 );
-            _Items[Index + Count - i - 1].Checked = false;
+            _Items[Index + i].Checked = false;
           }
+          _Items.RemoveRange( Index, Count );
         }
       }
 

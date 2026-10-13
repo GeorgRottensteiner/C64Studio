@@ -119,7 +119,14 @@ namespace RetroDevStudio.Controls
         int colorIndexX = X / ( panelCharColors.ClientSize.Width / _NumColorsPerLine );
         int colorIndexY = Y / ( panelCharColors.ClientSize.Height / _NumColorsPerColumn );
 
-        _SelectedColor = (byte)( colorIndexX * _NumColorsPerColumn + colorIndexY );
+        int newSelectedColor = colorIndexX * _NumColorsPerColumn + colorIndexY;
+        if ( ( newSelectedColor < 0 )
+        ||   ( newSelectedColor >= _ColorIndices.Count ) )
+        {
+          return;
+        }
+
+        _SelectedColor = (byte)newSelectedColor;
         _LastSelectedEntry = _ColorIndices[_SelectedColor];
         Redraw();
         RaiseColorSelectedEvent();
