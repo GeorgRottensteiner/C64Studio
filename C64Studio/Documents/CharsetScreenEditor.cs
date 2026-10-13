@@ -677,13 +677,13 @@ namespace RetroDevStudio.Documents
       int     offsetY = undoY - m_MousePos.Y;
       int     undoWidth = m_FloatingSelectionSize.Width - ( undoX - m_MousePos.X );
       int     undoHeight = m_FloatingSelectionSize.Height - ( undoY - m_MousePos.Y );
-      if ( undoX + undoWidth > CurrentScreen.Width )
+      if ( m_CharsetScreen.ScreenOffsetX + undoX + undoWidth > CurrentScreen.Width )
       {
-        undoWidth = CurrentScreen.Width - undoX;
+        undoWidth = CurrentScreen.Width - undoX - m_CharsetScreen.ScreenOffsetX;
       }
-      if ( undoY + undoHeight > CurrentScreen.Height )
+      if ( m_CharsetScreen.ScreenOffsetY + undoY + undoHeight > CurrentScreen.Height )
       {
-        undoHeight = CurrentScreen.Height - undoY;
+        undoHeight = CurrentScreen.Height - undoY - m_CharsetScreen.ScreenOffsetY;
       }
       if ( ( undoWidth <= 0 )
       ||   ( undoHeight <= 0 ) )

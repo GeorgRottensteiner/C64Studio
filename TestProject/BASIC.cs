@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Parser.BASIC;
 using System;
@@ -1135,6 +1135,19 @@ GOTO LABEL10
       var result = TestCompile( source, "BASIC V2" );
 
       Assert.AreEqual( "0108110842008BB5284229B3B142A73636000000", result.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void BASICV2AllKeys()
+    {
+      string    source = @"10 PRINT""{CBM-A}{CBM-B}{CBM-C}{CBM-D}{CBM-E}{CBM-F}{CBM-G}{CBM-H}{CBM-I}{CBM-J}{CBM-K}{CBM-L}{CBM-M}{CBM-N}{CBM-O}{CBM-P}{CBM-Q}{CBM-R}{CBM-S}{CBM-T}{CBM-U}{CBM-V}{CBM-W}{CBM-X}{CBM-Y}{CBM-Z}""";
+      //string    source = @"10 PRINT""{CBM-M}{CBM-N}""";
+
+      var result = TestCompile( source, "BASIC V2" );
+
+      Assert.AreEqual( "010823080A009922B0BFBCACB1BBA5B4A2B5A1B6A7AAB9AFABB2AEA3B8BEB3BDB7AD22000000", result.ToString() );
     }
 
 
