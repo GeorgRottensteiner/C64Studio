@@ -467,7 +467,7 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      int     firstLine = e.Index - 1;
+      int     firstLine = Math.Max( 0, e.Index - 1 );
       int     count = e.Count;
       if ( count == 0 )
       {
