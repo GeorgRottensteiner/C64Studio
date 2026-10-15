@@ -1095,20 +1095,20 @@ namespace C64Studio
 
     private void DrawLeafTopPlaceholders( TreeNode NodeOver )
     {
-      Graphics g = treeProject.CreateGraphics();
+      using ( Graphics g = treeProject.CreateGraphics() )
+      {
+        int NodeOverImageWidth = treeProject.ImageList.Images[NodeOver.ImageIndex].Size.Width + 8;
+        int LeftPos = NodeOver.Bounds.Left - NodeOverImageWidth;
+        int RightPos = treeProject.Width - 4;
 
-      int NodeOverImageWidth = treeProject.ImageList.Images[NodeOver.ImageIndex].Size.Width + 8;
-      int LeftPos = NodeOver.Bounds.Left - NodeOverImageWidth;
-      int RightPos = treeProject.Width - 4;
-
-      Point[] LeftTriangle = new Point[5]{
+        Point[] LeftTriangle = new Point[5]{
 												   new Point(LeftPos, NodeOver.Bounds.Top - 4),
 												   new Point(LeftPos, NodeOver.Bounds.Top + 4),
 												   new Point(LeftPos + 4, NodeOver.Bounds.Y),
 												   new Point(LeftPos + 4, NodeOver.Bounds.Top - 1),
 												   new Point(LeftPos, NodeOver.Bounds.Top - 5)};
 
-      Point[] RightTriangle = new Point[5]{
+        Point[] RightTriangle = new Point[5]{
 													new Point(RightPos, NodeOver.Bounds.Top - 4),
 													new Point(RightPos, NodeOver.Bounds.Top + 4),
 													new Point(RightPos - 4, NodeOver.Bounds.Y),
@@ -1116,9 +1116,13 @@ namespace C64Studio
 													new Point(RightPos, NodeOver.Bounds.Top - 5)};
 
 
-      g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
-      g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
-      g.DrawLine( new System.Drawing.Pen( Color.Black, 2 ), new Point( LeftPos, NodeOver.Bounds.Top ), new Point( RightPos, NodeOver.Bounds.Top ) );
+        g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
+        g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
+        using ( Pen linePen = new Pen( Color.Black, 2 ) )
+        {
+          g.DrawLine( linePen, new Point( LeftPos, NodeOver.Bounds.Top ), new Point( RightPos, NodeOver.Bounds.Top ) );
+        }
+      }
 
     }
 
@@ -1126,25 +1130,25 @@ namespace C64Studio
 
     private void DrawLeafBottomPlaceholders( TreeNode NodeOver, TreeNode ParentDragDrop )
     {
-      Graphics g = treeProject.CreateGraphics();
+      using ( Graphics g = treeProject.CreateGraphics() )
+      {
+        int NodeOverImageWidth = treeProject.ImageList.Images[NodeOver.ImageIndex].Size.Width + 8;
+        // Once again, we are not dragging to node over, draw the placeholder using the ParentDragDrop bounds
+        int LeftPos, RightPos;
+        if ( ParentDragDrop != null )
+          LeftPos = ParentDragDrop.Bounds.Left - ( treeProject.ImageList.Images[ParentDragDrop.ImageIndex].Size.Width + 8 );
+        else
+          LeftPos = NodeOver.Bounds.Left - NodeOverImageWidth;
+        RightPos = treeProject.Width - 4;
 
-      int NodeOverImageWidth = treeProject.ImageList.Images[NodeOver.ImageIndex].Size.Width + 8;
-      // Once again, we are not dragging to node over, draw the placeholder using the ParentDragDrop bounds
-      int LeftPos, RightPos;
-      if ( ParentDragDrop != null )
-        LeftPos = ParentDragDrop.Bounds.Left - ( treeProject.ImageList.Images[ParentDragDrop.ImageIndex].Size.Width + 8 );
-      else
-        LeftPos = NodeOver.Bounds.Left - NodeOverImageWidth;
-      RightPos = treeProject.Width - 4;
-
-      Point[] LeftTriangle = new Point[5]{
+        Point[] LeftTriangle = new Point[5]{
 												   new Point(LeftPos, NodeOver.Bounds.Bottom - 4),
 												   new Point(LeftPos, NodeOver.Bounds.Bottom + 4),
 												   new Point(LeftPos + 4, NodeOver.Bounds.Bottom),
 												   new Point(LeftPos + 4, NodeOver.Bounds.Bottom - 1),
 												   new Point(LeftPos, NodeOver.Bounds.Bottom - 5)};
 
-      Point[] RightTriangle = new Point[5]{
+        Point[] RightTriangle = new Point[5]{
 													new Point(RightPos, NodeOver.Bounds.Bottom - 4),
 													new Point(RightPos, NodeOver.Bounds.Bottom + 4),
 													new Point(RightPos - 4, NodeOver.Bounds.Bottom),
@@ -1152,30 +1156,35 @@ namespace C64Studio
 													new Point(RightPos, NodeOver.Bounds.Bottom - 5)};
 
 
-      g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
-      g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
-      g.DrawLine( new System.Drawing.Pen( Color.Black, 2 ), new Point( LeftPos, NodeOver.Bounds.Bottom ), new Point( RightPos, NodeOver.Bounds.Bottom ) );
+        g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
+        g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
+        using ( Pen linePen = new Pen( Color.Black, 2 ) )
+        {
+          g.DrawLine( linePen, new Point( LeftPos, NodeOver.Bounds.Bottom ), new Point( RightPos, NodeOver.Bounds.Bottom ) );
+        }
+      }
     }
 
 
 
     private void DrawFolderTopPlaceholders( TreeNode NodeOver )
     {
-      Graphics g = treeProject.CreateGraphics();
-      int NodeOverImageWidth = treeProject.ImageList.Images[NodeOver.ImageIndex].Size.Width + 8;
+      using ( Graphics g = treeProject.CreateGraphics() )
+      {
+        int NodeOverImageWidth = treeProject.ImageList.Images[NodeOver.ImageIndex].Size.Width + 8;
 
-      int LeftPos, RightPos;
-      LeftPos = NodeOver.Bounds.Left - NodeOverImageWidth;
-      RightPos = treeProject.Width - 4;
+        int LeftPos, RightPos;
+        LeftPos = NodeOver.Bounds.Left - NodeOverImageWidth;
+        RightPos = treeProject.Width - 4;
 
-      Point[] LeftTriangle = new Point[5]{
+        Point[] LeftTriangle = new Point[5]{
 												   new Point(LeftPos, NodeOver.Bounds.Top - 4),
 												   new Point(LeftPos, NodeOver.Bounds.Top + 4),
 												   new Point(LeftPos + 4, NodeOver.Bounds.Y),
 												   new Point(LeftPos + 4, NodeOver.Bounds.Top - 1),
 												   new Point(LeftPos, NodeOver.Bounds.Top - 5)};
 
-      Point[] RightTriangle = new Point[5]{
+        Point[] RightTriangle = new Point[5]{
 													new Point(RightPos, NodeOver.Bounds.Top - 4),
 													new Point(RightPos, NodeOver.Bounds.Top + 4),
 													new Point(RightPos - 4, NodeOver.Bounds.Y),
@@ -1183,9 +1192,13 @@ namespace C64Studio
 													new Point(RightPos, NodeOver.Bounds.Top - 5)};
 
 
-      g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
-      g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
-      g.DrawLine( new System.Drawing.Pen( Color.Black, 2 ), new Point( LeftPos, NodeOver.Bounds.Top ), new Point( RightPos, NodeOver.Bounds.Top ) );
+        g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
+        g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
+        using ( Pen linePen = new Pen( Color.Black, 2 ) )
+        {
+          g.DrawLine( linePen, new Point( LeftPos, NodeOver.Bounds.Top ), new Point( RightPos, NodeOver.Bounds.Top ) );
+        }
+      }
 
     }
 
@@ -1193,7 +1206,6 @@ namespace C64Studio
 
     private void DrawAddToFolderPlaceholder( TreeNode NodeOver )
     {
-      Graphics g = treeProject.CreateGraphics();
       int RightPos = NodeOver.Bounds.Right + 6;
       Point[] RightTriangle = new Point[5]{
 													new Point(RightPos, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) + 4),
@@ -1203,7 +1215,11 @@ namespace C64Studio
 													new Point(RightPos, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) - 5)};
 
       this.Refresh();
-      g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
+
+      using ( Graphics g = treeProject.CreateGraphics() )
+      {
+        g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
+      }
     }
 
 
