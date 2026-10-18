@@ -149,6 +149,16 @@ namespace RetroDevStudio.Formats
       _DiskInfoBlock.Creator        = diskData.ToAsciiString( 34, 14 );
       _DiskInfoBlock.NumberOfTracks = diskData.ByteAt( 48 );
       _DiskInfoBlock.NumberOfSides  = diskData.ByteAt( 49 );
+
+      //  _Tracks only holds the two sides of a disk, an unvalidated side count would
+      //  index outside of it (and the file size can not hold that many tracks either)
+      if ( ( _DiskInfoBlock.NumberOfSides < 1 )
+      ||   ( _DiskInfoBlock.NumberOfSides > 2 ) )
+      {
+        _LastError = "invalid number of sides in disk information block";
+        return false;
+      }
+
       _DiskInfoBlock.TrackSizeTable = new ByteBuffer( (uint)( _DiskInfoBlock.NumberOfTracks * _DiskInfoBlock.NumberOfSides ) );
 
       _Extended = _DiskInfoBlock.Description.StartsWith( "EXTENDED" );
@@ -161,6 +171,14 @@ namespace RetroDevStudio.Formats
       {
         for ( int side = 0; side < _DiskInfoBlock.NumberOfSides; ++side )
         {
+          //  a track information block is 256 bytes long and ToAsciiString/UInt16At below
+          //  would read outside of the buffer for a truncated file
+          if ( curPos + 256 > (int)diskData.Length )
+          {
+            _LastError = "track information block exceeds file size";
+            return false;
+          }
+
           var trackInfo = new TrackInformationBlock();
 
           trackInfo.Description = diskData.ToAsciiString( (uint)curPos, 13 );
