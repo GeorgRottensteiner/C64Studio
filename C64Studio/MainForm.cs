@@ -5965,7 +5965,7 @@ namespace RetroDevStudio
         config.Assembler = Document.Element.AssemblerType;
       }
       config.AutoTruncateLiteralValues = StudioCore.Settings.ASMAutoTruncateLiteralValues;
-      config.CreatePreProcesseFile = CreatePreProcessedFile;
+      config.CreatePreProcessedFile = CreatePreProcessedFile;
       config.CreateRelocationFile = CreateRelocationFile;
       config.LibraryFiles = StudioCore.Settings.ASMLibraryPaths;
       config.InputFile = Document.FullPath;
@@ -7143,6 +7143,12 @@ namespace RetroDevStudio
         {
           return;
         }
+        if ( Doc.DocumentFilename.ToUpper().EndsWith( ".DUMP" ) )
+        {
+          // dump files are automatically reloaded
+          Doc.ReloadDocument();
+          return;
+        }
         m_ExternallyChangedDocuments.Add( Doc );
         BeginInvoke( new DocCallback( OnDocumentExternallyChanged ), new object[] { Doc } );
       }
@@ -7156,11 +7162,7 @@ namespace RetroDevStudio
             // TODO - prefer project files (need to be watched as well)
             foreach ( var changedDoc in m_FilesChanged.ChangedDocuments )
             {
-              int cursorLine = changedDoc.BaseDoc.CursorLine;
-              int charPos = changedDoc.BaseDoc.CursorPosInLine;
-              changedDoc.BaseDoc.LoadDocument();
-              //changedDoc.BaseDoc.SetModified();
-              changedDoc.BaseDoc.SetCursorToLine( cursorLine, charPos, true );
+              changedDoc.BaseDoc.ReloadDocument();
             }
           }
           m_FilesChanged.Dispose();

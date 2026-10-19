@@ -611,6 +611,10 @@ namespace RetroDevStudio
       switch ( Mode )
       {
         case TextCharMode.COMMODORE_TED_MULTICOLOR:
+          if ( ( CustomColor % 16 ) < 8 )
+          {
+            return GraphicTileMode.COMMODORE_TED_HIRES;
+          }
           return GraphicTileMode.COMMODORE_TED_MULTICOLOR;
         case TextCharMode.COMMODORE_TED_HIRES:
           return GraphicTileMode.COMMODORE_TED_HIRES;

@@ -100,22 +100,6 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void radioBackground_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.BACKGROUND;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioCharColor_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.CUSTOM_COLOR;
-      RaiseColorSelectedEvent();
-    }
-
-
-
     public override void ColorChanged( ColorType Color, int Value )
     {
       switch ( Color )

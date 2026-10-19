@@ -1,4 +1,4 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,6 @@ namespace RetroDevStudio.Controls
     public StudioCore                   Core = null;
     public ColorSettings                Colors = null;
 
-    protected ColorType                 _CurrentColorType;
     protected byte                      _CustomColor = 1;
     protected byte                      _SelectedCustomColor = 1;
 
@@ -37,7 +36,6 @@ namespace RetroDevStudio.Controls
     public event PaletteMappingModifiedHandler  PaletteMappingModified;
     public event PaletteMappingSelectedHandler  PaletteMappingSelected;
     public event ColorsModifiedHandler          ColorsModified;
-    public event ColorSelectedHandler           SelectedColorChanged;
     public event CustomColorSelectedHandler     SelectedCustomColorChanged;
     public event ExchangeColorsHandler          ColorsExchanged;
     public event MulticolorFlagChangedHandler   MulticolorFlagChanged;
@@ -54,20 +52,6 @@ namespace RetroDevStudio.Controls
     public virtual int PaletteOffset
     {
       get; set;
-    }
-
-
-
-    public virtual ColorType SelectedColor
-    {
-      get
-      {
-        return _CurrentColorType;
-      }
-      set
-      {
-        _CurrentColorType = value;
-      }
     }
 
 
@@ -172,16 +156,6 @@ namespace RetroDevStudio.Controls
 
 
 
-    protected void RaiseColorSelectedEvent()
-    {
-      if ( SelectedColorChanged != null )
-      {
-        SelectedColorChanged( _CurrentColorType );
-      }
-    }
-
-
-
     protected void RaisePaletteMappingSelectedEvent()
     {
       if ( PaletteMappingSelected != null )
@@ -238,21 +212,6 @@ namespace RetroDevStudio.Controls
 
     public virtual void PalettesChanged()
     {
-    }
-
-
-
-    public void ToggleSelectedColor()
-    {
-      if ( _AvailableColors.Count <= 1 )
-      {
-        return;
-      }
-      int   index = _AvailableColors.IndexOf( _CurrentColorType );
-      var newColor = _AvailableColors[( index + 1 ) % _AvailableColors.Count];
-      Debug.Log( $"choose from {_AvailableColors.Count} colors" );
-      SelectedColor = newColor;
-      Debug.Log( $"selected color is now {SelectedColor}" );
     }
 
 

@@ -1,4 +1,4 @@
-﻿
+
 namespace RetroDevStudio.Controls
 {
   partial class ColorSettingsHiResMega65
@@ -29,71 +29,66 @@ namespace RetroDevStudio.Controls
     /// </summary>
     private void InitializeComponent()
     {
-      this.comboBackground = new System.Windows.Forms.ComboBox();
-      this.comboCharColor = new System.Windows.Forms.ComboBox();
-      this.radioBackground = new System.Windows.Forms.RadioButton();
-      this.radioCharColor = new System.Windows.Forms.RadioButton();
-      this.SuspendLayout();
+      comboBackground = new System.Windows.Forms.ComboBox();
+      comboCharColor = new System.Windows.Forms.ComboBox();
+      label2 = new System.Windows.Forms.Label();
+      label1 = new System.Windows.Forms.Label();
+      SuspendLayout();
       // 
       // comboBackground
       // 
-      this.comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBackground.FormattingEnabled = true;
-      this.comboBackground.Location = new System.Drawing.Point(93, 11);
-      this.comboBackground.Name = "comboBackground";
-      this.comboBackground.Size = new System.Drawing.Size(71, 21);
-      this.comboBackground.TabIndex = 1;
-      this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
+      comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboBackground.FormattingEnabled = true;
+      comboBackground.Location = new System.Drawing.Point( 80, 11 );
+      comboBackground.Name = "comboBackground";
+      comboBackground.Size = new System.Drawing.Size( 71, 24 );
+      comboBackground.TabIndex = 1;
+      comboBackground.DrawItem +=  comboColor_DrawItem ;
+      comboBackground.SelectedIndexChanged +=  comboBackground_SelectedIndexChanged ;
       // 
       // comboCharColor
       // 
-      this.comboCharColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboCharColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboCharColor.FormattingEnabled = true;
-      this.comboCharColor.Location = new System.Drawing.Point(93, 38);
-      this.comboCharColor.Name = "comboCharColor";
-      this.comboCharColor.Size = new System.Drawing.Size(71, 21);
-      this.comboCharColor.TabIndex = 3;
-      this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboCharColor_DrawItem);
-      this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
+      comboCharColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboCharColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboCharColor.FormattingEnabled = true;
+      comboCharColor.Location = new System.Drawing.Point( 80, 38 );
+      comboCharColor.Name = "comboCharColor";
+      comboCharColor.Size = new System.Drawing.Size( 71, 24 );
+      comboCharColor.TabIndex = 3;
+      comboCharColor.DrawItem +=  comboCharColor_DrawItem ;
+      comboCharColor.SelectedIndexChanged +=  comboCharColor_SelectedIndexChanged ;
       // 
-      // radioBackground
+      // label2
       // 
-      this.radioBackground.AutoSize = true;
-      this.radioBackground.Location = new System.Drawing.Point(3, 12);
-      this.radioBackground.Name = "radioBackground";
-      this.radioBackground.Size = new System.Drawing.Size(83, 17);
-      this.radioBackground.TabIndex = 0;
-      this.radioBackground.TabStop = true;
-      this.radioBackground.Text = "Background";
-      this.radioBackground.UseVisualStyleBackColor = true;
-      this.radioBackground.CheckedChanged += new System.EventHandler(this.radioBackground_CheckedChanged);
+      label2.AutoSize = true;
+      label2.Location = new System.Drawing.Point( 0, 41 );
+      label2.Name = "label2";
+      label2.Size = new System.Drawing.Size( 67, 15 );
+      label2.TabIndex = 5;
+      label2.Text = "Char Color:";
       // 
-      // radioCharColor
+      // label1
       // 
-      this.radioCharColor.AutoSize = true;
-      this.radioCharColor.Location = new System.Drawing.Point(3, 39);
-      this.radioCharColor.Name = "radioCharColor";
-      this.radioCharColor.Size = new System.Drawing.Size(74, 17);
-      this.radioCharColor.TabIndex = 2;
-      this.radioCharColor.TabStop = true;
-      this.radioCharColor.Text = "Char Color";
-      this.radioCharColor.UseVisualStyleBackColor = true;
-      this.radioCharColor.CheckedChanged += new System.EventHandler(this.radioCharColor_CheckedChanged);
+      label1.AutoSize = true;
+      label1.Location = new System.Drawing.Point( 0, 14 );
+      label1.Name = "label1";
+      label1.Size = new System.Drawing.Size( 74, 15 );
+      label1.TabIndex = 6;
+      label1.Text = "Background:";
       // 
       // ColorSettingsHiResMega65
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.comboBackground);
-      this.Controls.Add(this.comboCharColor);
-      this.Controls.Add(this.radioBackground);
-      this.Controls.Add(this.radioCharColor);
-      this.Name = "ColorSettingsHiResMega65";
-      this.ResumeLayout(false);
-      this.PerformLayout();
+      AutoScaleDimensions = new System.Drawing.SizeF( 7F, 15F );
+      AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      Controls.Add( label2 );
+      Controls.Add( label1 );
+      Controls.Add( comboBackground );
+      Controls.Add( comboCharColor );
+      Name = "ColorSettingsHiResMega65";
+      Size = new System.Drawing.Size( 168, 185 );
+      ResumeLayout( false );
+      PerformLayout();
 
     }
 
@@ -101,7 +96,7 @@ namespace RetroDevStudio.Controls
 
     private System.Windows.Forms.ComboBox comboBackground;
     private System.Windows.Forms.ComboBox comboCharColor;
-    private System.Windows.Forms.RadioButton radioBackground;
-    private System.Windows.Forms.RadioButton radioCharColor;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.Label label1;
   }
 }

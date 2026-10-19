@@ -31,37 +31,6 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override ColorType SelectedColor
-    {
-      get
-      {
-        return _CurrentColorType;
-      }
-      set
-      {
-        switch ( value )
-        {
-          case ColorType.BACKGROUND:
-            radioBackground.Checked = true;
-            break;
-          case ColorType.MULTICOLOR_1:
-            radioMultiColor1.Checked = true;
-            break;
-          case ColorType.MULTICOLOR_2:
-            radioMulticolor2.Checked = true;
-            break;
-          case ColorType.CUSTOM_COLOR:
-            radioCharColor.Checked = true;
-            break;
-          default:
-            return;
-        }
-        _CurrentColorType = value;
-      }
-    }
-
-
-
     public ColorSettingsMCCharacter() :
       base( null, null, 0 )
     { 
@@ -90,8 +59,6 @@ namespace RetroDevStudio.Controls
       comboMulticolor1.SelectedIndex = Colors.MultiColor1 % comboMulticolor1.Items.Count;
       comboMulticolor2.SelectedIndex = Colors.MultiColor2 % comboMulticolor2.Items.Count;
       comboCharColor.SelectedIndex = CustomColor % comboCharColor.Items.Count;
-
-      radioCharColor.Checked = true;
     }
 
 
@@ -117,7 +84,6 @@ namespace RetroDevStudio.Controls
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.BackgroundColor = comboBackground.SelectedIndex;
-      radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.BACKGROUND );
     }
 
@@ -126,7 +92,6 @@ namespace RetroDevStudio.Controls
     private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
-      radioMultiColor1.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_1 );
     }
 
@@ -135,7 +100,6 @@ namespace RetroDevStudio.Controls
     private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
-      radioMulticolor2.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_2 );
     }
 
@@ -144,7 +108,6 @@ namespace RetroDevStudio.Controls
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
       CustomColor = (byte)comboCharColor.SelectedIndex;
-      radioCharColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
 
@@ -153,38 +116,6 @@ namespace RetroDevStudio.Controls
     private void btnExchangeColors_Click( DecentForms.ControlBase Sender )
     {
       contextMenuExchangeColors.Show( btnExchangeColors, new Point( 0, btnExchangeColors.Height ) );
-    }
-
-
-
-    private void radioBackground_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.BACKGROUND;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioMultiColor1_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.MULTICOLOR_1;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioMulticolor2_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.MULTICOLOR_2;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioCharColor_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.CUSTOM_COLOR;
-      RaiseColorSelectedEvent();
     }
 
 

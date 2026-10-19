@@ -29,146 +29,141 @@ namespace RetroDevStudio.Controls
     /// </summary>
     private void InitializeComponent()
     {
-      this.comboBGColor4 = new System.Windows.Forms.ComboBox();
-      this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
-      this.comboBackground = new System.Windows.Forms.ComboBox();
-      this.comboMulticolor1 = new System.Windows.Forms.ComboBox();
-      this.comboCharColor = new System.Windows.Forms.ComboBox();
-      this.radioBackground = new System.Windows.Forms.RadioButton();
-      this.radioCharColor = new System.Windows.Forms.RadioButton();
-      this.label3 = new System.Windows.Forms.Label();
-      this.label2 = new System.Windows.Forms.Label();
-      this.label1 = new System.Windows.Forms.Label();
-      this.SuspendLayout();
+      comboBGColor4 = new System.Windows.Forms.ComboBox();
+      comboMulticolor2 = new System.Windows.Forms.ComboBox();
+      comboBackground = new System.Windows.Forms.ComboBox();
+      comboMulticolor1 = new System.Windows.Forms.ComboBox();
+      comboCharColor = new System.Windows.Forms.ComboBox();
+      label3 = new System.Windows.Forms.Label();
+      label2 = new System.Windows.Forms.Label();
+      label1 = new System.Windows.Forms.Label();
+      label4 = new System.Windows.Forms.Label();
+      label5 = new System.Windows.Forms.Label();
+      SuspendLayout();
       // 
       // comboBGColor4
       // 
-      this.comboBGColor4.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBGColor4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBGColor4.FormattingEnabled = true;
-      this.comboBGColor4.Location = new System.Drawing.Point(93, 92);
-      this.comboBGColor4.Name = "comboBGColor4";
-      this.comboBGColor4.Size = new System.Drawing.Size(71, 21);
-      this.comboBGColor4.TabIndex = 7;
-      this.comboBGColor4.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboBGColor4.SelectedIndexChanged += new System.EventHandler(this.comboBGColor4_SelectedIndexChanged);
+      comboBGColor4.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboBGColor4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboBGColor4.FormattingEnabled = true;
+      comboBGColor4.Location = new System.Drawing.Point( 84, 92 );
+      comboBGColor4.Name = "comboBGColor4";
+      comboBGColor4.Size = new System.Drawing.Size( 71, 24 );
+      comboBGColor4.TabIndex = 7;
+      comboBGColor4.DrawItem +=  comboColor_DrawItem ;
+      comboBGColor4.SelectedIndexChanged +=  comboBGColor4_SelectedIndexChanged ;
       // 
       // comboMulticolor2
       // 
-      this.comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor2.FormattingEnabled = true;
-      this.comboMulticolor2.Location = new System.Drawing.Point(93, 65);
-      this.comboMulticolor2.Name = "comboMulticolor2";
-      this.comboMulticolor2.Size = new System.Drawing.Size(71, 21);
-      this.comboMulticolor2.TabIndex = 5;
-      this.comboMulticolor2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor2.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
+      comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboMulticolor2.FormattingEnabled = true;
+      comboMulticolor2.Location = new System.Drawing.Point( 84, 65 );
+      comboMulticolor2.Name = "comboMulticolor2";
+      comboMulticolor2.Size = new System.Drawing.Size( 71, 24 );
+      comboMulticolor2.TabIndex = 5;
+      comboMulticolor2.DrawItem +=  comboColor_DrawItem ;
+      comboMulticolor2.SelectedIndexChanged +=  comboMulticolor2_SelectedIndexChanged ;
       // 
       // comboBackground
       // 
-      this.comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBackground.FormattingEnabled = true;
-      this.comboBackground.Location = new System.Drawing.Point(93, 11);
-      this.comboBackground.Name = "comboBackground";
-      this.comboBackground.Size = new System.Drawing.Size(71, 21);
-      this.comboBackground.TabIndex = 1;
-      this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
+      comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboBackground.FormattingEnabled = true;
+      comboBackground.Location = new System.Drawing.Point( 84, 11 );
+      comboBackground.Name = "comboBackground";
+      comboBackground.Size = new System.Drawing.Size( 71, 24 );
+      comboBackground.TabIndex = 1;
+      comboBackground.DrawItem +=  comboColor_DrawItem ;
+      comboBackground.SelectedIndexChanged +=  comboBackground_SelectedIndexChanged ;
       // 
       // comboMulticolor1
       // 
-      this.comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor1.FormattingEnabled = true;
-      this.comboMulticolor1.Location = new System.Drawing.Point(93, 38);
-      this.comboMulticolor1.Name = "comboMulticolor1";
-      this.comboMulticolor1.Size = new System.Drawing.Size(71, 21);
-      this.comboMulticolor1.TabIndex = 3;
-      this.comboMulticolor1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor1.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
+      comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboMulticolor1.FormattingEnabled = true;
+      comboMulticolor1.Location = new System.Drawing.Point( 84, 38 );
+      comboMulticolor1.Name = "comboMulticolor1";
+      comboMulticolor1.Size = new System.Drawing.Size( 71, 24 );
+      comboMulticolor1.TabIndex = 3;
+      comboMulticolor1.DrawItem +=  comboColor_DrawItem ;
+      comboMulticolor1.SelectedIndexChanged +=  comboMulticolor1_SelectedIndexChanged ;
       // 
       // comboCharColor
       // 
-      this.comboCharColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboCharColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboCharColor.FormattingEnabled = true;
-      this.comboCharColor.Location = new System.Drawing.Point(93, 119);
-      this.comboCharColor.Name = "comboCharColor";
-      this.comboCharColor.Size = new System.Drawing.Size(71, 21);
-      this.comboCharColor.TabIndex = 9;
-      this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboCharColor_DrawItem);
-      this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
-      // 
-      // radioBackground
-      // 
-      this.radioBackground.AutoSize = true;
-      this.radioBackground.Location = new System.Drawing.Point(4, 12);
-      this.radioBackground.Name = "radioBackground";
-      this.radioBackground.Size = new System.Drawing.Size(83, 17);
-      this.radioBackground.TabIndex = 0;
-      this.radioBackground.TabStop = true;
-      this.radioBackground.Text = "Background";
-      this.radioBackground.UseVisualStyleBackColor = true;
-      this.radioBackground.CheckedChanged += new System.EventHandler(this.radioBackground_CheckedChanged);
-      // 
-      // radioCharColor
-      // 
-      this.radioCharColor.AutoSize = true;
-      this.radioCharColor.Location = new System.Drawing.Point(4, 120);
-      this.radioCharColor.Name = "radioCharColor";
-      this.radioCharColor.Size = new System.Drawing.Size(74, 17);
-      this.radioCharColor.TabIndex = 8;
-      this.radioCharColor.TabStop = true;
-      this.radioCharColor.Text = "Char Color";
-      this.radioCharColor.UseVisualStyleBackColor = true;
-      this.radioCharColor.CheckedChanged += new System.EventHandler(this.radioCharColor_CheckedChanged);
+      comboCharColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      comboCharColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboCharColor.FormattingEnabled = true;
+      comboCharColor.Location = new System.Drawing.Point( 84, 119 );
+      comboCharColor.Name = "comboCharColor";
+      comboCharColor.Size = new System.Drawing.Size( 71, 24 );
+      comboCharColor.TabIndex = 9;
+      comboCharColor.DrawItem +=  comboCharColor_DrawItem ;
+      comboCharColor.SelectedIndexChanged +=  comboCharColor_SelectedIndexChanged ;
       // 
       // label3
       // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(20, 95);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(58, 13);
-      this.label3.TabIndex = 11;
-      this.label3.Text = "BGColor 4:";
+      label3.AutoSize = true;
+      label3.Location = new System.Drawing.Point( 4, 95 );
+      label3.Name = "label3";
+      label3.Size = new System.Drawing.Size( 63, 15 );
+      label3.TabIndex = 11;
+      label3.Text = "BGColor 4:";
       // 
       // label2
       // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(20, 68);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(58, 13);
-      this.label2.TabIndex = 12;
-      this.label2.Text = "BGColor 3:";
+      label2.AutoSize = true;
+      label2.Location = new System.Drawing.Point( 4, 68 );
+      label2.Name = "label2";
+      label2.Size = new System.Drawing.Size( 63, 15 );
+      label2.TabIndex = 12;
+      label2.Text = "BGColor 3:";
       // 
       // label1
       // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(20, 41);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(58, 13);
-      this.label1.TabIndex = 13;
-      this.label1.Text = "BGColor 2:";
+      label1.AutoSize = true;
+      label1.Location = new System.Drawing.Point( 4, 41 );
+      label1.Name = "label1";
+      label1.Size = new System.Drawing.Size( 63, 15 );
+      label1.TabIndex = 13;
+      label1.Text = "BGColor 2:";
       // 
-      // ColorSettingsECMMega65
+      // label4
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.label3);
-      this.Controls.Add(this.label2);
-      this.Controls.Add(this.label1);
-      this.Controls.Add(this.comboBGColor4);
-      this.Controls.Add(this.comboMulticolor2);
-      this.Controls.Add(this.comboBackground);
-      this.Controls.Add(this.comboMulticolor1);
-      this.Controls.Add(this.comboCharColor);
-      this.Controls.Add(this.radioBackground);
-      this.Controls.Add(this.radioCharColor);
-      this.Name = "ColorSettingsECMMega65";
-      this.ResumeLayout(false);
-      this.PerformLayout();
+      label4.AutoSize = true;
+      label4.Location = new System.Drawing.Point( 4, 14 );
+      label4.Name = "label4";
+      label4.Size = new System.Drawing.Size( 74, 15 );
+      label4.TabIndex = 13;
+      label4.Text = "Background:";
+      // 
+      // label5
+      // 
+      label5.AutoSize = true;
+      label5.Location = new System.Drawing.Point( 4, 122 );
+      label5.Name = "label5";
+      label5.Size = new System.Drawing.Size( 67, 15 );
+      label5.TabIndex = 13;
+      label5.Text = "Char Color:";
+      // 
+      // ColorSettingsECMTED
+      // 
+      AutoScaleDimensions = new System.Drawing.SizeF( 7F, 15F );
+      AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      Controls.Add( label3 );
+      Controls.Add( label2 );
+      Controls.Add( label5 );
+      Controls.Add( label4 );
+      Controls.Add( label1 );
+      Controls.Add( comboBGColor4 );
+      Controls.Add( comboMulticolor2 );
+      Controls.Add( comboBackground );
+      Controls.Add( comboMulticolor1 );
+      Controls.Add( comboCharColor );
+      Name = "ColorSettingsECMTED";
+      Size = new System.Drawing.Size( 168, 185 );
+      ResumeLayout( false );
+      PerformLayout();
 
     }
 
@@ -177,12 +172,12 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.ComboBox comboBackground;
     private System.Windows.Forms.ComboBox comboMulticolor1;
     private System.Windows.Forms.ComboBox comboCharColor;
-    private System.Windows.Forms.RadioButton radioBackground;
-    private System.Windows.Forms.RadioButton radioCharColor;
     private System.Windows.Forms.ComboBox comboMulticolor2;
     private System.Windows.Forms.ComboBox comboBGColor4;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.Label label5;
   }
 }

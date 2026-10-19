@@ -1,4 +1,4 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -569,6 +569,11 @@ namespace RetroDevStudio.Formats
       {
         return false;
       }
+      if ( Colors.CharMode == TextCharMode.UNKNOWN )
+      {
+        Colors.CharMode = Mode;
+      }
+
       return true;
     }
 

@@ -62,7 +62,15 @@ namespace RetroDevStudio.Controls
         int x = i / _NumColorsPerColumn;
         int y = i % _NumColorsPerColumn;
 
-        panelCharColors.DisplayPage.Box( x * 8, y * 8, 8, 8, _Colors.Palette.ColorValues[_Colors.PaletteOffset + _ColorIndices[i].ColorIndex] );
+        // passt für alle
+        int colorIndex = _Colors.PaletteOffset + _ColorIndices[i].ColorIndex;
+        if ( _Colors.CharMode == TextCharMode.NES )
+        {
+          // passt für NES (ungefähr)
+          colorIndex = _Colors.PaletteIndexMapping[_Colors.PaletteMappingIndex][i];
+        }
+
+        panelCharColors.DisplayPage.Box( x * 8, y * 8, 8, 8, _Colors.Palette.ColorValues[colorIndex] );
       }
       panelCharColors.Invalidate();
     }

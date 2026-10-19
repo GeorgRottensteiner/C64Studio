@@ -3253,7 +3253,7 @@ namespace RetroDevStudio.Parser.BASIC
       AssembledOutput.OriginalAssemblyStartAddress  = startAddress;
       AssembledOutput.OriginalAssemblySize          = originalSize;
 
-      if ( Config.CreatePreProcesseFile )
+      if ( Config.CreatePreProcessedFile )
       {
         CreatePreProcessedFile( Config.InputFile, _Lines, m_ASMFileInfo );
       }

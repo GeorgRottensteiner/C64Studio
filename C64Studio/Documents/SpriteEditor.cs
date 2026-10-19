@@ -502,7 +502,7 @@ namespace RetroDevStudio.Documents
         if ( m_ButtonReleased )
         {
           // middle button toggles selected color
-          _ColorSettingsDlg.ToggleSelectedColor();
+          _ColorPalette.ToggleSelectedColor();
           m_ButtonReleased = false;
         }
         return;
@@ -3362,14 +3362,11 @@ namespace RetroDevStudio.Documents
           break;
       }
       panelColorSettings.Controls.Add( _ColorSettingsDlg );
-      _ColorSettingsDlg.SelectedColorChanged += _ColorSettingsDlg_SelectedColorChanged;
       _ColorSettingsDlg.ColorsModified += _ColorSettingsDlg_ColorsModified;
       _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;
       _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
       _ColorSettingsDlg.PaletteSelected += _ColorSettingsDlg_PaletteSelected;
       _ColorSettingsDlg.MulticolorFlagChanged += _ColorSettingsDlg_MulticolorFlagChanged;
-
-      _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
     }
 
 
@@ -3494,7 +3491,6 @@ namespace RetroDevStudio.Documents
 
     private void _ColorPalette_SelectedColorChanged( ColorEntry color )
     {
-      _ColorSettingsDlg.SelectedColor       = color.Type;
       _ColorSettingsDlg.SelectedCustomColor = color.ColorIndex;
     }
 

@@ -1,15 +1,15 @@
-using RetroDevStudio.Types;
+using GR.Image;
 using GR.Memory;
+using RetroDevStudio.Controls;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using System.Drawing;
-using RetroDevStudio.Controls;
-using System.Linq;
-using GR.Image;
-using System.ComponentModel;
 
 namespace RetroDevStudio.Documents
 {
@@ -1244,7 +1244,7 @@ namespace RetroDevStudio.Documents
         }
 
         _PopupList.MouseClick += _PopupList_MouseClick;
-        ResizeListBoxToContent();
+        UtilForms.ResizeListBoxToContent( _PopupList );
 
         _MacroPopup = new PopupContainer( _PopupList );
         _MacroPopup.Location = newLocation;
@@ -1260,7 +1260,7 @@ namespace RetroDevStudio.Documents
         {
           _PopupList.Items.Add( item );
         }
-        ResizeListBoxToContent();
+        UtilForms.ResizeListBoxToContent( _PopupList );
         _PopupList.EndUpdate();
         _MacroPopup.Location = newLocation;
       }
@@ -1355,38 +1355,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void ResizeListBoxToContent()
-    {
-      var g = _PopupList.CreateGraphics();
-
-      int     maxWidth = 0;
-      int     maxHeight = _PopupList.Items.Count * _PopupList.Font.Height;
-
-      var currentScreen = Screen.FromHandle( _PopupList.Handle );
-      if ( maxHeight > currentScreen.Bounds.Height )
-      {
-        maxHeight = currentScreen.Bounds.Height;
-      }
-      if ( maxHeight > 160 )
-      {
-        maxHeight = 160;
-      }
-
-      foreach ( var item in _PopupList.Items )
-      {
-        int   itemWidth = (int)g.MeasureString( item.Text, _PopupList.Font ).Width;
-
-        if ( itemWidth > maxWidth )
-        {
-          maxWidth = itemWidth;
-        }
-      }
-
-      _PopupList.ClientSize = new Size( _PopupList.ClientSize.Width, maxHeight );
-    }
-
-
-
     private void Edit_HandleDestroyed( object sender, EventArgs e )
     {
       ClosePopup();
@@ -1445,6 +1413,21 @@ namespace RetroDevStudio.Documents
 
     protected virtual void MarkModifiedLines( List<int> list )
     {
+    }
+
+
+
+    public void ReloadDocument()
+    {
+      if ( InvokeRequired )
+      {
+        Invoke( new RetroDevStudio.MainForm.ParameterLessCallback( ReloadDocument ) );
+        return;
+      }
+      int cursorLine  = CursorLine;
+      int charPos     = CursorPosInLine;
+      LoadDocument();
+      SetCursorToLine( cursorLine, charPos, true );
     }
 
 

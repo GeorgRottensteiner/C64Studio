@@ -11178,7 +11178,7 @@ namespace RetroDevStudio.Parser
       RemoveScopedDisabledWarnings();
 
       // create preprocessed file even with errors (might be the reason to get the preprocessed file in the first place)
-      if ( Config.CreatePreProcesseFile )
+      if ( Config.CreatePreProcessedFile )
       {
         CreatePreProcessedFile( Config.InputFile, lines, m_ASMFileInfo );
       }

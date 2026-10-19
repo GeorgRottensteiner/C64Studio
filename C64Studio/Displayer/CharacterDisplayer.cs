@@ -1,9 +1,9 @@
-using RetroDevStudio.Controls;
 using RetroDevStudio;
+using RetroDevStudio.Controls;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Security.Policy;
+using System.Text;
 
 
 
@@ -48,6 +48,20 @@ namespace RetroDevStudio.Displayer
     public static void DisplayMultiColorChar( Types.GraphicTile Tile, int BGColor, int MColor1, int MColor2, int CharColor, CustomDrawControlContext Context, int X, int Y )
     {
       DisplayMultiColorChar( Tile.Data, Tile.Width, Tile.Height, BGColor, MColor1, MColor2, CharColor, Context, X, Y );
+    }
+
+
+
+    public static void DisplayMultiColorCharTED( Types.GraphicTile Tile, int BGColor, int MColor1, int MColor2, int CharColor, CustomDrawControlContext Context, int X, int Y )
+    {
+      if ( ( CharColor % 16 ) < 8 )
+      {
+        DisplayHiResChar( Tile, BGColor, CharColor, Context );
+      }
+      else
+      {
+        DisplayMultiColorChar( Tile.Data, Tile.Width, Tile.Height, BGColor, MColor1, MColor2, CharColor, Context, X, Y );
+      }
     }
 
 
@@ -235,6 +249,20 @@ namespace RetroDevStudio.Displayer
     public static void DisplayMultiColorChar( Types.GraphicTile Tile, GR.Image.Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       DisplayMultiColorChar( Tile.Data, Tile.Width, Tile.Height, Palette, BGColor, MColor1, MColor2, CharColor, TargetImage, X, Y );
+    }
+
+
+
+    public static void DisplayMultiColorCharTED( Types.GraphicTile Tile, GR.Image.Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    {
+      if ( ( CharColor % 16 ) <= 8 )
+      {
+        DisplayHiResChar( Tile.Data, Tile.Width, Tile.Height, Palette, BGColor, CharColor, TargetImage, X, Y );
+      }
+      else
+      {
+        DisplayMultiColorChar( Tile.Data, Tile.Width, Tile.Height, Palette, BGColor, MColor1, MColor2, CharColor, TargetImage, X, Y );
+      }
     }
 
 
@@ -467,10 +495,13 @@ namespace RetroDevStudio.Displayer
         }
         DisplayHiResChar( origChar.Tile, ecmBGColor, color, Context );
       }
-      else if ( ( mode == TextCharMode.COMMODORE_MULTICOLOR )
-      ||        ( mode == TextCharMode.COMMODORE_TED_MULTICOLOR ) )
+      else if ( mode == TextCharMode.COMMODORE_MULTICOLOR )
       {
         DisplayMultiColorChar( Char.Tile, bgColor, mColor1, mColor2, color, Context, 0, 0 );
+      }
+      else if ( mode == TextCharMode.COMMODORE_TED_MULTICOLOR )
+      {
+        DisplayMultiColorCharTED( Char.Tile, bgColor, mColor1, mColor2, color, Context, 0, 0 );
       }
       else if ( ( mode == TextCharMode.COMMODORE_HIRES )
       ||        ( mode == TextCharMode.MEGA65_HIRES )
@@ -563,10 +594,13 @@ namespace RetroDevStudio.Displayer
         }
         DisplayHiResChar( origChar.Tile, palette, altBGColor, color, TargetImage, X, Y );
       }
-      else if ( ( mode == TextCharMode.COMMODORE_MULTICOLOR )
-      ||        ( mode == TextCharMode.COMMODORE_TED_MULTICOLOR ) )
+      else if ( mode == TextCharMode.COMMODORE_MULTICOLOR )
       {
         DisplayMultiColorChar( Char.Tile, palette, bgColor, mColor1, mColor2, color, TargetImage, X, Y );
+      }
+      else if ( mode == TextCharMode.COMMODORE_TED_MULTICOLOR )
+      {
+        DisplayMultiColorCharTED( Char.Tile, palette, bgColor, mColor1, mColor2, color, TargetImage, X, Y );
       }
       else if ( ( mode == TextCharMode.COMMODORE_HIRES )
       ||        ( mode == TextCharMode.MEGA65_HIRES )

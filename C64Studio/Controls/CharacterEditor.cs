@@ -11,10 +11,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+
+
 
 namespace RetroDevStudio.Controls
 {
@@ -29,7 +32,6 @@ namespace RetroDevStudio.Controls
     private ushort                      m_CurrentChar = 0;
     private ushort                      m_CurrentColor = 1;
     private int                         m_CurrentPaletteMapping = 0;
-    private ColorType                   m_CurrentColorType = ColorType.CUSTOM_COLOR;
     private bool                        m_ButtonReleased = false;
     public StudioCore                   Core = null;
     public Undo.UndoManager             UndoManager = null;
@@ -45,6 +47,7 @@ namespace RetroDevStudio.Controls
     private bool                        _AllowModeChange = true;
 
     private ColorSettingsBase           _ColorSettingsDlg = null;
+    private ColorPaletteBase            _ColorPalette = null;
     private ColorPickerCharsBase        _ColorPickerDlg = null;
 
     private int                         _NumColorsInColorSelector = 16;
@@ -54,6 +57,8 @@ namespace RetroDevStudio.Controls
 
     private int                         m_CharacterEditorOrigWidth = -1;
     private int                         m_CharacterEditorOrigHeight = -1;
+
+    private Dictionary<Control,int>     m_XOffsetOfControlsToTheRightOfPalette = new Dictionary<Control, int>();
 
 
     public bool AllowModeChange
@@ -116,6 +121,7 @@ namespace RetroDevStudio.Controls
       ApplyPalette();
       ChangeColorSettingsDialog();
       ChangeColorPickerDialog();
+      ChangeColorPalette();
       OnPaletteChanged();
 
       m_CharacterEditorOrigWidth = canvasEditor.Width;
@@ -129,6 +135,7 @@ namespace RetroDevStudio.Controls
         }
       }
       comboCharsetMode.SelectedIndex = 0;
+      UtilForms.ResizeComboDropDownListToContent( comboCharsetMode );
 
       panelCharacters.SelectedIndex = 0;
 
@@ -145,7 +152,206 @@ namespace RetroDevStudio.Controls
       }
       btnPaste.Enabled = Clipboard.ContainsImage() || Clipboard.ContainsData( "RetroDevStudio.ImageList" );
 
+      AddControl( panelColorSettings );
+      AddControl( labelCharNo );
+      AddControl( labelCharsetMode );
+      AddControl( comboCharsetMode );
+      AddControl( labelCategory );
+      AddControl( comboCategories );
+      AddControl( panelCharacters );
+      AddControl( picturePlayground );
+
       DoNotUpdateFromControls = false;
+    }
+
+
+
+    private void AddControl( Control control )
+    {
+      m_XOffsetOfControlsToTheRightOfPalette.Add( control, control.Left - panelColorPalette.Right );
+    }
+
+
+
+    private byte DetermineListIndex( List<ColorEntry> entries, ColorEntry previousSelectedColor )
+    {
+      var entry = entries.FirstOrDefault( e => ( e.Type == previousSelectedColor.Type ) && ( e.ColorIndex == previousSelectedColor.ColorIndex ) );
+      if ( entry == null )
+      {
+        entry = entries.FirstOrDefault( e => e.Type == previousSelectedColor.Type );
+        if ( entry == null )
+        {
+          entry = entries.FirstOrDefault( e => e.Type == ColorType.CUSTOM_COLOR );
+        }
+      }
+      return (byte)entries.IndexOf( entry );
+    }
+
+
+
+    public void ChangeColorPalette()
+    {
+      var previousSelectedColor = new ColorEntry();
+
+      if ( _ColorPalette != null )
+      {
+        previousSelectedColor = _ColorPalette.SelectedColor;
+        panelColorPalette.Controls.Remove( _ColorPalette );
+        _ColorPalette.Dispose();
+        _ColorPalette = null;
+      }
+
+      var curChar = m_Project.Characters[m_CurrentChar];
+
+      switch ( m_Project.Mode )
+      {
+        case TextCharMode.COMMODORE_TED_ECM:
+        case TextCharMode.COMMODORE_ECM:
+        case TextCharMode.MEGA65_ECM:
+          {
+            int bgColor = m_Project.Colors.BackgroundColor;
+            switch ( m_CurrentChar / 64 )
+            {
+              case 1:
+                bgColor = m_Project.Colors.MultiColor1;
+                break;
+              case 2:
+                bgColor = m_Project.Colors.MultiColor2;
+                break;
+              case 3:
+                bgColor = m_Project.Colors.BGColor4;
+                break;
+            }
+
+            var palColors = new ColorSettings( m_Project.Colors );
+            palColors.Palette.ColorValues[0] = m_Project.Colors.Palette.ColorValues[bgColor];
+
+            var entries = new List<ColorEntry>()
+                    {
+                      new ColorEntry( ColorType.BACKGROUND, (byte)bgColor ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, (byte)curChar.Tile.CustomColor )
+                    };
+            _ColorPalette = new ColorPaletteRaster( Core, m_Project.Colors, entries, DetermineListIndex( entries, previousSelectedColor ) );
+          }
+          break;
+        case TextCharMode.COMMODORE_HIRES:
+        case TextCharMode.COMMODORE_TED_HIRES:
+        default:
+          {
+            var entries = new List<ColorEntry>()
+                    {
+                      new ColorEntry( ColorType.BACKGROUND, (byte)m_Project.Colors.BackgroundColor ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, (byte)curChar.Tile.CustomColor )
+                    };
+            _ColorPalette = new ColorPaletteRaster( Core, m_Project.Colors, entries, DetermineListIndex( entries, previousSelectedColor ) );
+          }
+          break;
+        case TextCharMode.VIC20:
+        case TextCharMode.VIC20_8X16:
+          if ( curChar.Tile.CustomColor >= 8 )
+          {
+            var entries = new List<ColorEntry>()
+                    {
+                      new ColorEntry( ColorType.BACKGROUND, (byte)m_Project.Colors.BackgroundColor ),
+                      new ColorEntry( ColorType.MULTICOLOR_1, (byte)m_Project.Colors.MultiColor1 ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, (byte)m_Project.Colors.MultiColor2 ),
+                      new ColorEntry( ColorType.MULTICOLOR_2, (byte)( curChar.Tile.CustomColor % 8 ) )
+                    };
+            _ColorPalette = new ColorPaletteRaster( Core, m_Project.Colors, entries, DetermineListIndex( entries, previousSelectedColor ) );
+          }
+          else
+          {
+            var entries = new List<ColorEntry>()
+                    {
+                      new ColorEntry( ColorType.BACKGROUND, (byte)m_Project.Colors.BackgroundColor ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, (byte)curChar.Tile.CustomColor )
+                    };
+            _ColorPalette = new ColorPaletteRaster( Core, m_Project.Colors, entries, DetermineListIndex( entries, previousSelectedColor ) );
+          }
+          break;
+        case TextCharMode.COMMODORE_MULTICOLOR:
+        case TextCharMode.COMMODORE_TED_MULTICOLOR:
+          if ( ( curChar.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS )
+          ||   ( curChar.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16 )
+          ||   ( curChar.Tile.Mode == GraphicTileMode.COMMODORE_TED_MULTICOLOR ) )
+          {
+            var entries = new List<ColorEntry>()
+                    {
+                      new ColorEntry( ColorType.BACKGROUND, (byte)m_Project.Colors.BackgroundColor ),
+                      new ColorEntry( ColorType.MULTICOLOR_1, (byte)m_Project.Colors.MultiColor1 ),
+                      new ColorEntry( ColorType.MULTICOLOR_2, (byte)m_Project.Colors.MultiColor2 ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, (byte)( curChar.Tile.CustomColor % 8 ) )
+                    };
+            _ColorPalette = new ColorPaletteRaster( Core, m_Project.Colors, entries, DetermineListIndex( entries, previousSelectedColor ) );
+          }
+          else
+          {
+            var entries = new List<ColorEntry>()
+                    {
+                      new ColorEntry( ColorType.BACKGROUND, (byte)m_Project.Colors.BackgroundColor ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, (byte)curChar.Tile.CustomColor )
+                    };
+            _ColorPalette = new ColorPaletteRaster( Core, m_Project.Colors, entries, DetermineListIndex( entries, previousSelectedColor ) );
+          }
+          break;
+        case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_FCM_16BIT:
+          {
+            var entries = new List<ColorEntry>();
+            for ( int i = 0; i < 256; ++i )
+            {
+              entries.Add( new ColorEntry( ColorType.CUSTOM_COLOR, (byte)i ) );
+            }
+            _ColorPalette = new ColorPaletteRaster( Core, m_Project.Colors, entries, DetermineListIndex( entries, previousSelectedColor ), 8 );
+          }
+          break;
+        case TextCharMode.MEGA65_NCM:
+          {
+            var entries = new List<ColorEntry>();
+            for ( int i = 0; i < 16; ++i )
+            {
+              entries.Add( new ColorEntry( ColorType.CUSTOM_COLOR, (byte)i ) );
+            }
+            _ColorPalette = new ColorPaletteRaster( Core, m_Project.Colors, entries, DetermineListIndex( entries, previousSelectedColor ), 2 );
+          }
+          break;
+        case TextCharMode.NES:
+          {
+            int paletteMappingIndex = m_Project.Colors.PaletteMappingIndex;
+
+            var palColors = new ColorSettings( m_Project.Colors );
+            for ( int i = 0; i < 4; ++i )
+            {
+              palColors.Palette.ColorValues[i] = m_Project.Colors.Palette.ColorValues[m_Project.Colors.PaletteIndexMapping[paletteMappingIndex][i]];
+            }
+
+            var entries = new List<ColorEntry>()
+                    {
+                      new ColorEntry( ColorType.CUSTOM_COLOR, 0 ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, 1 ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, 2 ),
+                      new ColorEntry( ColorType.CUSTOM_COLOR, 3 )
+                    };
+
+            _ColorPalette = new ColorPaletteRaster( Core, palColors, entries, DetermineListIndex( entries, previousSelectedColor ) );
+          }
+          break;
+          /*
+        default:
+          Debug.Log( "ChangeColorSettingsDialog unsupported mode " + m_SpriteProject.Mode );
+          break;*/
+      }
+      _ColorPalette.SelectedColorChanged += _ColorPalette_SelectedColorChanged;
+      panelColorPalette.Size = _ColorPalette.Size;
+      panelColorPalette.Controls.Add( _ColorPalette );
+      _ColorPalette.Redraw();
+    }
+
+
+
+    private void _ColorPalette_SelectedColorChanged( ColorEntry color )
+    {
+      _ColorSettingsDlg.SelectedCustomColor = color.ColorIndex;
     }
 
 
@@ -187,8 +393,8 @@ namespace RetroDevStudio.Controls
     {
       if ( _ColorPickerDlg != null )
       {
-        _ColorPickerDlg.SelectedColor          = m_CurrentColor;
-        _ColorPickerDlg.SelectedChar           = m_CurrentChar;
+        _ColorPickerDlg.SelectedColor = m_CurrentColor;
+        _ColorPickerDlg.SelectedChar = m_CurrentChar;
         _ColorPickerDlg.SelectedPaletteMapping = m_CurrentPaletteMapping;
         _ColorPickerDlg.Redraw();
       }
@@ -221,7 +427,7 @@ namespace RetroDevStudio.Controls
       get
       {
         return ( ( canvasEditor.Focused )
-            ||   ( panelCharacters.Focused ) );
+            || ( panelCharacters.Focused ) );
       }
     }
 
@@ -236,7 +442,7 @@ namespace RetroDevStudio.Controls
       }
 
       var clipList = new ClipboardImageList();
-      clipList.Mode   = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, 8 );
+      clipList.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, 8 );
       clipList.Colors = m_Project.Colors;
       clipList.ColumnBased = panelCharacters.IsSelectionColumnBased;
 
@@ -250,8 +456,8 @@ namespace RetroDevStudio.Controls
         var entry = new ClipboardImageList.Entry();
         var character = m_Project.Characters[indexToUse];
 
-        entry.Tile        = character.Tile;
-        entry.Index       = indexToUse;
+        entry.Tile = character.Tile;
+        entry.Index = indexToUse;
 
         clipList.Entries.Add( entry );
       }
@@ -332,7 +538,7 @@ namespace RetroDevStudio.Controls
           int copyWidth = Math.Max( 8, entry.Tile.Width );
           int copyHeight = Math.Max( 8, entry.Tile.Height );
 
-          
+
           for ( int x = 0; x < copyWidth; x += Lookup.PixelWidth( targetTile.Mode ) )
           {
             for ( int y = 0; y < copyHeight; ++y )
@@ -538,7 +744,7 @@ namespace RetroDevStudio.Controls
 
       bool currentCharChanged = false;
 
-      foreach ( var charIndex in modifiedChars  )
+      foreach ( var charIndex in modifiedChars )
       {
         RebuildAffectedChar( charIndex );
         if ( m_CurrentChar == charIndex )
@@ -553,6 +759,7 @@ namespace RetroDevStudio.Controls
         _ColorSettingsDlg.CustomColor = (byte)m_Project.Characters[m_CurrentChar].Tile.CustomColor;
 
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
+        ChangeColorPalette();
       }
 
       RefreshCategoryCounts();
@@ -569,11 +776,6 @@ namespace RetroDevStudio.Controls
       {
         return;
       }
-      if ( CharIndex == 0 )
-      {
-        //Debug.Log( "Chareditor RebuildCharImage" );
-      }
-
       m_Project.Characters[CharIndex].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) );
 
       Displayer.CharacterDisplayer.DisplayChar( m_Project, CharIndex, m_Project.Characters[CharIndex].Tile.Image, 0, 0 );
@@ -745,7 +947,7 @@ namespace RetroDevStudio.Controls
           {
             byte  newCustomColor = (byte)m_Project.Characters[m_CurrentChar].Tile.CustomColor;
             if ( ( importAsType == GraphicType.CHARACTERS_MULTICOLOR )
-            &&   ( newCustomColor < 8 ) )
+            && ( newCustomColor < 8 ) )
             {
               newCustomColor += 8;
             }
@@ -791,6 +993,7 @@ namespace RetroDevStudio.Controls
         canvasEditor.Invalidate();
 
         SelectCategory( m_Project.Characters[m_CurrentChar].Category );
+        ChangeColorPalette();
         RedrawColorPicker();
       }
     }
@@ -851,7 +1054,7 @@ namespace RetroDevStudio.Controls
       bool  isMultiColor = false;
 
       if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-      ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
+      || ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
       {
         for ( int i = 0; i < Buffer.Length; ++i )
         {
@@ -897,37 +1100,37 @@ namespace RetroDevStudio.Controls
         }
         //Debug.Log( "For Char " + CharIndex + ", hasSinglePixel = " + hasSinglePixel + ", numColors = " + numColors + ", usedBackgroundColor = " + usedBackgroundColor );
         if ( ( hasSinglePixel )
-        &&   ( numColors > 2 ) )
+        && ( numColors > 2 ) )
         {
           return false;
         }
         if ( ( hasSinglePixel )
-        &&   ( numColors == 2 )
-        &&   ( !usedBackgroundColor ) )
+        && ( numColors == 2 )
+        && ( !usedBackgroundColor ) )
         {
           return false;
         }
         if ( ( !hasSinglePixel )
-        &&   ( numColors > 4 ) )
+        && ( numColors > 4 ) )
         {
           return false;
         }
         if ( ( !hasSinglePixel )
-        &&   ( numColors == 4 )
-        &&   ( !usedBackgroundColor ) )
+        && ( numColors == 4 )
+        && ( !usedBackgroundColor ) )
         {
           return false;
         }
         int     otherColorIndex = 16;
         if ( ( !hasSinglePixel )
-        &&   ( ( ( numColors == 2 )
-        &&       ( usedBackgroundColor ) )
-        ||     ( numColors == 1 ) ) )
+        && ( ( ( numColors == 2 )
+        && ( usedBackgroundColor ) )
+        || ( numColors == 1 ) ) )
         {
           for ( int i = 0; i < 16; ++i )
           {
             if ( ( usedColor[i] )
-            &&   ( i != m_Project.Colors.BackgroundColor ) )
+            && ( i != m_Project.Colors.BackgroundColor ) )
             {
               otherColorIndex = i;
               break;
@@ -936,15 +1139,15 @@ namespace RetroDevStudio.Controls
         }
         if ( ( !ForceMulticolor )
         // single pixel, and uses bg and one custom color
-        &&   ( ( ( hasSinglePixel )
-        ||       ( ( numColors == 2 )
-        &&         ( usedBackgroundColor )
-        &&         ( otherColorIndex < 8 ) ) )
+        && ( ( ( hasSinglePixel )
+        || ( ( numColors == 2 )
+        && ( usedBackgroundColor )
+        && ( otherColorIndex < 8 ) ) )
         // not a single pixel, but only one color < 8 (e.g. full block)
-        ||     ( ( !hasSinglePixel )
-        &&       ( numColors == 1 )
-        &&       ( !usedBackgroundColor )
-        &&       ( otherColorIndex < 8 ) ) ) )
+        || ( ( !hasSinglePixel )
+        && ( numColors == 1 )
+        && ( !usedBackgroundColor )
+        && ( otherColorIndex < 8 ) ) ) )
         {
           // eligible for single color
           int usedFreeColor = -1;
@@ -997,8 +1200,8 @@ namespace RetroDevStudio.Controls
             if ( usedColor[i] )
             {
               if ( ( i == m_Project.Colors.MultiColor1 )
-              ||   ( i == m_Project.Colors.MultiColor2 )
-              ||   ( i == m_Project.Colors.BackgroundColor ) )
+              || ( i == m_Project.Colors.MultiColor2 )
+              || ( i == m_Project.Colors.BackgroundColor ) )
               {
                 ++usedMultiColors;
               }
@@ -1055,7 +1258,7 @@ namespace RetroDevStudio.Controls
       }
       m_Project.Characters[CharIndex].Tile.CustomColor = (byte)chosenCharColor;
       if ( ( isMultiColor )
-      &&   ( chosenCharColor < 8 ) )
+      && ( chosenCharColor < 8 ) )
       {
         m_Project.Characters[CharIndex].Tile.CustomColor = (byte)( chosenCharColor + 8 );
         if ( m_Project.Characters[CharIndex].Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
@@ -1080,6 +1283,10 @@ namespace RetroDevStudio.Controls
       }
 
       RebuildAffectedChar( CharIndex );
+      if ( CharIndex == m_CurrentChar )
+      {
+        ChangeColorPalette();
+      }
       return true;
     }
 
@@ -1087,7 +1294,7 @@ namespace RetroDevStudio.Controls
 
     public void BackgroundColor()
     {
-      _ColorSettingsDlg.SelectedColor = ColorType.BACKGROUND;
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.BACKGROUND );
     }
 
 
@@ -1102,16 +1309,16 @@ namespace RetroDevStudio.Controls
 
       //Debug.Log( "CharsetUpdated a " );
       var origPalette = m_Project.Colors.Palette;
-      
+
       if ( ( comboCharsetMode.SelectedIndex != (int)m_Project.Mode )
-      &&   ( (int)m_Project.Mode < comboCharsetMode.Items.Count ) )
+      && ( (int)m_Project.Mode < comboCharsetMode.Items.Count ) )
       {
         //Debug.Log( "CharsetUpdated b " );
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
         //Debug.Log( "CharsetUpdated c " );
       }
-      panelCharacters.ItemWidth   = Lookup.CharacterWidthInPixel( m_Project.Characters[0].Tile.Mode );
-      panelCharacters.ItemHeight  = Lookup.CharacterHeightInPixel( m_Project.Characters[0].Tile.Mode );
+      panelCharacters.ItemWidth = Lookup.CharacterWidthInPixel( m_Project.Characters[0].Tile.Mode );
+      panelCharacters.ItemHeight = Lookup.CharacterHeightInPixel( m_Project.Characters[0].Tile.Mode );
 
       //Debug.Log( "CharsetUpdated d " );
       ChangeColorSettingsDialog();
@@ -1212,8 +1419,8 @@ namespace RetroDevStudio.Controls
           if ( Core.Imaging != null )
           {
             int offset = (int)e.Graphics.MeasureString( labelCharNo.Text, labelCharNo.Font ).Width;
-            e.Graphics.DrawString( "" + ConstantData.ScreenCodeToChar[(byte)m_CurrentChar].CharValue, 
-                                   Core.Imaging.FontFromMachine( MachineType.C64 ), 
+            e.Graphics.DrawString( "" + ConstantData.ScreenCodeToChar[(byte)m_CurrentChar].CharValue,
+                                   Core.Imaging.FontFromMachine( MachineType.C64 ),
                                    System.Drawing.SystemBrushes.WindowText, offset + 10, 0 );
           }
         }
@@ -1251,13 +1458,16 @@ namespace RetroDevStudio.Controls
         affectedChar = m_Project.Characters[affectedCharIndex];
       }
 
-      var newColor = new ColorEntry( _ColorSettingsDlg.SelectedColor, _ColorSettingsDlg.SelectedCustomColor );
+      var newColor = _ColorPalette.SelectedColor;
 
       if ( ( Core.Settings.BehaviourRightClickIsBGColorPaint )
       &&   ( ( Buttons & MouseButtons.Right ) != 0 ) )
       {
         Buttons = MouseButtons.Left;
-        newColor.Type  = ColorType.BACKGROUND;
+        newColor = new ColorEntry( ColorType.BACKGROUND, (byte)m_Project.Colors.BackgroundColor );
+      }
+      if ( newColor.Type == ColorType.BACKGROUND )
+      {
         newColor.ColorIndex = 0;
       }
 
@@ -1270,7 +1480,7 @@ namespace RetroDevStudio.Controls
         if ( m_ButtonReleased )
         {
           // middle button toggles selected color
-          _ColorSettingsDlg.ToggleSelectedColor();
+          _ColorPalette.ToggleSelectedColor();
           m_ButtonReleased = false;
         }
         return;
@@ -1295,13 +1505,35 @@ namespace RetroDevStudio.Controls
       {
         m_ButtonReleased = true;
       }
+
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
-        var   pickedColor = affectedChar.Tile.GetPixel( charX, charY );
+        var pickedColor = affectedChar.Tile.GetPixel( charX, charY );
 
-        _ColorSettingsDlg.SelectedColor       = pickedColor.Type;
-        _ColorSettingsDlg.SelectedCustomColor = pickedColor.ColorIndex;
+        if ( Lookup.IsECMMode( m_Project.Mode ) )
+        {
+          int bgColor = m_Project.Colors.BackgroundColor;
+          switch ( m_CurrentChar / 64 )
+          {
+            case 1:
+              bgColor = m_Project.Colors.MultiColor1;
+              break;
+            case 2:
+              bgColor = m_Project.Colors.MultiColor2;
+              break;
+            case 3:
+              bgColor = m_Project.Colors.BGColor4;
+              break;
+          }
+          pickedColor.ColorIndex = (byte)bgColor;
 
+          var palColors = new ColorSettings( m_Project.Colors );
+          palColors.Palette.ColorValues[0] = m_Project.Colors.Palette.ColorValues[bgColor];
+
+          _ColorPalette.UpdateColors( palColors );
+        }
+        _ColorPalette.SelectedColor = pickedColor;
+        
         RedrawColorPicker();
       }
     }
@@ -1447,7 +1679,7 @@ namespace RetroDevStudio.Controls
       foreach ( var selChar in selectedChars )
       {
         if ( ( categoryIndex != -1 )
-        &&   ( m_Project.Characters[selChar].Category != categoryIndex ) )
+        && ( m_Project.Characters[selChar].Category != categoryIndex ) )
         {
           modifiedChars.Add( selChar );
         }
@@ -1460,7 +1692,7 @@ namespace RetroDevStudio.Controls
       foreach ( var selChar in selectedChars )
       {
         if ( ( categoryIndex != -1 )
-        &&   ( m_Project.Characters[selChar].Category != categoryIndex ) )
+        && ( m_Project.Characters[selChar].Category != categoryIndex ) )
         {
           m_Project.Characters[selChar].Category = categoryIndex;
         }
@@ -1470,34 +1702,6 @@ namespace RetroDevStudio.Controls
         RaiseModifiedEvent( modifiedChars );
         RefreshCategoryCounts();
       }
-    }
-
-
-
-    private void radioBackground_CheckedChanged( object sender, EventArgs e )
-    {
-      m_CurrentColorType = ColorType.BACKGROUND;
-    }
-
-
-
-    private void radioMultiColor1_CheckedChanged( object sender, EventArgs e )
-    {
-      m_CurrentColorType = ColorType.MULTICOLOR_1;
-    }
-
-
-
-    private void radioMulticolor2_CheckedChanged( object sender, EventArgs e )
-    {
-      m_CurrentColorType = ColorType.MULTICOLOR_2;
-    }
-
-
-
-    private void radioCharColor_CheckedChanged( object sender, EventArgs e )
-    {
-      m_CurrentColorType = ColorType.CUSTOM_COLOR;
     }
 
 
@@ -1589,9 +1793,9 @@ namespace RetroDevStudio.Controls
       }
 
       if ( ( charX < 0 )
-      ||   ( charX >= 16 )
-      ||   ( charY < 0 )
-      ||   ( charY >= 16 ) )
+      || ( charX >= 16 )
+      || ( charY < 0 )
+      || ( charY >= 16 ) )
       {
         return;
       }
@@ -1955,6 +2159,7 @@ namespace RetroDevStudio.Controls
 
       ApplyPalette();
       RebuildAllCharImages();
+      ChangeColorPalette();
       canvasEditor.Invalidate();
       panelCharacters.Invalidate();
 
@@ -1979,13 +2184,10 @@ namespace RetroDevStudio.Controls
       int origHeight  = Lookup.CharacterHeightInPixel( m_Project.Characters[0].Tile.Mode );
       bool modeChanged = false;
 
-      Debug.Log( "comboCharsetMode_SelectedIndexChanged a" );
-
       if ( m_Project.Mode != (TextCharMode)comboCharsetMode.SelectedIndex )
       {
         if ( !DoNotAddUndo )
         {
-          Debug.Log( "comboCharsetMode_SelectedIndexChanged ab" );
           var affectedChars = new List<int>();
           for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
           {
@@ -1998,19 +2200,15 @@ namespace RetroDevStudio.Controls
         modeChanged = true;
       }
 
-      Debug.Log( "comboCharsetMode_SelectedIndexChanged c" );
       AdjustCharacterSizes();
 
       UpdatePalette();
-      Debug.Log( "comboCharsetMode_SelectedIndexChanged d" );
       ChangeColorPickerDialog();
-      Debug.Log( "comboCharsetMode_SelectedIndexChanged e" );
       ChangeColorSettingsDialog();
-      Debug.Log( "comboCharsetMode_SelectedIndexChanged f" );
+      ChangeColorPalette();
 
       if ( m_Project.TotalNumberOfCharacters != Lookup.NumCharactersForMode( m_Project.Mode ) )
       {
-        Debug.Log( "comboCharsetMode_SelectedIndexChanged g" );
         m_Project.TotalNumberOfCharacters = Lookup.NumCharactersForMode( m_Project.Mode );
 
         if ( m_Project.Characters.Count > m_Project.TotalNumberOfCharacters )
@@ -2034,15 +2232,12 @@ namespace RetroDevStudio.Controls
           panelCharacters.Items.Add( "", newChar.Tile.Image );
         }
         panelCharacters.EndUpdate();
-        Debug.Log( "comboCharsetMode_SelectedIndexChanged h" );
       }
 
-      Debug.Log( "comboCharsetMode_SelectedIndexChanged i" );
       if ( ( modeChanged )
-      ||   ( m_CharacterWidth != origWidth )
-      ||   ( m_CharacterHeight != origHeight ) )
+      || ( m_CharacterWidth != origWidth )
+      || ( m_CharacterHeight != origHeight ) )
       {
-        Debug.Log( "comboCharsetMode_SelectedIndexChanged j" );
         for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
         {
           m_Project.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[i].Tile.CustomColor );
@@ -2058,7 +2253,6 @@ namespace RetroDevStudio.Controls
 
           RebuildCharImage( i );
         }
-        Debug.Log( "comboCharsetMode_SelectedIndexChanged k" );
       }
       panelCharacters.Invalidate();
 
@@ -2130,7 +2324,6 @@ namespace RetroDevStudio.Controls
       }
       panelColorSettings.Controls.Add( _ColorSettingsDlg );
       DPIHandler.ResizeControlsForDPI( _ColorSettingsDlg );
-      _ColorSettingsDlg.SelectedColorChanged += _ColorSettingsDlg_SelectedColorChanged;
       _ColorSettingsDlg.ColorsModified += _ColorSettingsDlg_ColorsModified;
       _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;
       _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
@@ -2138,9 +2331,6 @@ namespace RetroDevStudio.Controls
       _ColorSettingsDlg.PaletteSelected += _ColorSettingsDlg_PaletteSelected;
       _ColorSettingsDlg.PaletteMappingSelected += _ColorSettingsDlg_PaletteMappingSelected;
       _ColorSettingsDlg.SelectedCustomColorChanged += _ColorSettingsDlg_SelectedCustomColorChanged;
-
-      _ColorSettingsDlg.SelectedColor = ColorType.CUSTOM_COLOR;
-      _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
     }
 
 
@@ -2148,6 +2338,11 @@ namespace RetroDevStudio.Controls
     private void _ColorSettingsDlg_PaletteMappingSelected( ColorSettings Colors )
     {
       m_Project.Colors.PaletteMappingIndex = Colors.PaletteMappingIndex;
+      _ColorPalette.UpdateColors( m_Project.Colors );
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.CUSTOM_COLOR, (byte)_ColorSettingsDlg.SelectedCustomColor );
+      _ColorSettingsDlg_SelectedCustomColorChanged( _ColorSettingsDlg.SelectedCustomColor );
+      
+
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
@@ -2157,6 +2352,7 @@ namespace RetroDevStudio.Controls
 
       ApplyPalette();
       OnPaletteChanged();
+      //ChangeColorPalette();
     }
 
 
@@ -2164,12 +2360,14 @@ namespace RetroDevStudio.Controls
     private void _ColorSettingsDlg_PaletteMappingModified( ColorSettings Colors )
     {
       _ColorSettingsDlg_PaletteModified( Colors, -1, null );
+      ChangeColorPalette();
     }
 
 
 
     private void _ColorSettingsDlg_SelectedCustomColorChanged( int SelectedCustomColor )
     {
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.CUSTOM_COLOR, (byte)SelectedCustomColor );
     }
 
 
@@ -2193,6 +2391,7 @@ namespace RetroDevStudio.Controls
           modifiedChars.Add( i );
         }
         RaiseModifiedEvent( modifiedChars );
+        ChangeColorPalette();
       }
     }
 
@@ -2310,7 +2509,6 @@ namespace RetroDevStudio.Controls
             break;
           case ColorType.CUSTOM_COLOR:
             {
-              // TODO
               List<int>   selectedChars = panelCharacters.SelectedIndices;
               if ( selectedChars.Count == 0 )
               {
@@ -2325,6 +2523,7 @@ namespace RetroDevStudio.Controls
                 {
                   m_Project.Characters[selChar].Tile.CustomColor = (byte)CustomColor;
                   m_Project.Characters[selChar].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[selChar].Tile.CustomColor );
+
                   RebuildCharImage( selChar );
                   modified = true;
                   panelCharacters.InvalidateItemRect( selChar );
@@ -2338,6 +2537,7 @@ namespace RetroDevStudio.Controls
             break;
         }
 
+        ChangeColorPalette();
         for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
         {
           RebuildCharImage( i );
@@ -2351,13 +2551,6 @@ namespace RetroDevStudio.Controls
         canvasEditor.Invalidate();
         panelCharacters.Invalidate();
       }
-    }
-
-
-
-    private void _ColorSettingsDlg_SelectedColorChanged( ColorType Color )
-    {
-      m_CurrentColorType = Color;
     }
 
 
@@ -2449,21 +2642,21 @@ namespace RetroDevStudio.Controls
 
     public void MultiColor2()
     {
-      _ColorSettingsDlg.SelectedColor = ColorType.MULTICOLOR_2;
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.MULTICOLOR_2 );
     }
 
 
 
     public void MultiColor1()
     {
-      _ColorSettingsDlg.SelectedColor = ColorType.MULTICOLOR_1;
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.MULTICOLOR_1 );
     }
 
 
 
     public void CustomColor()
     {
-      _ColorSettingsDlg.SelectedColor = ColorType.CUSTOM_COLOR;
+      _ColorPalette.SelectedColor = new ColorEntry( ColorType.CUSTOM_COLOR );
     }
 
 
@@ -2546,8 +2739,8 @@ namespace RetroDevStudio.Controls
         {
           for ( int i = 0; i < 4; ++i )
           {
-            charMapNewToOld[i * 64 + insertIndex % 64]  = i * 64 + entry % 64;
-            charMapOldToNew[i * 64 + entry % 64]        = i * 64 + insertIndex % 64;
+            charMapNewToOld[i * 64 + insertIndex % 64] = i * 64 + entry % 64;
+            charMapOldToNew[i * 64 + entry % 64] = i * 64 + insertIndex % 64;
           }
         }
         else
@@ -2577,7 +2770,7 @@ namespace RetroDevStudio.Controls
         {
           for ( int i = 0; i < 4; ++i )
           {
-            charMapNewToOld[i * 64 + charPos]         = i * 64 + insertCharIndex;
+            charMapNewToOld[i * 64 + charPos] = i * 64 + insertCharIndex;
             charMapOldToNew[i * 64 + insertCharIndex] = i * 64 + charPos;
           }
         }
@@ -2782,7 +2975,7 @@ namespace RetroDevStudio.Controls
             if ( m_Project.Characters[j].Category == category )
             {
               if ( ( m_Project.Characters[i].Tile.Data.Compare( m_Project.Characters[j].Tile.Data ) == 0 )
-              &&   ( m_Project.Characters[i].Tile.CustomColor == m_Project.Characters[j].Tile.CustomColor ) )
+              && ( m_Project.Characters[i].Tile.CustomColor == m_Project.Characters[j].Tile.CustomColor ) )
               {
                 // collapse!
                 //Debug.Log( "Collapse " + j.ToString() + " into " + i.ToString() );
@@ -2988,8 +3181,8 @@ namespace RetroDevStudio.Controls
     private void btnMoveCategoryUp_Click( DecentForms.ControlBase Sender )
     {
       if ( ( listCategories.Items.Count > 1 )
-      &&   ( listCategories.SelectedIndices.Count > 0 )
-      &&   ( listCategories.SelectedIndices[0] > 0 ) )
+      && ( listCategories.SelectedIndices.Count > 0 )
+      && ( listCategories.SelectedIndices[0] > 0 ) )
       {
         int     index1 = listCategories.SelectedIndices[0];
 
@@ -3038,8 +3231,8 @@ namespace RetroDevStudio.Controls
     private void btnMoveCategoryDown_Click( DecentForms.ControlBase Sender )
     {
       if ( ( listCategories.Items.Count > 1 )
-      &&   ( listCategories.SelectedIndices.Count > 0 )
-      &&   ( listCategories.SelectedIndices[0] + 1 < listCategories.Items.Count ) )
+      && ( listCategories.SelectedIndices.Count > 0 )
+      && ( listCategories.SelectedIndices[0] + 1 < listCategories.Items.Count ) )
       {
         int     index1 = listCategories.SelectedIndices[0];
 
@@ -3271,9 +3464,9 @@ namespace RetroDevStudio.Controls
           }
           else
           {
-            placedTargets[group]          = targetIndex;
-            charMapNewToOld[targetIndex]  = j;
-            charMapOldToNew[j]            = targetIndex;
+            placedTargets[group] = targetIndex;
+            charMapNewToOld[targetIndex] = j;
+            charMapOldToNew[j] = targetIndex;
             ++targetIndex;
           }
         }
@@ -3283,7 +3476,7 @@ namespace RetroDevStudio.Controls
       while ( targetIndex < numChars )
       {
         charMapNewToOld[targetIndex] = firstEmpty;
-        charMapOldToNew[firstEmpty]  = targetIndex;
+        charMapOldToNew[firstEmpty] = targetIndex;
 
         //m_Project.Characters[targetIndex].Tile.Data.Fill( 0, (int)m_Project.Characters[targetIndex].Tile.Data.Length, 0 );
         ++targetIndex;
@@ -3321,7 +3514,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.Items[i] = new ImageListbox.ImageListItem( panelCharacters )
         {
           MemoryImage = new MemoryImage( origListItems[charMapNewToOld[i]].MemoryImage ),
-          Value       = origListItems[charMapNewToOld[i]].Value
+          Value = origListItems[charMapNewToOld[i]].Value
         };
         RebuildCharImage( i );
       }
@@ -3387,7 +3580,7 @@ namespace RetroDevStudio.Controls
       if ( m_Project.Name != editCharsetName.Text )
       {
         if ( ( UndoManager.LastUndo is Undo.UndoCharacterEditorNameChange )
-        &&   ( ( (Undo.UndoCharacterEditorNameChange)UndoManager.LastUndo ).Editor == this ) )
+        && ( ( (Undo.UndoCharacterEditorNameChange)UndoManager.LastUndo ).Editor == this ) )
         {
           // collapse undo
         }
@@ -3408,7 +3601,7 @@ namespace RetroDevStudio.Controls
       if ( m_Project.Characters[m_CurrentChar].Name != editCharName.Text )
       {
         if ( ( UndoManager.LastUndo is Undo.UndoCharacterEditorCharacterNameChange )
-        &&   ( ( (Undo.UndoCharacterEditorCharacterNameChange)UndoManager.LastUndo ).Editor == this ) )
+        && ( ( (Undo.UndoCharacterEditorCharacterNameChange)UndoManager.LastUndo ).Editor == this ) )
         {
           // collapse undo
         }
@@ -3441,5 +3634,15 @@ namespace RetroDevStudio.Controls
 
 
 
+    private void panelColorPalette_SizeChanged( object sender, EventArgs e )
+    {
+      foreach ( var control in m_XOffsetOfControlsToTheRightOfPalette )
+      {
+        control.Key.Left = panelColorPalette.Right + control.Value;
+      }
     }
+
+
+
+  }
 }

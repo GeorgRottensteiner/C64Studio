@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Types;
+using RetroDevStudio.Types;
 using GR.Collections;
 using System;
 using System.Collections.Generic;
@@ -898,7 +898,7 @@ namespace RetroDevStudio.Tasks
                                           CheckSummerClass = checkSummerClass,
                                           EnabledHacks = Core.Settings.EnabledC64StudioHacks,
                                           Encoding = Core.Settings.SourceFileEncoding,
-                                          CreatePreProcesseFile = CreatePreProcessedFile,
+                                          CreatePreProcessedFile = CreatePreProcessedFile,
                                           CreateRelocationFile = CreateRelocationFile,
                                           InputFile = Doc.DocumentFilename
                                         } ) )

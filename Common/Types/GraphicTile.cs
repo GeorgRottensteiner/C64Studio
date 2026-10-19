@@ -70,6 +70,7 @@ namespace RetroDevStudio.Types
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
         case GraphicTileMode.COMMODORE_TED_HIRES:
+        case GraphicTileMode.COMMODORE_TED_ECM:
           {
             int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
             int   byteValue = Data.ByteAt( bytePos );
@@ -284,6 +285,7 @@ namespace RetroDevStudio.Types
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
         case GraphicTileMode.COMMODORE_TED_HIRES:
+        case GraphicTileMode.COMMODORE_TED_ECM:
           {
             if ( ( Data.ByteAt( Y * ( ( Width + 7 ) / 8 ) + X / 8 ) & ( 1 << ( 7 - ( X % 8 ) ) ) ) != 0 )
             {

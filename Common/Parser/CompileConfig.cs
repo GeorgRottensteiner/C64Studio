@@ -1,4 +1,4 @@
-﻿using GR.Collections;
+using GR.Collections;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +17,7 @@ namespace RetroDevStudio.Parser
     public RetroDevStudio.Types.CompileTargetType TargetType = RetroDevStudio.Types.CompileTargetType.NONE;
     public Types.AssemblerType                    Assembler = Types.AssemblerType.AUTO;
     public bool                                   AutoTruncateLiteralValues = false;
-    public bool                                   CreatePreProcesseFile = false;
+    public bool                                   CreatePreProcessedFile = false;
     public bool                                   CreateRelocationFile = false;
     public bool                                   DoNotExpandStringLiterals = false;
     public List<string>                           LibraryFiles = new List<string>();

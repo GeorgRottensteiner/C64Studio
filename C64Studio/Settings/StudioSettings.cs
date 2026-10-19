@@ -1553,8 +1553,11 @@ namespace RetroDevStudio
                         ToolWindowType    toolWindow = (ToolWindowType)subBinIn.ReadInt32();
                         bool              visible = ( subBinIn.ReadUInt8() == 1 );
 
-
-                        Tools[toolWindow].Visible[perspective] = visible;
+                        if ( ( Tools.TryGetValue( toolWindow, out var tool ) )
+                        &&   ( tool != null ) )
+                        {
+                          tool.Visible[perspective] = visible;
+                        }
                       }
                     }
                     break;

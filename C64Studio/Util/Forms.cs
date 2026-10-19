@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Documents;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
@@ -120,6 +120,97 @@ namespace RetroDevStudio
         ComboFiles.Items.Add( new Types.ComboItem( item.Desc, (DocumentInfo)item.Tag ) );
       }
     }
+
+
+
+    public static void ResizeListBoxToContent( ListBox list )
+    {
+      using ( var g = list.CreateGraphics() )
+      {
+
+        int     maxWidth = 0;
+        int     maxHeight = list.Items.Count * list.Font.Height;
+
+        var currentScreen = Screen.FromHandle( list.Handle );
+        if ( maxHeight > currentScreen.Bounds.Height )
+        {
+          maxHeight = currentScreen.Bounds.Height;
+        }
+        if ( maxHeight > 160 )
+        {
+          maxHeight = 160;
+        }
+
+        foreach ( var item in list.Items )
+        {
+          int   itemWidth = (int)g.MeasureString( item.ToString(), list.Font ).Width;
+
+          if ( itemWidth > maxWidth )
+          {
+            maxWidth = itemWidth;
+          }
+        }
+
+        list.ClientSize = new System.Drawing.Size( list.ClientSize.Width, maxHeight );
+      }
+    }
+
+
+
+    public static void ResizeListBoxToContent( DecentForms.ListBox list )
+    {
+      using ( var g = list.CreateGraphics() )
+      {
+
+        int     maxWidth = 0;
+        int     maxHeight = list.Items.Count * list.Font.Height;
+
+        var currentScreen = Screen.FromHandle( list.Handle );
+        if ( maxHeight > currentScreen.Bounds.Height )
+        {
+          maxHeight = currentScreen.Bounds.Height;
+        }
+        if ( maxHeight > 160 )
+        {
+          maxHeight = 160;
+        }
+
+        foreach ( var item in list.Items )
+        {
+          int   itemWidth = (int)g.MeasureString( item.Text, list.Font ).Width;
+
+          if ( itemWidth > maxWidth )
+          {
+            maxWidth = itemWidth;
+          }
+        }
+
+        list.ClientSize = new System.Drawing.Size( list.ClientSize.Width, maxHeight );
+      }
+    }
+
+
+
+    public static void ResizeComboDropDownListToContent( ComboBox combo )
+    {
+      using ( var g = combo.CreateGraphics() )
+      {
+        int     maxWidth = 0;
+
+        foreach ( var item in combo.Items )
+        {
+          int   itemWidth = (int)g.MeasureString( item.ToString(), combo.Font ).Width;
+
+          if ( itemWidth > maxWidth )
+          {
+            maxWidth = itemWidth;
+          }
+        }
+
+        combo.DropDownWidth = maxWidth;
+      }
+    }
+
 
 
 

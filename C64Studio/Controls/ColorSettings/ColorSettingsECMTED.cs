@@ -31,31 +31,6 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override ColorType SelectedColor
-    {
-      get
-      {
-        return _CurrentColorType;
-      }
-      set
-      {
-        switch ( value )
-        {
-          case ColorType.BACKGROUND:
-            radioBackground.Checked = true;
-            break;
-          case ColorType.CUSTOM_COLOR:
-            radioCharColor.Checked = true;
-            break;
-          default:
-            return;
-        }
-        _CurrentColorType = value;
-      }
-    }
-    
-    
-    
     public ColorSettingsECMTED() :
       base( null, null, 0 )
     { 
@@ -83,8 +58,6 @@ namespace RetroDevStudio.Controls
       comboMulticolor2.SelectedIndex  = Colors.MultiColor2 % comboMulticolor2.Items.Count;
       comboBGColor4.SelectedIndex     = Colors.BGColor4 % comboBGColor4.Items.Count;
       comboCharColor.SelectedIndex    = CustomColor % comboCharColor.Items.Count;
-
-      radioCharColor.Checked = true;
     }
 
 
@@ -110,7 +83,6 @@ namespace RetroDevStudio.Controls
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.BackgroundColor = comboBackground.SelectedIndex;
-      radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.BACKGROUND );
     }
 
@@ -135,7 +107,6 @@ namespace RetroDevStudio.Controls
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
       CustomColor = (byte)comboCharColor.SelectedIndex;
-      radioCharColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
 
@@ -145,46 +116,6 @@ namespace RetroDevStudio.Controls
     {
       Colors.BGColor4 = comboBGColor4.SelectedIndex;
       RaiseColorsModifiedEvent( ColorType.BGCOLOR4 );
-    }
-
-
-
-    private void radioBackground_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.BACKGROUND;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioMultiColor1_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.MULTICOLOR_1;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioMulticolor2_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.MULTICOLOR_2;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioBGColor4_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.BGCOLOR4;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioCharColor_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.CUSTOM_COLOR;
-      RaiseColorSelectedEvent();
     }
 
 

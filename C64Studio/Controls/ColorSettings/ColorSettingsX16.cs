@@ -31,30 +31,6 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override ColorType SelectedColor
-    {
-      get
-      {
-        return _CurrentColorType;
-      }
-      set
-      {
-        _CurrentColorType = value;
-        if ( _CurrentColorType == ColorType.BACKGROUND )
-        {
-          radioBackground.Checked = true;
-        }
-        else
-        {
-          radioCharColor.Checked = true;
-        }
-        comboCharColor.SelectedIndex = _CustomColor & comboCharColor.Items.Count;
-        comboBackground.SelectedIndex = ( _CustomColor >> 4 ) & comboBackground.Items.Count;
-      }
-    }
-
-
-
     public override int ActivePalette
     {
       get
@@ -94,8 +70,6 @@ namespace RetroDevStudio.Controls
       comboBackground.SelectedIndex = Colors.BackgroundColor % 16;
       comboCharColor.SelectedIndex = CustomColor % 16;
 
-      radioCharColor.Checked = true;
-
       foreach ( var pal in Colors.Palettes )
       {
         comboActivePalette.Items.Add( pal.Name );
@@ -126,7 +100,6 @@ namespace RetroDevStudio.Controls
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
       CustomColor = (byte)( ( comboBackground.SelectedIndex << 4 ) | comboCharColor.SelectedIndex );
-      radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
 
@@ -135,7 +108,6 @@ namespace RetroDevStudio.Controls
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
       CustomColor = (byte)( ( comboBackground.SelectedIndex << 4 ) | comboCharColor.SelectedIndex );
-      radioCharColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
 
@@ -160,22 +132,6 @@ namespace RetroDevStudio.Controls
 
         comboCharColor.Invalidate();
       }
-    }
-
-
-
-    private void radioBackground_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.BACKGROUND;
-      RaiseColorSelectedEvent();
-    }
-
-
-
-    private void radioCharColor_CheckedChanged( object sender, EventArgs e )
-    {
-      _CurrentColorType = ColorType.CUSTOM_COLOR;
-      RaiseColorSelectedEvent();
     }
 
 

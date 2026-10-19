@@ -1,9 +1,12 @@
-﻿using GR.Forms;
+using GR.Forms;
 using RetroDevStudio.Dialogs;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+
+
+// PaletteMappingIndex = 0 to 3  (4 palettes)
 
 
 
@@ -29,20 +32,6 @@ namespace RetroDevStudio.Controls
         _SelectedCustomColor = value;
 
         _Palettes[Colors.PaletteMappingIndex % 4].Invalidate();
-      }
-    }
-
-
-
-    public override ColorType SelectedColor
-    {
-      get
-      {
-        return _CurrentColorType;
-      }
-      set
-      {
-        _CurrentColorType = ColorType.CUSTOM_COLOR;
       }
     }
 
@@ -151,7 +140,7 @@ namespace RetroDevStudio.Controls
           SelectedCustomColor = newColor;
           _Palettes[Colors.PaletteMappingIndex % 4].Invalidate();
           picFullPalette.Invalidate();
-          RaiseColorSelectedEvent();
+          //RaiseColorSelectedEvent();
         }
         /*
         if ( CustomColor != newColor )

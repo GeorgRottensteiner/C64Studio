@@ -65,13 +65,28 @@ namespace RetroDevStudio.Controls
     {
       get
       {
+        if ( _Colors.CharMode == TextCharMode.NES )
+        {
+          int index = _ColorIndices.IndexOf( _LastSelectedEntry );
+
+          return new ColorEntry( ColorType.CUSTOM_COLOR, (byte)index );
+        }
+
         return _LastSelectedEntry;
       }
       set
       {
+        if ( _Colors.CharMode == TextCharMode.NES )
+        {
+          _SelectedColor = value.ColorIndex % 4;
+          _LastSelectedEntry = _ColorIndices[_SelectedColor];
+          Redraw();
+          return;
+        }
+
         int index = DetermineListIndex( value );
-          //_ColorIndices.IndexOf( value );
-        if ( ( index < 0 ) || ( index >= _ColorIndices.Count ) )
+        if ( ( index < 0 ) 
+        ||   ( index >= _ColorIndices.Count ) )
         {
           index = 0;
         }
@@ -110,6 +125,7 @@ namespace RetroDevStudio.Controls
       this.Core           = Core;
       _SelectedColor      = SelectedColor;
       _Colors.Palette     = colors.Palette;
+      _Colors.CharMode    = colors.CharMode;
       _ColorIndices       = colorIndices;
       _LastSelectedEntry  = _ColorIndices[_SelectedColor];
 
@@ -147,6 +163,14 @@ namespace RetroDevStudio.Controls
     public virtual void UpdateColors( ColorSettings colors )
     {
       _Colors = colors;
+      if ( _Colors.CharMode == TextCharMode.NES )
+      {
+        var palColors = new ColorSettings( colors );
+        for ( int i = 0; i < 4; ++i )
+        {
+          palColors.Palette.ColorValues[i] = colors.Palette.ColorValues[colors.PaletteIndexMapping[colors.PaletteMappingIndex][i]];
+        }
+      }
       Redraw();
     }
 
@@ -160,5 +184,22 @@ namespace RetroDevStudio.Controls
 
 
 
+    public void ToggleSelectedColor()
+    {
+      if ( _ColorIndices.Count <= 1 )
+      {
+        return;
+      }
+      int   index = _ColorIndices.IndexOf( SelectedColor );
+      var newColor = _ColorIndices[( index + 1 ) % _ColorIndices.Count];
+      SelectedColor = newColor;
+    }
+
+
+
+
   }
+
+
+
 }

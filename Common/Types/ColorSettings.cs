@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -81,6 +81,7 @@ namespace RetroDevStudio.Types
 
     public ColorSettings( ColorSettings OtherSettings )
     {
+      CharMode        = OtherSettings.CharMode;
       CustomColor     = OtherSettings.CustomColor;
       BackgroundColor = OtherSettings.BackgroundColor;
       MultiColor1     = OtherSettings.MultiColor1;

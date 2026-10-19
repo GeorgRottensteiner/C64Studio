@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio.Controls
+namespace RetroDevStudio.Controls
 {
   partial class CharacterEditor
   {
@@ -28,772 +28,799 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
+      components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      this.comboCategories = new System.Windows.Forms.ComboBox();
-      this.label4 = new System.Windows.Forms.Label();
-      this.labelCharNo = new System.Windows.Forms.Label();
-      this.checkShowGrid = new System.Windows.Forms.CheckBox();
-      this.checkPasteMultiColor = new System.Windows.Forms.CheckBox();
-      this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
-      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnHighlightDuplicates = new DecentForms.Button();
-      this.btnPaste = new DecentForms.Button();
-      this.btnCopy = new DecentForms.Button();
-      this.btnInvert = new DecentForms.Button();
-      this.btnMirrorY = new DecentForms.Button();
-      this.btnMirrorX = new DecentForms.Button();
-      this.btnShiftDown = new DecentForms.Button();
-      this.btnShiftUp = new DecentForms.Button();
-      this.btnShiftRight = new DecentForms.Button();
-      this.button3 = new DecentForms.Button();
-      this.btnPasteFromClipboard = new DecentForms.Button();
-      this.btnRotateLeft = new DecentForms.Button();
-      this.btnShiftLeft = new DecentForms.Button();
-      this.tabCharacterEditor = new System.Windows.Forms.TabControl();
-      this.tabEditor = new System.Windows.Forms.TabPage();
-      this.btnMoveSelectionToTarget = new DecentForms.Button();
-      this.panelColorChooser = new System.Windows.Forms.Panel();
-      this.btnRestoreDefault = new DecentForms.Button();
-      this.btnClearChars = new DecentForms.Button();
-      this.btnRemoveDuplicates = new DecentForms.Button();
-      this.panelColorSettings = new System.Windows.Forms.Panel();
-      this.canvasEditor = new RetroDevStudio.Controls.CustomDrawControl();
-      this.comboCharsetMode = new System.Windows.Forms.ComboBox();
-      this.labelCharsetMode = new System.Windows.Forms.Label();
-      this.picturePlayground = new GR.Forms.FastPictureBox();
-      this.panelCharacters = new GR.Forms.ImageListbox();
-      this.tabCategories = new System.Windows.Forms.TabPage();
-      this.btnMoveCategoryDown = new DecentForms.Button();
-      this.btnMoveCategoryUp = new DecentForms.Button();
-      this.groupAllCategories = new System.Windows.Forms.GroupBox();
-      this.btnSortCategories = new DecentForms.Button();
-      this.groupCategorySpecific = new System.Windows.Forms.GroupBox();
-      this.label5 = new System.Windows.Forms.Label();
-      this.editCollapseIndex = new System.Windows.Forms.TextBox();
-      this.btnCollapseCategory = new DecentForms.Button();
-      this.btnReseatCategory = new DecentForms.Button();
-      this.btnDelete = new DecentForms.Button();
-      this.btnAddCategory = new DecentForms.Button();
-      this.listCategories = new System.Windows.Forms.ListView();
-      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.editCategoryName = new System.Windows.Forms.TextBox();
-      this.label3 = new System.Windows.Forms.Label();
-      this.label1 = new System.Windows.Forms.Label();
-      this.editCharsetName = new System.Windows.Forms.TextBox();
-      this.label2 = new System.Windows.Forms.Label();
-      this.editCharName = new System.Windows.Forms.TextBox();
-      this.tabCharacterEditor.SuspendLayout();
-      this.tabEditor.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).BeginInit();
-      this.tabCategories.SuspendLayout();
-      this.groupAllCategories.SuspendLayout();
-      this.groupCategorySpecific.SuspendLayout();
-      this.SuspendLayout();
+      comboCategories = new System.Windows.Forms.ComboBox();
+      labelCategory = new System.Windows.Forms.Label();
+      labelCharNo = new System.Windows.Forms.Label();
+      checkShowGrid = new System.Windows.Forms.CheckBox();
+      checkPasteMultiColor = new System.Windows.Forms.CheckBox();
+      editMoveTargetIndex = new System.Windows.Forms.TextBox();
+      toolTip1 = new System.Windows.Forms.ToolTip( components );
+      btnHighlightDuplicates = new DecentForms.Button();
+      btnPaste = new DecentForms.Button();
+      btnCopy = new DecentForms.Button();
+      btnInvert = new DecentForms.Button();
+      btnMirrorY = new DecentForms.Button();
+      btnMirrorX = new DecentForms.Button();
+      btnShiftDown = new DecentForms.Button();
+      btnShiftUp = new DecentForms.Button();
+      btnShiftRight = new DecentForms.Button();
+      button3 = new DecentForms.Button();
+      btnPasteFromClipboard = new DecentForms.Button();
+      btnRotateLeft = new DecentForms.Button();
+      btnShiftLeft = new DecentForms.Button();
+      tabCharacterEditor = new System.Windows.Forms.TabControl();
+      tabEditor = new System.Windows.Forms.TabPage();
+      panelColorPalette = new System.Windows.Forms.Panel();
+      btnMoveSelectionToTarget = new DecentForms.Button();
+      panelColorChooser = new System.Windows.Forms.Panel();
+      editCharName = new System.Windows.Forms.TextBox();
+      editCharsetName = new System.Windows.Forms.TextBox();
+      btnRestoreDefault = new DecentForms.Button();
+      btnClearChars = new DecentForms.Button();
+      btnRemoveDuplicates = new DecentForms.Button();
+      panelColorSettings = new System.Windows.Forms.Panel();
+      canvasEditor = new CustomDrawControl();
+      comboCharsetMode = new System.Windows.Forms.ComboBox();
+      label2 = new System.Windows.Forms.Label();
+      label1 = new System.Windows.Forms.Label();
+      labelCharsetMode = new System.Windows.Forms.Label();
+      picturePlayground = new GR.Forms.FastPictureBox();
+      panelCharacters = new GR.Forms.ImageListbox();
+      tabCategories = new System.Windows.Forms.TabPage();
+      btnMoveCategoryDown = new DecentForms.Button();
+      btnMoveCategoryUp = new DecentForms.Button();
+      groupAllCategories = new System.Windows.Forms.GroupBox();
+      btnSortCategories = new DecentForms.Button();
+      groupCategorySpecific = new System.Windows.Forms.GroupBox();
+      label5 = new System.Windows.Forms.Label();
+      editCollapseIndex = new System.Windows.Forms.TextBox();
+      btnCollapseCategory = new DecentForms.Button();
+      btnReseatCategory = new DecentForms.Button();
+      btnDelete = new DecentForms.Button();
+      btnAddCategory = new DecentForms.Button();
+      listCategories = new System.Windows.Forms.ListView();
+      columnHeader1 = new System.Windows.Forms.ColumnHeader();
+      columnHeader2 = new System.Windows.Forms.ColumnHeader();
+      editCategoryName = new System.Windows.Forms.TextBox();
+      label3 = new System.Windows.Forms.Label();
+      tabCharacterEditor.SuspendLayout();
+      tabEditor.SuspendLayout();
+      ( (System.ComponentModel.ISupportInitialize)canvasEditor ).BeginInit();
+      ( (System.ComponentModel.ISupportInitialize)picturePlayground ).BeginInit();
+      tabCategories.SuspendLayout();
+      groupAllCategories.SuspendLayout();
+      groupCategorySpecific.SuspendLayout();
+      SuspendLayout();
       // 
       // comboCategories
       // 
-      this.comboCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboCategories.FormattingEnabled = true;
-      this.comboCategories.Location = new System.Drawing.Point(351, 245);
-      this.comboCategories.Name = "comboCategories";
-      this.comboCategories.Size = new System.Drawing.Size(157, 21);
-      this.comboCategories.TabIndex = 11;
-      this.comboCategories.SelectedIndexChanged += new System.EventHandler(this.comboCategories_SelectedIndexChanged);
+      comboCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboCategories.FormattingEnabled = true;
+      comboCategories.Location = new System.Drawing.Point( 368, 245 );
+      comboCategories.Name = "comboCategories";
+      comboCategories.Size = new System.Drawing.Size( 140, 23 );
+      comboCategories.TabIndex = 11;
+      comboCategories.SelectedIndexChanged +=  comboCategories_SelectedIndexChanged ;
       // 
-      // label4
+      // labelCategory
       // 
-      this.label4.Location = new System.Drawing.Point(277, 248);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(68, 23);
-      this.label4.TabIndex = 35;
-      this.label4.Text = "Category:";
+      labelCategory.Location = new System.Drawing.Point( 303, 248 );
+      labelCategory.Name = "labelCategory";
+      labelCategory.Size = new System.Drawing.Size( 59, 23 );
+      labelCategory.TabIndex = 35;
+      labelCategory.Text = "Category:";
       // 
       // labelCharNo
       // 
-      this.labelCharNo.Location = new System.Drawing.Point(277, 192);
-      this.labelCharNo.Name = "labelCharNo";
-      this.labelCharNo.Size = new System.Drawing.Size(231, 23);
-      this.labelCharNo.TabIndex = 34;
-      this.labelCharNo.Text = "label1";
-      this.labelCharNo.Paint += new System.Windows.Forms.PaintEventHandler(this.labelCharNo_Paint);
+      labelCharNo.Location = new System.Drawing.Point( 303, 192 );
+      labelCharNo.Name = "labelCharNo";
+      labelCharNo.Size = new System.Drawing.Size( 205, 23 );
+      labelCharNo.TabIndex = 34;
+      labelCharNo.Text = "label1";
+      labelCharNo.Paint +=  labelCharNo_Paint ;
       // 
       // checkShowGrid
       // 
-      this.checkShowGrid.AutoSize = true;
-      this.checkShowGrid.Location = new System.Drawing.Point(280, 298);
-      this.checkShowGrid.Name = "checkShowGrid";
-      this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
-      this.checkShowGrid.TabIndex = 13;
-      this.checkShowGrid.Text = "Show Grid";
-      this.checkShowGrid.UseVisualStyleBackColor = true;
-      this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
+      checkShowGrid.AutoSize = true;
+      checkShowGrid.Location = new System.Drawing.Point( 280, 298 );
+      checkShowGrid.Name = "checkShowGrid";
+      checkShowGrid.Size = new System.Drawing.Size( 80, 19 );
+      checkShowGrid.TabIndex = 13;
+      checkShowGrid.Text = "Show Grid";
+      checkShowGrid.UseVisualStyleBackColor = true;
+      checkShowGrid.CheckedChanged +=  checkShowGrid_CheckedChanged ;
       // 
       // checkPasteMultiColor
       // 
-      this.checkPasteMultiColor.AutoSize = true;
-      this.checkPasteMultiColor.Location = new System.Drawing.Point(280, 275);
-      this.checkPasteMultiColor.Name = "checkPasteMultiColor";
-      this.checkPasteMultiColor.Size = new System.Drawing.Size(145, 17);
-      this.checkPasteMultiColor.TabIndex = 12;
-      this.checkPasteMultiColor.Text = "Force Multicolor on paste";
-      this.checkPasteMultiColor.UseVisualStyleBackColor = true;
+      checkPasteMultiColor.AutoSize = true;
+      checkPasteMultiColor.Location = new System.Drawing.Point( 280, 275 );
+      checkPasteMultiColor.Name = "checkPasteMultiColor";
+      checkPasteMultiColor.Size = new System.Drawing.Size( 161, 19 );
+      checkPasteMultiColor.TabIndex = 12;
+      checkPasteMultiColor.Text = "Force Multicolor on paste";
+      checkPasteMultiColor.UseVisualStyleBackColor = true;
       // 
       // editMoveTargetIndex
       // 
-      this.editMoveTargetIndex.Location = new System.Drawing.Point(617, 329);
-      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
-      this.editMoveTargetIndex.Size = new System.Drawing.Size(122, 20);
-      this.editMoveTargetIndex.TabIndex = 23;
-      this.toolTip1.SetToolTip(this.editMoveTargetIndex, "Index to move selected characters to");
-      this.editMoveTargetIndex.TextChanged += new System.EventHandler(this.editMoveTargetIndex_TextChanged);
+      editMoveTargetIndex.Location = new System.Drawing.Point( 617, 329 );
+      editMoveTargetIndex.Name = "editMoveTargetIndex";
+      editMoveTargetIndex.Size = new System.Drawing.Size( 122, 23 );
+      editMoveTargetIndex.TabIndex = 23;
+      toolTip1.SetToolTip( editMoveTargetIndex, "Index to move selected characters to" );
+      editMoveTargetIndex.TextChanged +=  editMoveTargetIndex_TextChanged ;
       // 
       // btnHighlightDuplicates
       // 
-      this.btnHighlightDuplicates.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnHighlightDuplicates.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnHighlightDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnHighlightDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnHighlightDuplicates.Image = null;
-      this.btnHighlightDuplicates.Location = new System.Drawing.Point(514, 356);
-      this.btnHighlightDuplicates.Name = "btnHighlightDuplicates";
-      this.btnHighlightDuplicates.Size = new System.Drawing.Size(97, 23);
-      this.btnHighlightDuplicates.TabIndex = 24;
-      this.btnHighlightDuplicates.Text = "Duplicates";
-      this.toolTip1.SetToolTip(this.btnHighlightDuplicates, "Highlight duplicates");
-      this.btnHighlightDuplicates.Click += new DecentForms.EventHandler(this.btnHighlightDuplicates_Click);
+      btnHighlightDuplicates.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnHighlightDuplicates.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnHighlightDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnHighlightDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnHighlightDuplicates.DisplayAntiAliased = true;
+      btnHighlightDuplicates.Image = null;
+      btnHighlightDuplicates.Location = new System.Drawing.Point( 514, 356 );
+      btnHighlightDuplicates.Name = "btnHighlightDuplicates";
+      btnHighlightDuplicates.Size = new System.Drawing.Size( 97, 23 );
+      btnHighlightDuplicates.TabIndex = 24;
+      btnHighlightDuplicates.Text = "Duplicates";
+      toolTip1.SetToolTip( btnHighlightDuplicates, "Highlight duplicates" );
+      btnHighlightDuplicates.Click +=  btnHighlightDuplicates_Click ;
       // 
       // btnPaste
       // 
-      this.btnPaste.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnPaste.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnPaste.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnPaste.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnPaste.Image = ((System.Drawing.Image)(resources.GetObject("btnPaste.Image")));
-      this.btnPaste.Location = new System.Drawing.Point(546, 269);
-      this.btnPaste.Name = "btnPaste";
-      this.btnPaste.Size = new System.Drawing.Size(26, 23);
-      this.btnPaste.TabIndex = 18;
-      this.toolTip1.SetToolTip(this.btnPaste, "Paste Characters");
-      this.btnPaste.Click += new DecentForms.EventHandler(this.btnPaste_Click);
+      btnPaste.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnPaste.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnPaste.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnPaste.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnPaste.DisplayAntiAliased = true;
+      btnPaste.Image = (System.Drawing.Image)resources.GetObject( "btnPaste.Image" );
+      btnPaste.Location = new System.Drawing.Point( 546, 269 );
+      btnPaste.Name = "btnPaste";
+      btnPaste.Size = new System.Drawing.Size( 26, 23 );
+      btnPaste.TabIndex = 18;
+      toolTip1.SetToolTip( btnPaste, "Paste Characters" );
+      btnPaste.Click +=  btnPaste_Click ;
       // 
       // btnCopy
       // 
-      this.btnCopy.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnCopy.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnCopy.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnCopy.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
-      this.btnCopy.Location = new System.Drawing.Point(514, 269);
-      this.btnCopy.Name = "btnCopy";
-      this.btnCopy.Size = new System.Drawing.Size(26, 23);
-      this.btnCopy.TabIndex = 17;
-      this.toolTip1.SetToolTip(this.btnCopy, "Copy Characters to Clipboard");
-      this.btnCopy.Click += new DecentForms.EventHandler(this.btnCopy_Click);
+      btnCopy.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnCopy.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnCopy.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnCopy.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnCopy.DisplayAntiAliased = true;
+      btnCopy.Image = (System.Drawing.Image)resources.GetObject( "btnCopy.Image" );
+      btnCopy.Location = new System.Drawing.Point( 514, 269 );
+      btnCopy.Name = "btnCopy";
+      btnCopy.Size = new System.Drawing.Size( 26, 23 );
+      btnCopy.TabIndex = 17;
+      toolTip1.SetToolTip( btnCopy, "Copy Characters to Clipboard" );
+      btnCopy.Click +=  btnCopy_Click ;
       // 
       // btnInvert
       // 
-      this.btnInvert.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnInvert.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnInvert.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnInvert.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnInvert.Image = ((System.Drawing.Image)(resources.GetObject("btnInvert.Image")));
-      this.btnInvert.Location = new System.Drawing.Point(198, 269);
-      this.btnInvert.Name = "btnInvert";
-      this.btnInvert.Size = new System.Drawing.Size(26, 26);
-      this.btnInvert.TabIndex = 6;
-      this.toolTip1.SetToolTip(this.btnInvert, "Invert");
-      this.btnInvert.Click += new DecentForms.EventHandler(this.btnInvert_Click);
+      btnInvert.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnInvert.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnInvert.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnInvert.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnInvert.DisplayAntiAliased = true;
+      btnInvert.Image = (System.Drawing.Image)resources.GetObject( "btnInvert.Image" );
+      btnInvert.Location = new System.Drawing.Point( 198, 269 );
+      btnInvert.Name = "btnInvert";
+      btnInvert.Size = new System.Drawing.Size( 26, 26 );
+      btnInvert.TabIndex = 6;
+      toolTip1.SetToolTip( btnInvert, "Invert" );
+      btnInvert.Click +=  btnInvert_Click ;
       // 
       // btnMirrorY
       // 
-      this.btnMirrorY.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnMirrorY.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnMirrorY.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnMirrorY.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnMirrorY.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorY.Image")));
-      this.btnMirrorY.Location = new System.Drawing.Point(166, 269);
-      this.btnMirrorY.Name = "btnMirrorY";
-      this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
-      this.btnMirrorY.TabIndex = 5;
-      this.toolTip1.SetToolTip(this.btnMirrorY, "Mirror Y");
-      this.btnMirrorY.Click += new DecentForms.EventHandler(this.btnMirrorY_Click);
+      btnMirrorY.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnMirrorY.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnMirrorY.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnMirrorY.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnMirrorY.DisplayAntiAliased = true;
+      btnMirrorY.Image = (System.Drawing.Image)resources.GetObject( "btnMirrorY.Image" );
+      btnMirrorY.Location = new System.Drawing.Point( 166, 269 );
+      btnMirrorY.Name = "btnMirrorY";
+      btnMirrorY.Size = new System.Drawing.Size( 26, 26 );
+      btnMirrorY.TabIndex = 5;
+      toolTip1.SetToolTip( btnMirrorY, "Mirror Y" );
+      btnMirrorY.Click +=  btnMirrorY_Click ;
       // 
       // btnMirrorX
       // 
-      this.btnMirrorX.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnMirrorX.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnMirrorX.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnMirrorX.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnMirrorX.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorX.Image")));
-      this.btnMirrorX.Location = new System.Drawing.Point(134, 269);
-      this.btnMirrorX.Name = "btnMirrorX";
-      this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
-      this.btnMirrorX.TabIndex = 4;
-      this.toolTip1.SetToolTip(this.btnMirrorX, "Mirror X");
-      this.btnMirrorX.Click += new DecentForms.EventHandler(this.btnMirrorX_Click);
+      btnMirrorX.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnMirrorX.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnMirrorX.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnMirrorX.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnMirrorX.DisplayAntiAliased = true;
+      btnMirrorX.Image = (System.Drawing.Image)resources.GetObject( "btnMirrorX.Image" );
+      btnMirrorX.Location = new System.Drawing.Point( 134, 269 );
+      btnMirrorX.Name = "btnMirrorX";
+      btnMirrorX.Size = new System.Drawing.Size( 26, 26 );
+      btnMirrorX.TabIndex = 4;
+      toolTip1.SetToolTip( btnMirrorX, "Mirror X" );
+      btnMirrorX.Click +=  btnMirrorX_Click ;
       // 
       // btnShiftDown
       // 
-      this.btnShiftDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnShiftDown.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnShiftDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnShiftDown.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
-      this.btnShiftDown.Location = new System.Drawing.Point(102, 269);
-      this.btnShiftDown.Name = "btnShiftDown";
-      this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftDown.TabIndex = 3;
-      this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
-      this.btnShiftDown.Click += new DecentForms.EventHandler(this.btnShiftDown_Click);
+      btnShiftDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnShiftDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnShiftDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnShiftDown.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnShiftDown.DisplayAntiAliased = true;
+      btnShiftDown.Image = (System.Drawing.Image)resources.GetObject( "btnShiftDown.Image" );
+      btnShiftDown.Location = new System.Drawing.Point( 102, 269 );
+      btnShiftDown.Name = "btnShiftDown";
+      btnShiftDown.Size = new System.Drawing.Size( 26, 26 );
+      btnShiftDown.TabIndex = 3;
+      toolTip1.SetToolTip( btnShiftDown, "Shift Down" );
+      btnShiftDown.Click +=  btnShiftDown_Click ;
       // 
       // btnShiftUp
       // 
-      this.btnShiftUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnShiftUp.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnShiftUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnShiftUp.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
-      this.btnShiftUp.Location = new System.Drawing.Point(70, 269);
-      this.btnShiftUp.Name = "btnShiftUp";
-      this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftUp.TabIndex = 2;
-      this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
-      this.btnShiftUp.Click += new DecentForms.EventHandler(this.btnShiftUp_Click);
+      btnShiftUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnShiftUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnShiftUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnShiftUp.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnShiftUp.DisplayAntiAliased = true;
+      btnShiftUp.Image = (System.Drawing.Image)resources.GetObject( "btnShiftUp.Image" );
+      btnShiftUp.Location = new System.Drawing.Point( 70, 269 );
+      btnShiftUp.Name = "btnShiftUp";
+      btnShiftUp.Size = new System.Drawing.Size( 26, 26 );
+      btnShiftUp.TabIndex = 2;
+      toolTip1.SetToolTip( btnShiftUp, "Shift Up" );
+      btnShiftUp.Click +=  btnShiftUp_Click ;
       // 
       // btnShiftRight
       // 
-      this.btnShiftRight.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnShiftRight.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnShiftRight.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnShiftRight.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
-      this.btnShiftRight.Location = new System.Drawing.Point(38, 269);
-      this.btnShiftRight.Name = "btnShiftRight";
-      this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftRight.TabIndex = 1;
-      this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
-      this.btnShiftRight.Click += new DecentForms.EventHandler(this.btnShiftRight_Click);
+      btnShiftRight.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnShiftRight.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnShiftRight.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnShiftRight.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnShiftRight.DisplayAntiAliased = true;
+      btnShiftRight.Image = (System.Drawing.Image)resources.GetObject( "btnShiftRight.Image" );
+      btnShiftRight.Location = new System.Drawing.Point( 38, 269 );
+      btnShiftRight.Name = "btnShiftRight";
+      btnShiftRight.Size = new System.Drawing.Size( 26, 26 );
+      btnShiftRight.TabIndex = 1;
+      toolTip1.SetToolTip( btnShiftRight, "Shift Right" );
+      btnShiftRight.Click +=  btnShiftRight_Click ;
       // 
       // button3
       // 
-      this.button3.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.button3.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.button3.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.button3.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
-      this.button3.Location = new System.Drawing.Point(38, 301);
-      this.button3.Name = "button3";
-      this.button3.Size = new System.Drawing.Size(26, 26);
-      this.button3.TabIndex = 8;
-      this.toolTip1.SetToolTip(this.button3, "Rotate Right");
-      this.button3.Click += new DecentForms.EventHandler(this.btnRotateRight_Click);
+      button3.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      button3.BorderStyle = DecentForms.BorderStyle.FLAT;
+      button3.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      button3.DialogResult = System.Windows.Forms.DialogResult.OK;
+      button3.DisplayAntiAliased = true;
+      button3.Image = (System.Drawing.Image)resources.GetObject( "button3.Image" );
+      button3.Location = new System.Drawing.Point( 38, 301 );
+      button3.Name = "button3";
+      button3.Size = new System.Drawing.Size( 26, 26 );
+      button3.TabIndex = 8;
+      toolTip1.SetToolTip( button3, "Rotate Right" );
+      button3.Click +=  btnRotateRight_Click ;
       // 
       // btnPasteFromClipboard
       // 
-      this.btnPasteFromClipboard.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnPasteFromClipboard.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnPasteFromClipboard.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnPasteFromClipboard.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnPasteFromClipboard.Image = null;
-      this.btnPasteFromClipboard.Location = new System.Drawing.Point(617, 269);
-      this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
-      this.btnPasteFromClipboard.Size = new System.Drawing.Size(122, 23);
-      this.btnPasteFromClipboard.TabIndex = 19;
-      this.btnPasteFromClipboard.Text = "Paste Image";
-      this.toolTip1.SetToolTip(this.btnPasteFromClipboard, "Paste Image");
-      this.btnPasteFromClipboard.Click += new DecentForms.EventHandler(this.btnPasteFromClipboard_Click);
+      btnPasteFromClipboard.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnPasteFromClipboard.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnPasteFromClipboard.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnPasteFromClipboard.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnPasteFromClipboard.DisplayAntiAliased = true;
+      btnPasteFromClipboard.Image = null;
+      btnPasteFromClipboard.Location = new System.Drawing.Point( 617, 269 );
+      btnPasteFromClipboard.Name = "btnPasteFromClipboard";
+      btnPasteFromClipboard.Size = new System.Drawing.Size( 122, 23 );
+      btnPasteFromClipboard.TabIndex = 19;
+      btnPasteFromClipboard.Text = "Paste Image";
+      toolTip1.SetToolTip( btnPasteFromClipboard, "Paste Image" );
+      btnPasteFromClipboard.Click +=  btnPasteFromClipboard_Click ;
       // 
       // btnRotateLeft
       // 
-      this.btnRotateLeft.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnRotateLeft.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnRotateLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnRotateLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnRotateLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnRotateLeft.Image")));
-      this.btnRotateLeft.Location = new System.Drawing.Point(6, 301);
-      this.btnRotateLeft.Name = "btnRotateLeft";
-      this.btnRotateLeft.Size = new System.Drawing.Size(26, 26);
-      this.btnRotateLeft.TabIndex = 7;
-      this.toolTip1.SetToolTip(this.btnRotateLeft, "Rotate Left");
-      this.btnRotateLeft.Click += new DecentForms.EventHandler(this.btnRotateLeft_Click);
+      btnRotateLeft.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnRotateLeft.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnRotateLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnRotateLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnRotateLeft.DisplayAntiAliased = true;
+      btnRotateLeft.Image = (System.Drawing.Image)resources.GetObject( "btnRotateLeft.Image" );
+      btnRotateLeft.Location = new System.Drawing.Point( 6, 301 );
+      btnRotateLeft.Name = "btnRotateLeft";
+      btnRotateLeft.Size = new System.Drawing.Size( 26, 26 );
+      btnRotateLeft.TabIndex = 7;
+      toolTip1.SetToolTip( btnRotateLeft, "Rotate Left" );
+      btnRotateLeft.Click +=  btnRotateLeft_Click ;
       // 
       // btnShiftLeft
       // 
-      this.btnShiftLeft.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnShiftLeft.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnShiftLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnShiftLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
-      this.btnShiftLeft.Location = new System.Drawing.Point(6, 269);
-      this.btnShiftLeft.Name = "btnShiftLeft";
-      this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftLeft.TabIndex = 0;
-      this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
-      this.btnShiftLeft.Click += new DecentForms.EventHandler(this.btnShiftLeft_Click);
+      btnShiftLeft.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnShiftLeft.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnShiftLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnShiftLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnShiftLeft.DisplayAntiAliased = true;
+      btnShiftLeft.Image = (System.Drawing.Image)resources.GetObject( "btnShiftLeft.Image" );
+      btnShiftLeft.Location = new System.Drawing.Point( 6, 269 );
+      btnShiftLeft.Name = "btnShiftLeft";
+      btnShiftLeft.Size = new System.Drawing.Size( 26, 26 );
+      btnShiftLeft.TabIndex = 0;
+      toolTip1.SetToolTip( btnShiftLeft, "Shift Left" );
+      btnShiftLeft.Click +=  btnShiftLeft_Click ;
       // 
       // tabCharacterEditor
       // 
-      this.tabCharacterEditor.Controls.Add(this.tabEditor);
-      this.tabCharacterEditor.Controls.Add(this.tabCategories);
-      this.tabCharacterEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tabCharacterEditor.Location = new System.Drawing.Point(0, 0);
-      this.tabCharacterEditor.Name = "tabCharacterEditor";
-      this.tabCharacterEditor.SelectedIndex = 0;
-      this.tabCharacterEditor.Size = new System.Drawing.Size(1070, 490);
-      this.tabCharacterEditor.TabIndex = 0;
+      tabCharacterEditor.Controls.Add( tabEditor );
+      tabCharacterEditor.Controls.Add( tabCategories );
+      tabCharacterEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+      tabCharacterEditor.Location = new System.Drawing.Point( 0, 0 );
+      tabCharacterEditor.Name = "tabCharacterEditor";
+      tabCharacterEditor.SelectedIndex = 0;
+      tabCharacterEditor.Size = new System.Drawing.Size( 1143, 490 );
+      tabCharacterEditor.TabIndex = 0;
       // 
       // tabEditor
       // 
-      this.tabEditor.Controls.Add(this.btnMoveSelectionToTarget);
-      this.tabEditor.Controls.Add(this.panelColorChooser);
-      this.tabEditor.Controls.Add(this.editCharName);
-      this.tabEditor.Controls.Add(this.editCharsetName);
-      this.tabEditor.Controls.Add(this.editMoveTargetIndex);
-      this.tabEditor.Controls.Add(this.btnRestoreDefault);
-      this.tabEditor.Controls.Add(this.btnClearChars);
-      this.tabEditor.Controls.Add(this.btnRemoveDuplicates);
-      this.tabEditor.Controls.Add(this.btnHighlightDuplicates);
-      this.tabEditor.Controls.Add(this.panelColorSettings);
-      this.tabEditor.Controls.Add(this.canvasEditor);
-      this.tabEditor.Controls.Add(this.comboCharsetMode);
-      this.tabEditor.Controls.Add(this.label2);
-      this.tabEditor.Controls.Add(this.label1);
-      this.tabEditor.Controls.Add(this.labelCharsetMode);
-      this.tabEditor.Controls.Add(this.picturePlayground);
-      this.tabEditor.Controls.Add(this.btnPaste);
-      this.tabEditor.Controls.Add(this.btnCopy);
-      this.tabEditor.Controls.Add(this.btnInvert);
-      this.tabEditor.Controls.Add(this.btnMirrorY);
-      this.tabEditor.Controls.Add(this.checkPasteMultiColor);
-      this.tabEditor.Controls.Add(this.btnMirrorX);
-      this.tabEditor.Controls.Add(this.checkShowGrid);
-      this.tabEditor.Controls.Add(this.btnShiftDown);
-      this.tabEditor.Controls.Add(this.panelCharacters);
-      this.tabEditor.Controls.Add(this.btnShiftUp);
-      this.tabEditor.Controls.Add(this.labelCharNo);
-      this.tabEditor.Controls.Add(this.btnShiftRight);
-      this.tabEditor.Controls.Add(this.label4);
-      this.tabEditor.Controls.Add(this.button3);
-      this.tabEditor.Controls.Add(this.btnPasteFromClipboard);
-      this.tabEditor.Controls.Add(this.btnRotateLeft);
-      this.tabEditor.Controls.Add(this.comboCategories);
-      this.tabEditor.Controls.Add(this.btnShiftLeft);
-      this.tabEditor.Location = new System.Drawing.Point(4, 22);
-      this.tabEditor.Name = "tabEditor";
-      this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(1062, 464);
-      this.tabEditor.TabIndex = 0;
-      this.tabEditor.Text = "Editor";
-      this.tabEditor.UseVisualStyleBackColor = true;
+      tabEditor.Controls.Add( panelColorPalette );
+      tabEditor.Controls.Add( btnMoveSelectionToTarget );
+      tabEditor.Controls.Add( panelColorChooser );
+      tabEditor.Controls.Add( editCharName );
+      tabEditor.Controls.Add( editCharsetName );
+      tabEditor.Controls.Add( editMoveTargetIndex );
+      tabEditor.Controls.Add( btnRestoreDefault );
+      tabEditor.Controls.Add( btnClearChars );
+      tabEditor.Controls.Add( btnRemoveDuplicates );
+      tabEditor.Controls.Add( btnHighlightDuplicates );
+      tabEditor.Controls.Add( panelColorSettings );
+      tabEditor.Controls.Add( canvasEditor );
+      tabEditor.Controls.Add( comboCharsetMode );
+      tabEditor.Controls.Add( label2 );
+      tabEditor.Controls.Add( label1 );
+      tabEditor.Controls.Add( labelCharsetMode );
+      tabEditor.Controls.Add( picturePlayground );
+      tabEditor.Controls.Add( btnPaste );
+      tabEditor.Controls.Add( btnCopy );
+      tabEditor.Controls.Add( btnInvert );
+      tabEditor.Controls.Add( btnMirrorY );
+      tabEditor.Controls.Add( checkPasteMultiColor );
+      tabEditor.Controls.Add( btnMirrorX );
+      tabEditor.Controls.Add( checkShowGrid );
+      tabEditor.Controls.Add( btnShiftDown );
+      tabEditor.Controls.Add( panelCharacters );
+      tabEditor.Controls.Add( btnShiftUp );
+      tabEditor.Controls.Add( labelCharNo );
+      tabEditor.Controls.Add( btnShiftRight );
+      tabEditor.Controls.Add( labelCategory );
+      tabEditor.Controls.Add( button3 );
+      tabEditor.Controls.Add( btnPasteFromClipboard );
+      tabEditor.Controls.Add( btnRotateLeft );
+      tabEditor.Controls.Add( comboCategories );
+      tabEditor.Controls.Add( btnShiftLeft );
+      tabEditor.Location = new System.Drawing.Point( 4, 24 );
+      tabEditor.Name = "tabEditor";
+      tabEditor.Padding = new System.Windows.Forms.Padding( 3 );
+      tabEditor.Size = new System.Drawing.Size( 1135, 462 );
+      tabEditor.TabIndex = 0;
+      tabEditor.Text = "Editor";
+      tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // panelColorPalette
+      // 
+      panelColorPalette.Location = new System.Drawing.Point( 277, 3 );
+      panelColorPalette.Name = "panelColorPalette";
+      panelColorPalette.Size = new System.Drawing.Size( 20, 186 );
+      panelColorPalette.TabIndex = 65;
+      panelColorPalette.SizeChanged +=  panelColorPalette_SizeChanged ;
       // 
       // btnMoveSelectionToTarget
       // 
-      this.btnMoveSelectionToTarget.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnMoveSelectionToTarget.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnMoveSelectionToTarget.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnMoveSelectionToTarget.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnMoveSelectionToTarget.Image = null;
-      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(514, 327);
-      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
-      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(97, 23);
-      this.btnMoveSelectionToTarget.TabIndex = 22;
-      this.btnMoveSelectionToTarget.Text = "Move to Index";
-      this.btnMoveSelectionToTarget.Click += new DecentForms.EventHandler(this.btnMoveSelectionToTarget_Click);
+      btnMoveSelectionToTarget.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnMoveSelectionToTarget.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnMoveSelectionToTarget.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnMoveSelectionToTarget.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnMoveSelectionToTarget.DisplayAntiAliased = true;
+      btnMoveSelectionToTarget.Image = null;
+      btnMoveSelectionToTarget.Location = new System.Drawing.Point( 514, 327 );
+      btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
+      btnMoveSelectionToTarget.Size = new System.Drawing.Size( 97, 23 );
+      btnMoveSelectionToTarget.TabIndex = 22;
+      btnMoveSelectionToTarget.Text = "Move to Index";
+      btnMoveSelectionToTarget.Click +=  btnMoveSelectionToTarget_Click ;
       // 
       // panelColorChooser
       // 
-      this.panelColorChooser.Location = new System.Drawing.Point(780, 275);
-      this.panelColorChooser.Name = "panelColorChooser";
-      this.panelColorChooser.Size = new System.Drawing.Size(280, 120);
-      this.panelColorChooser.TabIndex = 26;
-      // 
-      // btnRestoreDefault
-      // 
-      this.btnRestoreDefault.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnRestoreDefault.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnRestoreDefault.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnRestoreDefault.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnRestoreDefault.Image = null;
-      this.btnRestoreDefault.Location = new System.Drawing.Point(617, 298);
-      this.btnRestoreDefault.Name = "btnRestoreDefault";
-      this.btnRestoreDefault.Size = new System.Drawing.Size(122, 23);
-      this.btnRestoreDefault.TabIndex = 21;
-      this.btnRestoreDefault.Text = "Restore Default";
-      this.btnRestoreDefault.Click += new DecentForms.EventHandler(this.btnRestoreDefault_Click);
-      // 
-      // btnClearChars
-      // 
-      this.btnClearChars.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnClearChars.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnClearChars.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnClearChars.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnClearChars.Image = null;
-      this.btnClearChars.Location = new System.Drawing.Point(514, 298);
-      this.btnClearChars.Name = "btnClearChars";
-      this.btnClearChars.Size = new System.Drawing.Size(97, 23);
-      this.btnClearChars.TabIndex = 20;
-      this.btnClearChars.Text = "Clear";
-      this.btnClearChars.Click += new DecentForms.EventHandler(this.btnClear_Click);
-      // 
-      // btnRemoveDuplicates
-      // 
-      this.btnRemoveDuplicates.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnRemoveDuplicates.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnRemoveDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnRemoveDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnRemoveDuplicates.Image = null;
-      this.btnRemoveDuplicates.Location = new System.Drawing.Point(617, 356);
-      this.btnRemoveDuplicates.Name = "btnRemoveDuplicates";
-      this.btnRemoveDuplicates.Size = new System.Drawing.Size(122, 23);
-      this.btnRemoveDuplicates.TabIndex = 25;
-      this.btnRemoveDuplicates.Text = "Remove Duplicates";
-      this.btnRemoveDuplicates.Click += new DecentForms.EventHandler(this.btnRemoveDuplicates_Click);
-      // 
-      // panelColorSettings
-      // 
-      this.panelColorSettings.Location = new System.Drawing.Point(277, 3);
-      this.panelColorSettings.Name = "panelColorSettings";
-      this.panelColorSettings.Size = new System.Drawing.Size(231, 186);
-      this.panelColorSettings.TabIndex = 9;
-      // 
-      // canvasEditor
-      // 
-      this.canvasEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.canvasEditor.Location = new System.Drawing.Point(6, 3);
-      this.canvasEditor.Name = "canvasEditor";
-      this.canvasEditor.Size = new System.Drawing.Size(265, 260);
-      this.canvasEditor.TabIndex = 54;
-      this.canvasEditor.TabStop = false;
-      this.canvasEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.canvasEditor_Paint);
-      this.canvasEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseDown);
-      this.canvasEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseMove);
-      // 
-      // comboCharsetMode
-      // 
-      this.comboCharsetMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboCharsetMode.FormattingEnabled = true;
-      this.comboCharsetMode.Location = new System.Drawing.Point(351, 218);
-      this.comboCharsetMode.Name = "comboCharsetMode";
-      this.comboCharsetMode.Size = new System.Drawing.Size(157, 21);
-      this.comboCharsetMode.TabIndex = 10;
-      this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
-      // 
-      // labelCharsetMode
-      // 
-      this.labelCharsetMode.AutoSize = true;
-      this.labelCharsetMode.Location = new System.Drawing.Point(277, 221);
-      this.labelCharsetMode.Name = "labelCharsetMode";
-      this.labelCharsetMode.Size = new System.Drawing.Size(37, 13);
-      this.labelCharsetMode.TabIndex = 17;
-      this.labelCharsetMode.Text = "Mode:";
-      // 
-      // picturePlayground
-      // 
-      this.picturePlayground.AutoResize = false;
-      this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      fastImage1.FixedScaleFactor = 1;
-      this.picturePlayground.DisplayPage = fastImage1;
-      this.picturePlayground.Image = null;
-      this.picturePlayground.Location = new System.Drawing.Point(780, 3);
-      this.picturePlayground.Name = "picturePlayground";
-      this.picturePlayground.Size = new System.Drawing.Size(260, 260);
-      this.picturePlayground.TabIndex = 51;
-      this.picturePlayground.TabStop = false;
-      this.picturePlayground.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseDown);
-      this.picturePlayground.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseMove);
-      // 
-      // panelCharacters
-      // 
-      this.panelCharacters.AllowPopup = false;
-      this.panelCharacters.AutoScroll = true;
-      this.panelCharacters.AutoScrollHorizontalMaximum = 100;
-      this.panelCharacters.AutoScrollHorizontalMinimum = 0;
-      this.panelCharacters.AutoScrollHPos = 0;
-      this.panelCharacters.AutoScrollVerticalMaximum = -23;
-      this.panelCharacters.AutoScrollVerticalMinimum = 0;
-      this.panelCharacters.AutoScrollVPos = 0;
-      this.panelCharacters.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharacters.EnableAutoScrollHorizontal = true;
-      this.panelCharacters.EnableAutoScrollVertical = true;
-      this.panelCharacters.HottrackColor = ((uint)(2151694591u));
-      this.panelCharacters.ItemHeight = 8;
-      this.panelCharacters.ItemWidth = 8;
-      this.panelCharacters.Location = new System.Drawing.Point(514, 3);
-      this.panelCharacters.Name = "panelCharacters";
-      this.panelCharacters.PixelFormat = GR.Drawing.PixelFormat.DontCare;
-      this.panelCharacters.SelectedIndex = -1;
-      this.panelCharacters.Size = new System.Drawing.Size(260, 260);
-      this.panelCharacters.TabIndex = 16;
-      this.panelCharacters.TabStop = true;
-      this.panelCharacters.VisibleAutoScrollHorizontal = false;
-      this.panelCharacters.VisibleAutoScrollVertical = false;
-      this.panelCharacters.SelectionChanged += new System.EventHandler(this.panelCharacters_SelectionChanged);
-      // 
-      // tabCategories
-      // 
-      this.tabCategories.Controls.Add(this.btnMoveCategoryDown);
-      this.tabCategories.Controls.Add(this.btnMoveCategoryUp);
-      this.tabCategories.Controls.Add(this.groupAllCategories);
-      this.tabCategories.Controls.Add(this.groupCategorySpecific);
-      this.tabCategories.Controls.Add(this.btnDelete);
-      this.tabCategories.Controls.Add(this.btnAddCategory);
-      this.tabCategories.Controls.Add(this.listCategories);
-      this.tabCategories.Controls.Add(this.editCategoryName);
-      this.tabCategories.Controls.Add(this.label3);
-      this.tabCategories.Location = new System.Drawing.Point(4, 22);
-      this.tabCategories.Name = "tabCategories";
-      this.tabCategories.Padding = new System.Windows.Forms.Padding(3);
-      this.tabCategories.Size = new System.Drawing.Size(1062, 464);
-      this.tabCategories.TabIndex = 1;
-      this.tabCategories.Text = "Categories";
-      this.tabCategories.UseVisualStyleBackColor = true;
-      // 
-      // btnMoveCategoryDown
-      // 
-      this.btnMoveCategoryDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnMoveCategoryDown.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnMoveCategoryDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnMoveCategoryDown.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnMoveCategoryDown.Enabled = false;
-      this.btnMoveCategoryDown.Image = null;
-      this.btnMoveCategoryDown.Location = new System.Drawing.Point(90, 201);
-      this.btnMoveCategoryDown.Name = "btnMoveCategoryDown";
-      this.btnMoveCategoryDown.Size = new System.Drawing.Size(75, 23);
-      this.btnMoveCategoryDown.TabIndex = 12;
-      this.btnMoveCategoryDown.Text = "Move Down";
-      this.btnMoveCategoryDown.Click += new DecentForms.EventHandler(this.btnMoveCategoryDown_Click);
-      // 
-      // btnMoveCategoryUp
-      // 
-      this.btnMoveCategoryUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnMoveCategoryUp.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnMoveCategoryUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnMoveCategoryUp.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnMoveCategoryUp.Enabled = false;
-      this.btnMoveCategoryUp.Image = null;
-      this.btnMoveCategoryUp.Location = new System.Drawing.Point(9, 201);
-      this.btnMoveCategoryUp.Name = "btnMoveCategoryUp";
-      this.btnMoveCategoryUp.Size = new System.Drawing.Size(75, 23);
-      this.btnMoveCategoryUp.TabIndex = 12;
-      this.btnMoveCategoryUp.Text = "Move Up";
-      this.btnMoveCategoryUp.Click += new DecentForms.EventHandler(this.btnMoveCategoryUp_Click);
-      // 
-      // groupAllCategories
-      // 
-      this.groupAllCategories.Controls.Add(this.btnSortCategories);
-      this.groupAllCategories.Location = new System.Drawing.Point(261, 119);
-      this.groupAllCategories.Name = "groupAllCategories";
-      this.groupAllCategories.Size = new System.Drawing.Size(255, 76);
-      this.groupAllCategories.TabIndex = 10;
-      this.groupAllCategories.TabStop = false;
-      this.groupAllCategories.Text = "All Categories";
-      // 
-      // btnSortCategories
-      // 
-      this.btnSortCategories.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnSortCategories.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnSortCategories.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnSortCategories.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnSortCategories.Image = null;
-      this.btnSortCategories.Location = new System.Drawing.Point(6, 19);
-      this.btnSortCategories.Name = "btnSortCategories";
-      this.btnSortCategories.Size = new System.Drawing.Size(105, 23);
-      this.btnSortCategories.TabIndex = 3;
-      this.btnSortCategories.Text = "Sort by Categories";
-      this.btnSortCategories.Click += new DecentForms.EventHandler(this.btnSortCategories_Click);
-      // 
-      // groupCategorySpecific
-      // 
-      this.groupCategorySpecific.Controls.Add(this.label5);
-      this.groupCategorySpecific.Controls.Add(this.editCollapseIndex);
-      this.groupCategorySpecific.Controls.Add(this.btnCollapseCategory);
-      this.groupCategorySpecific.Controls.Add(this.btnReseatCategory);
-      this.groupCategorySpecific.Location = new System.Drawing.Point(261, 37);
-      this.groupCategorySpecific.Name = "groupCategorySpecific";
-      this.groupCategorySpecific.Size = new System.Drawing.Size(255, 76);
-      this.groupCategorySpecific.TabIndex = 11;
-      this.groupCategorySpecific.TabStop = false;
-      this.groupCategorySpecific.Text = "Selected Category";
-      // 
-      // label5
-      // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(117, 52);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(47, 13);
-      this.label5.TabIndex = 6;
-      this.label5.Text = "at index:";
-      // 
-      // editCollapseIndex
-      // 
-      this.editCollapseIndex.Location = new System.Drawing.Point(180, 49);
-      this.editCollapseIndex.Name = "editCollapseIndex";
-      this.editCollapseIndex.Size = new System.Drawing.Size(69, 20);
-      this.editCollapseIndex.TabIndex = 5;
-      // 
-      // btnCollapseCategory
-      // 
-      this.btnCollapseCategory.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnCollapseCategory.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnCollapseCategory.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnCollapseCategory.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnCollapseCategory.Enabled = false;
-      this.btnCollapseCategory.Image = null;
-      this.btnCollapseCategory.Location = new System.Drawing.Point(6, 19);
-      this.btnCollapseCategory.Name = "btnCollapseCategory";
-      this.btnCollapseCategory.Size = new System.Drawing.Size(140, 23);
-      this.btnCollapseCategory.TabIndex = 3;
-      this.btnCollapseCategory.Text = "Collapse Unique Chars";
-      this.btnCollapseCategory.Click += new DecentForms.EventHandler(this.btnCollapseCategory_Click);
-      // 
-      // btnReseatCategory
-      // 
-      this.btnReseatCategory.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnReseatCategory.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnReseatCategory.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnReseatCategory.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnReseatCategory.Enabled = false;
-      this.btnReseatCategory.Image = null;
-      this.btnReseatCategory.Location = new System.Drawing.Point(6, 47);
-      this.btnReseatCategory.Name = "btnReseatCategory";
-      this.btnReseatCategory.Size = new System.Drawing.Size(105, 23);
-      this.btnReseatCategory.TabIndex = 3;
-      this.btnReseatCategory.Text = "Reseat Category";
-      this.btnReseatCategory.Click += new DecentForms.EventHandler(this.btnReseatCategory_Click);
-      // 
-      // btnDelete
-      // 
-      this.btnDelete.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnDelete.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnDelete.Enabled = false;
-      this.btnDelete.Image = null;
-      this.btnDelete.Location = new System.Drawing.Point(342, 8);
-      this.btnDelete.Name = "btnDelete";
-      this.btnDelete.Size = new System.Drawing.Size(96, 23);
-      this.btnDelete.TabIndex = 8;
-      this.btnDelete.Text = "Delete Category";
-      this.btnDelete.Click += new DecentForms.EventHandler(this.btnDelete_Click);
-      // 
-      // btnAddCategory
-      // 
-      this.btnAddCategory.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnAddCategory.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnAddCategory.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnAddCategory.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnAddCategory.Enabled = false;
-      this.btnAddCategory.Image = null;
-      this.btnAddCategory.Location = new System.Drawing.Point(261, 8);
-      this.btnAddCategory.Name = "btnAddCategory";
-      this.btnAddCategory.Size = new System.Drawing.Size(75, 23);
-      this.btnAddCategory.TabIndex = 9;
-      this.btnAddCategory.Text = "Add";
-      this.btnAddCategory.Click += new DecentForms.EventHandler(this.btnAddCategory_Click);
-      // 
-      // listCategories
-      // 
-      this.listCategories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-      this.listCategories.FullRowSelect = true;
-      this.listCategories.HideSelection = false;
-      this.listCategories.Location = new System.Drawing.Point(9, 36);
-      this.listCategories.Name = "listCategories";
-      this.listCategories.ShowGroups = false;
-      this.listCategories.Size = new System.Drawing.Size(246, 159);
-      this.listCategories.TabIndex = 7;
-      this.listCategories.UseCompatibleStateImageBehavior = false;
-      this.listCategories.View = System.Windows.Forms.View.Details;
-      this.listCategories.SelectedIndexChanged += new System.EventHandler(this.listCategories_SelectedIndexChanged);
-      // 
-      // columnHeader1
-      // 
-      this.columnHeader1.Text = "Name";
-      this.columnHeader1.Width = 150;
-      // 
-      // columnHeader2
-      // 
-      this.columnHeader2.Text = "No. Chars";
-      this.columnHeader2.Width = 67;
-      // 
-      // editCategoryName
-      // 
-      this.editCategoryName.Location = new System.Drawing.Point(81, 10);
-      this.editCategoryName.Name = "editCategoryName";
-      this.editCategoryName.Size = new System.Drawing.Size(174, 20);
-      this.editCategoryName.TabIndex = 6;
-      this.editCategoryName.TextChanged += new System.EventHandler(this.editCategoryName_TextChanged);
-      // 
-      // label3
-      // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(6, 13);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(52, 13);
-      this.label3.TabIndex = 5;
-      this.label3.Text = "Category:";
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(277, 332);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(77, 13);
-      this.label1.TabIndex = 17;
-      this.label1.Text = "Charset Name:";
-      // 
-      // editCharsetName
-      // 
-      this.editCharsetName.Location = new System.Drawing.Point(360, 329);
-      this.editCharsetName.Name = "editCharsetName";
-      this.editCharsetName.Size = new System.Drawing.Size(148, 20);
-      this.editCharsetName.TabIndex = 14;
-      this.editCharsetName.TextChanged += new System.EventHandler(this.editCharsetName_TextChanged);
-      // 
-      // label2
-      // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(277, 361);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(63, 13);
-      this.label2.TabIndex = 17;
-      this.label2.Text = "Char Name:";
+      panelColorChooser.Location = new System.Drawing.Point( 780, 275 );
+      panelColorChooser.Name = "panelColorChooser";
+      panelColorChooser.Size = new System.Drawing.Size( 280, 120 );
+      panelColorChooser.TabIndex = 26;
       // 
       // editCharName
       // 
-      this.editCharName.Location = new System.Drawing.Point(360, 358);
-      this.editCharName.Name = "editCharName";
-      this.editCharName.Size = new System.Drawing.Size(148, 20);
-      this.editCharName.TabIndex = 15;
-      this.editCharName.TextChanged += new System.EventHandler(this.editCharName_TextChanged);
+      editCharName.Location = new System.Drawing.Point( 368, 358 );
+      editCharName.Name = "editCharName";
+      editCharName.Size = new System.Drawing.Size( 140, 23 );
+      editCharName.TabIndex = 15;
+      editCharName.TextChanged +=  editCharName_TextChanged ;
+      // 
+      // editCharsetName
+      // 
+      editCharsetName.Location = new System.Drawing.Point( 368, 329 );
+      editCharsetName.Name = "editCharsetName";
+      editCharsetName.Size = new System.Drawing.Size( 140, 23 );
+      editCharsetName.TabIndex = 14;
+      editCharsetName.TextChanged +=  editCharsetName_TextChanged ;
+      // 
+      // btnRestoreDefault
+      // 
+      btnRestoreDefault.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnRestoreDefault.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnRestoreDefault.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnRestoreDefault.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnRestoreDefault.DisplayAntiAliased = true;
+      btnRestoreDefault.Image = null;
+      btnRestoreDefault.Location = new System.Drawing.Point( 617, 298 );
+      btnRestoreDefault.Name = "btnRestoreDefault";
+      btnRestoreDefault.Size = new System.Drawing.Size( 122, 23 );
+      btnRestoreDefault.TabIndex = 21;
+      btnRestoreDefault.Text = "Restore Default";
+      btnRestoreDefault.Click +=  btnRestoreDefault_Click ;
+      // 
+      // btnClearChars
+      // 
+      btnClearChars.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnClearChars.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnClearChars.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnClearChars.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnClearChars.DisplayAntiAliased = true;
+      btnClearChars.Image = null;
+      btnClearChars.Location = new System.Drawing.Point( 514, 298 );
+      btnClearChars.Name = "btnClearChars";
+      btnClearChars.Size = new System.Drawing.Size( 97, 23 );
+      btnClearChars.TabIndex = 20;
+      btnClearChars.Text = "Clear";
+      btnClearChars.Click +=  btnClear_Click ;
+      // 
+      // btnRemoveDuplicates
+      // 
+      btnRemoveDuplicates.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnRemoveDuplicates.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnRemoveDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnRemoveDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnRemoveDuplicates.DisplayAntiAliased = true;
+      btnRemoveDuplicates.Image = null;
+      btnRemoveDuplicates.Location = new System.Drawing.Point( 617, 356 );
+      btnRemoveDuplicates.Name = "btnRemoveDuplicates";
+      btnRemoveDuplicates.Size = new System.Drawing.Size( 122, 23 );
+      btnRemoveDuplicates.TabIndex = 25;
+      btnRemoveDuplicates.Text = "Remove Duplicates";
+      btnRemoveDuplicates.Click +=  btnRemoveDuplicates_Click ;
+      // 
+      // panelColorSettings
+      // 
+      panelColorSettings.Location = new System.Drawing.Point( 303, 3 );
+      panelColorSettings.Name = "panelColorSettings";
+      panelColorSettings.Size = new System.Drawing.Size( 205, 186 );
+      panelColorSettings.TabIndex = 9;
+      // 
+      // canvasEditor
+      // 
+      canvasEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      canvasEditor.Location = new System.Drawing.Point( 6, 3 );
+      canvasEditor.Name = "canvasEditor";
+      canvasEditor.Size = new System.Drawing.Size( 265, 260 );
+      canvasEditor.TabIndex = 54;
+      canvasEditor.TabStop = false;
+      canvasEditor.Paint +=  canvasEditor_Paint ;
+      canvasEditor.MouseDown +=  canvasEditor_MouseDown ;
+      canvasEditor.MouseMove +=  canvasEditor_MouseMove ;
+      // 
+      // comboCharsetMode
+      // 
+      comboCharsetMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      comboCharsetMode.FormattingEnabled = true;
+      comboCharsetMode.Location = new System.Drawing.Point( 368, 218 );
+      comboCharsetMode.Name = "comboCharsetMode";
+      comboCharsetMode.Size = new System.Drawing.Size( 140, 23 );
+      comboCharsetMode.TabIndex = 10;
+      comboCharsetMode.SelectedIndexChanged +=  comboCharsetMode_SelectedIndexChanged ;
+      // 
+      // label2
+      // 
+      label2.AutoSize = true;
+      label2.Location = new System.Drawing.Point( 277, 361 );
+      label2.Name = "label2";
+      label2.Size = new System.Drawing.Size( 70, 15 );
+      label2.TabIndex = 17;
+      label2.Text = "Char Name:";
+      // 
+      // label1
+      // 
+      label1.AutoSize = true;
+      label1.Location = new System.Drawing.Point( 277, 332 );
+      label1.Name = "label1";
+      label1.Size = new System.Drawing.Size( 85, 15 );
+      label1.TabIndex = 17;
+      label1.Text = "Charset Name:";
+      // 
+      // labelCharsetMode
+      // 
+      labelCharsetMode.AutoSize = true;
+      labelCharsetMode.Location = new System.Drawing.Point( 303, 221 );
+      labelCharsetMode.Name = "labelCharsetMode";
+      labelCharsetMode.Size = new System.Drawing.Size( 41, 15 );
+      labelCharsetMode.TabIndex = 17;
+      labelCharsetMode.Text = "Mode:";
+      // 
+      // picturePlayground
+      // 
+      picturePlayground.AutoResize = false;
+      picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      picturePlayground.Location = new System.Drawing.Point( 780, 3 );
+      picturePlayground.Name = "picturePlayground";
+      picturePlayground.Size = new System.Drawing.Size( 260, 260 );
+      picturePlayground.TabIndex = 51;
+      picturePlayground.TabStop = false;
+      picturePlayground.MouseDown +=  picturePlayground_MouseDown ;
+      picturePlayground.MouseMove +=  picturePlayground_MouseMove ;
+      // 
+      // panelCharacters
+      // 
+      panelCharacters.AllowPopup = false;
+      panelCharacters.AutoScroll = true;
+      panelCharacters.AutoScrollHorizontalMaximum = 100;
+      panelCharacters.AutoScrollHorizontalMinimum = 0;
+      panelCharacters.AutoScrollHPos = 0;
+      panelCharacters.AutoScrollVerticalMaximum = -23;
+      panelCharacters.AutoScrollVerticalMinimum = 0;
+      panelCharacters.AutoScrollVPos = 0;
+      panelCharacters.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      panelCharacters.EnableAutoScrollHorizontal = true;
+      panelCharacters.EnableAutoScrollVertical = true;
+      panelCharacters.HottrackColor = 2151694591U;
+      panelCharacters.ItemHeight = 8;
+      panelCharacters.ItemWidth = 8;
+      panelCharacters.Location = new System.Drawing.Point( 514, 3 );
+      panelCharacters.Name = "panelCharacters";
+      panelCharacters.PixelFormat = GR.Drawing.PixelFormat.DontCare;
+      panelCharacters.SelectionDisplayedAsFrame = false;
+      panelCharacters.Size = new System.Drawing.Size( 260, 260 );
+      panelCharacters.TabIndex = 16;
+      panelCharacters.TabStop = true;
+      panelCharacters.VisibleAutoScrollHorizontal = false;
+      panelCharacters.VisibleAutoScrollVertical = false;
+      panelCharacters.SelectionChanged +=  panelCharacters_SelectionChanged ;
+      // 
+      // tabCategories
+      // 
+      tabCategories.Controls.Add( btnMoveCategoryDown );
+      tabCategories.Controls.Add( btnMoveCategoryUp );
+      tabCategories.Controls.Add( groupAllCategories );
+      tabCategories.Controls.Add( groupCategorySpecific );
+      tabCategories.Controls.Add( btnDelete );
+      tabCategories.Controls.Add( btnAddCategory );
+      tabCategories.Controls.Add( listCategories );
+      tabCategories.Controls.Add( editCategoryName );
+      tabCategories.Controls.Add( label3 );
+      tabCategories.Location = new System.Drawing.Point( 4, 24 );
+      tabCategories.Name = "tabCategories";
+      tabCategories.Padding = new System.Windows.Forms.Padding( 3 );
+      tabCategories.Size = new System.Drawing.Size( 1135, 462 );
+      tabCategories.TabIndex = 1;
+      tabCategories.Text = "Categories";
+      tabCategories.UseVisualStyleBackColor = true;
+      // 
+      // btnMoveCategoryDown
+      // 
+      btnMoveCategoryDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnMoveCategoryDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnMoveCategoryDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnMoveCategoryDown.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnMoveCategoryDown.DisplayAntiAliased = true;
+      btnMoveCategoryDown.Enabled = false;
+      btnMoveCategoryDown.Image = null;
+      btnMoveCategoryDown.Location = new System.Drawing.Point( 90, 201 );
+      btnMoveCategoryDown.Name = "btnMoveCategoryDown";
+      btnMoveCategoryDown.Size = new System.Drawing.Size( 75, 23 );
+      btnMoveCategoryDown.TabIndex = 12;
+      btnMoveCategoryDown.Text = "Move Down";
+      btnMoveCategoryDown.Click +=  btnMoveCategoryDown_Click ;
+      // 
+      // btnMoveCategoryUp
+      // 
+      btnMoveCategoryUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnMoveCategoryUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnMoveCategoryUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnMoveCategoryUp.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnMoveCategoryUp.DisplayAntiAliased = true;
+      btnMoveCategoryUp.Enabled = false;
+      btnMoveCategoryUp.Image = null;
+      btnMoveCategoryUp.Location = new System.Drawing.Point( 9, 201 );
+      btnMoveCategoryUp.Name = "btnMoveCategoryUp";
+      btnMoveCategoryUp.Size = new System.Drawing.Size( 75, 23 );
+      btnMoveCategoryUp.TabIndex = 12;
+      btnMoveCategoryUp.Text = "Move Up";
+      btnMoveCategoryUp.Click +=  btnMoveCategoryUp_Click ;
+      // 
+      // groupAllCategories
+      // 
+      groupAllCategories.Controls.Add( btnSortCategories );
+      groupAllCategories.Location = new System.Drawing.Point( 261, 119 );
+      groupAllCategories.Name = "groupAllCategories";
+      groupAllCategories.Size = new System.Drawing.Size( 255, 76 );
+      groupAllCategories.TabIndex = 10;
+      groupAllCategories.TabStop = false;
+      groupAllCategories.Text = "All Categories";
+      // 
+      // btnSortCategories
+      // 
+      btnSortCategories.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnSortCategories.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnSortCategories.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnSortCategories.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnSortCategories.DisplayAntiAliased = true;
+      btnSortCategories.Image = null;
+      btnSortCategories.Location = new System.Drawing.Point( 6, 19 );
+      btnSortCategories.Name = "btnSortCategories";
+      btnSortCategories.Size = new System.Drawing.Size( 105, 23 );
+      btnSortCategories.TabIndex = 3;
+      btnSortCategories.Text = "Sort by Categories";
+      btnSortCategories.Click +=  btnSortCategories_Click ;
+      // 
+      // groupCategorySpecific
+      // 
+      groupCategorySpecific.Controls.Add( label5 );
+      groupCategorySpecific.Controls.Add( editCollapseIndex );
+      groupCategorySpecific.Controls.Add( btnCollapseCategory );
+      groupCategorySpecific.Controls.Add( btnReseatCategory );
+      groupCategorySpecific.Location = new System.Drawing.Point( 261, 37 );
+      groupCategorySpecific.Name = "groupCategorySpecific";
+      groupCategorySpecific.Size = new System.Drawing.Size( 255, 76 );
+      groupCategorySpecific.TabIndex = 11;
+      groupCategorySpecific.TabStop = false;
+      groupCategorySpecific.Text = "Selected Category";
+      // 
+      // label5
+      // 
+      label5.AutoSize = true;
+      label5.Location = new System.Drawing.Point( 117, 52 );
+      label5.Name = "label5";
+      label5.Size = new System.Drawing.Size( 51, 15 );
+      label5.TabIndex = 6;
+      label5.Text = "at index:";
+      // 
+      // editCollapseIndex
+      // 
+      editCollapseIndex.Location = new System.Drawing.Point( 180, 49 );
+      editCollapseIndex.Name = "editCollapseIndex";
+      editCollapseIndex.Size = new System.Drawing.Size( 69, 23 );
+      editCollapseIndex.TabIndex = 5;
+      // 
+      // btnCollapseCategory
+      // 
+      btnCollapseCategory.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnCollapseCategory.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnCollapseCategory.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnCollapseCategory.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnCollapseCategory.DisplayAntiAliased = true;
+      btnCollapseCategory.Enabled = false;
+      btnCollapseCategory.Image = null;
+      btnCollapseCategory.Location = new System.Drawing.Point( 6, 19 );
+      btnCollapseCategory.Name = "btnCollapseCategory";
+      btnCollapseCategory.Size = new System.Drawing.Size( 140, 23 );
+      btnCollapseCategory.TabIndex = 3;
+      btnCollapseCategory.Text = "Collapse Unique Chars";
+      btnCollapseCategory.Click +=  btnCollapseCategory_Click ;
+      // 
+      // btnReseatCategory
+      // 
+      btnReseatCategory.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnReseatCategory.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnReseatCategory.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnReseatCategory.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnReseatCategory.DisplayAntiAliased = true;
+      btnReseatCategory.Enabled = false;
+      btnReseatCategory.Image = null;
+      btnReseatCategory.Location = new System.Drawing.Point( 6, 47 );
+      btnReseatCategory.Name = "btnReseatCategory";
+      btnReseatCategory.Size = new System.Drawing.Size( 105, 23 );
+      btnReseatCategory.TabIndex = 3;
+      btnReseatCategory.Text = "Reseat Category";
+      btnReseatCategory.Click +=  btnReseatCategory_Click ;
+      // 
+      // btnDelete
+      // 
+      btnDelete.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnDelete.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnDelete.DisplayAntiAliased = true;
+      btnDelete.Enabled = false;
+      btnDelete.Image = null;
+      btnDelete.Location = new System.Drawing.Point( 342, 8 );
+      btnDelete.Name = "btnDelete";
+      btnDelete.Size = new System.Drawing.Size( 96, 23 );
+      btnDelete.TabIndex = 8;
+      btnDelete.Text = "Delete Category";
+      btnDelete.Click +=  btnDelete_Click ;
+      // 
+      // btnAddCategory
+      // 
+      btnAddCategory.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnAddCategory.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnAddCategory.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnAddCategory.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnAddCategory.DisplayAntiAliased = true;
+      btnAddCategory.Enabled = false;
+      btnAddCategory.Image = null;
+      btnAddCategory.Location = new System.Drawing.Point( 261, 8 );
+      btnAddCategory.Name = "btnAddCategory";
+      btnAddCategory.Size = new System.Drawing.Size( 75, 23 );
+      btnAddCategory.TabIndex = 9;
+      btnAddCategory.Text = "Add";
+      btnAddCategory.Click +=  btnAddCategory_Click ;
+      // 
+      // listCategories
+      // 
+      listCategories.Columns.AddRange( new System.Windows.Forms.ColumnHeader[] { columnHeader1, columnHeader2 } );
+      listCategories.FullRowSelect = true;
+      listCategories.Location = new System.Drawing.Point( 9, 36 );
+      listCategories.Name = "listCategories";
+      listCategories.ShowGroups = false;
+      listCategories.Size = new System.Drawing.Size( 246, 159 );
+      listCategories.TabIndex = 7;
+      listCategories.UseCompatibleStateImageBehavior = false;
+      listCategories.View = System.Windows.Forms.View.Details;
+      listCategories.SelectedIndexChanged +=  listCategories_SelectedIndexChanged ;
+      // 
+      // columnHeader1
+      // 
+      columnHeader1.Text = "Name";
+      columnHeader1.Width = 150;
+      // 
+      // columnHeader2
+      // 
+      columnHeader2.Text = "No. Chars";
+      columnHeader2.Width = 67;
+      // 
+      // editCategoryName
+      // 
+      editCategoryName.Location = new System.Drawing.Point( 81, 10 );
+      editCategoryName.Name = "editCategoryName";
+      editCategoryName.Size = new System.Drawing.Size( 174, 23 );
+      editCategoryName.TabIndex = 6;
+      editCategoryName.TextChanged +=  editCategoryName_TextChanged ;
+      // 
+      // label3
+      // 
+      label3.AutoSize = true;
+      label3.Location = new System.Drawing.Point( 6, 13 );
+      label3.Name = "label3";
+      label3.Size = new System.Drawing.Size( 58, 15 );
+      label3.TabIndex = 5;
+      label3.Text = "Category:";
       // 
       // CharacterEditor
       // 
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.Controls.Add(this.tabCharacterEditor);
-      this.Name = "CharacterEditor";
-      this.Size = new System.Drawing.Size(1070, 490);
-      this.tabCharacterEditor.ResumeLayout(false);
-      this.tabEditor.ResumeLayout(false);
-      this.tabEditor.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
-      this.tabCategories.ResumeLayout(false);
-      this.tabCategories.PerformLayout();
-      this.groupAllCategories.ResumeLayout(false);
-      this.groupCategorySpecific.ResumeLayout(false);
-      this.groupCategorySpecific.PerformLayout();
-      this.ResumeLayout(false);
+      AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+      Controls.Add( tabCharacterEditor );
+      Name = "CharacterEditor";
+      Size = new System.Drawing.Size( 1143, 490 );
+      tabCharacterEditor.ResumeLayout( false );
+      tabEditor.ResumeLayout( false );
+      tabEditor.PerformLayout();
+      ( (System.ComponentModel.ISupportInitialize)canvasEditor ).EndInit();
+      ( (System.ComponentModel.ISupportInitialize)picturePlayground ).EndInit();
+      tabCategories.ResumeLayout( false );
+      tabCategories.PerformLayout();
+      groupAllCategories.ResumeLayout( false );
+      groupCategorySpecific.ResumeLayout( false );
+      groupCategorySpecific.PerformLayout();
+      ResumeLayout( false );
 
     }
 
-        #endregion
-        private GR.Forms.FastPictureBox picturePlayground;
+    #endregion
+    private GR.Forms.FastPictureBox picturePlayground;
         private DecentForms.Button btnClearChars;
         private DecentForms.Button btnPaste;
         private DecentForms.Button btnCopy;
@@ -808,7 +835,7 @@
         private DecentForms.Button btnShiftLeft;
         private System.Windows.Forms.ComboBox comboCategories;
         private DecentForms.Button btnPasteFromClipboard;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label labelCategory;
         private System.Windows.Forms.Label labelCharNo;
         private GR.Forms.ImageListbox panelCharacters;
         private System.Windows.Forms.CheckBox checkShowGrid;
@@ -847,5 +874,6 @@
     private System.Windows.Forms.TextBox editCharsetName;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Panel panelColorPalette;
   }
 }
