@@ -79,10 +79,10 @@ namespace RetroDevStudio.Controls
       switch ( Color )
       {
         case ColorType.BACKGROUND:
-          comboBackground.SelectedIndex = Value;
+          comboBackground.SelectedIndex = Value % comboBackground.Items.Count;
           break;
         case ColorType.MULTICOLOR_1:
-          comboBorderColor.SelectedIndex = Value;
+          comboBorderColor.SelectedIndex = Value % comboBorderColor.Items.Count;
           break;
         case ColorType.MULTICOLOR_2:
           comboAuxColor.SelectedIndex = Value;
