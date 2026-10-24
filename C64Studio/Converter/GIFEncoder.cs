@@ -72,7 +72,6 @@ namespace RetroDevStudio.Converter
       {
         img.Save( gifStream, ImageFormat.Gif );
 
-        System.IO.File.WriteAllBytes( "frame" + ( _isFirstImage ? "1.gif" : "2.gif" ), gifStream.ToArray() );
         if ( _isFirstImage ) // Steal the global color table info
         {
           InitHeader( gifStream, img.Width, img.Height );
