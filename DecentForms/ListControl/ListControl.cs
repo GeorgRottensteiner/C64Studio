@@ -1109,7 +1109,9 @@ namespace DecentForms
                     if ( ( Event.ControlPressed )
                     &&   ( !Event.ShiftPressed ) )
                     {
-                      if ( !Items[MouseOverItem].GroupHeader )
+                      if ( ( _MouseOverItem != -1 )
+                      &&   ( _MouseOverItem < Items.Count )
+                      &&   ( !Items[MouseOverItem].GroupHeader ) )
                       {
                         Items[MouseOverItem].Selected = !Items[MouseOverItem].Selected;
                       }
@@ -1150,7 +1152,9 @@ namespace DecentForms
                   }
                   else if ( Event.ControlPressed )
                   {
-                    if ( !Items[MouseOverItem].GroupHeader )
+                    if ( ( _MouseOverItem != -1 )
+                    &&   ( _MouseOverItem < Items.Count )
+                    &&   ( !Items[MouseOverItem].GroupHeader ) )
                     {
                       Items[MouseOverItem].Selected = !Items[MouseOverItem].Selected;
                     }
