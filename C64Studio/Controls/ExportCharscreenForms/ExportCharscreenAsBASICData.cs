@@ -74,7 +74,7 @@ namespace RetroDevStudio.Controls
       if ( ( lineOffset < 0 )
       ||   ( lineOffset > 63999 ) )
       {
-        startLine = 10;
+        lineOffset = 10;
       }
 
       int wrapByteCount = GetExportWrapCount();
