@@ -270,8 +270,17 @@ namespace RetroDevStudio.Formats
       {
         Track trackHeader = Tracks[TRACK_HEADER - 1];
 
-        value.CopyTo( trackHeader.Sectors[SECTOR_HEADER].Data, 0, 2, 0xa2 );
-        value.CopyTo( trackHeader.Sectors[SECTOR_HEADER].Data, 3, 2, 0xa2 + 3 );
+        for ( int i = 0; i < 2; ++i )
+        {
+          if ( i >= value.Length )
+          {
+            trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 0xA2 + i, 0xa0 );
+          }
+          else
+          {
+            trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 0xA2 + i, value.ByteAt( i ) );
+          }
+        }
       }
     }
 
