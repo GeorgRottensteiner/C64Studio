@@ -22,8 +22,12 @@ namespace RetroDevStudio.Formats
     public override GR.Memory.ByteBuffer Compile()
     {
       _LastError = "";
+      // Data already contains the complete PRG image including the two load address bytes
+      if ( Data.Length >= 2 )
+      {
+        return new GR.Memory.ByteBuffer( Data );
+      }
       GR.Memory.ByteBuffer result = new GR.Memory.ByteBuffer();
-
       result.AppendU16( LoadAddress );
       result.Append( Data );
       return result;
@@ -135,6 +139,11 @@ namespace RetroDevStudio.Formats
         return false;
       }
       Data = new GR.Memory.ByteBuffer( Content );
+      if ( Data.Length >= 2 )
+      {
+        // content carries its own load address in its first two bytes
+        LoadAddress = Data.UInt16At( 0 );
+      }
       this.Filename = Filename;
       return true;
     }
