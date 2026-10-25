@@ -55,12 +55,23 @@ namespace RetroDevStudio.Controls
 
     private void RedrawPaletteGroups()
     {
+      int   paletteRow = _Charset.Colors.PaletteMappingIndex * 4;
+
+      // PaletteMappingIndex is a row index into PaletteIndexMapping, but the NES palette settings store
+      // group * 4 + selected row there. Guard the derived row against the table so an out-of-range
+      // mapping falls back to the standard rows 0..3 instead of throwing out of the constructor.
+      if ( ( paletteRow < 0 )
+      ||   ( paletteRow + 3 >= _Charset.Colors.PaletteIndexMapping.Count ) )
+      {
+        paletteRow = 0;
+      }
+
       for ( int i = 0; i < 4; ++i )
       {
-        picPalette1.DisplayPage.Box( 8 + i * 8, 0, 8, 8, _Charset.Colors.Palette.ColorValues[_Charset.Colors.PaletteIndexMapping[_Charset.Colors.PaletteMappingIndex * 4 + 0][i]] );
-        picPalette2.DisplayPage.Box( 8 + i * 8, 0, 8, 8, _Charset.Colors.Palette.ColorValues[_Charset.Colors.PaletteIndexMapping[_Charset.Colors.PaletteMappingIndex * 4 + 1][i]] );
-        picPalette3.DisplayPage.Box( 8 + i * 8, 0, 8, 8, _Charset.Colors.Palette.ColorValues[_Charset.Colors.PaletteIndexMapping[_Charset.Colors.PaletteMappingIndex * 4 + 2][i]] );
-        picPalette4.DisplayPage.Box( 8 + i * 8, 0, 8, 8, _Charset.Colors.Palette.ColorValues[_Charset.Colors.PaletteIndexMapping[_Charset.Colors.PaletteMappingIndex * 4 + 3][i]] );
+        picPalette1.DisplayPage.Box( 8 + i * 8, 0, 8, 8, _Charset.Colors.Palette.ColorValues[_Charset.Colors.PaletteIndexMapping[paletteRow + 0][i]] );
+        picPalette2.DisplayPage.Box( 8 + i * 8, 0, 8, 8, _Charset.Colors.Palette.ColorValues[_Charset.Colors.PaletteIndexMapping[paletteRow + 1][i]] );
+        picPalette3.DisplayPage.Box( 8 + i * 8, 0, 8, 8, _Charset.Colors.Palette.ColorValues[_Charset.Colors.PaletteIndexMapping[paletteRow + 2][i]] );
+        picPalette4.DisplayPage.Box( 8 + i * 8, 0, 8, 8, _Charset.Colors.Palette.ColorValues[_Charset.Colors.PaletteIndexMapping[paletteRow + 3][i]] );
       }
       picPalette1.Invalidate();
       picPalette2.Invalidate();
