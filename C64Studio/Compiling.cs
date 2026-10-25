@@ -183,7 +183,7 @@ namespace RetroDevStudio
               }
 
               var fileTime = FileLastWriteTime( fullPath );
-              if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath].TimeStampOfTargetFile )
+              if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath].TimeStampOfSourceFile )
               {
                 Core.AddToOutput( "External Dependency " + fullPath + " was modified, need to rebuild dependent element " + DocInfo.DocumentFilename + System.Environment.NewLine );
                 return true;
