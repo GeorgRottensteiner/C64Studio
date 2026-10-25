@@ -150,9 +150,9 @@ namespace C64Ass
       {
         config.OutputFile = _Args.Parameter( "O" );
       }
-      if ( _Args.IsParameterSet( "OUTFILE" ) )
+      if ( _Args.IsParameterSet( "-OUTFILE" ) )
       {
-        config.OutputFile = _Args.Parameter( "OUTFILE" );
+        config.OutputFile = _Args.Parameter( "-OUTFILE" );
       }
       if ( _Args.IsParameterSet( "L" ) )
       {
@@ -160,15 +160,15 @@ namespace C64Ass
       }
       if ( _Args.IsParameterSet( "-LABELDUMP" ) )
       {
-        config.LabelDumpSettings.Filename = _Args.Parameter( "LABELDUMP" );
+        config.LabelDumpSettings.Filename = _Args.Parameter( "-LABELDUMP" );
       }
       if ( _Args.IsParameterSet( "LIB" ) )
       {
         config.LibraryFiles = _Args.Parameter( "LIB" ).Split( ',' ).ToList();
       }
-      if ( _Args.IsParameterSet( "LIBRARY" ) )
+      if ( _Args.IsParameterSet( "-LIBRARY" ) )
       {
-        config.LibraryFiles = _Args.Parameter( "LIBRARY" ).Split( ',' ).ToList();
+        config.LibraryFiles = _Args.Parameter( "-LIBRARY" ).Split( ',' ).ToList();
       }
       if ( _Args.IsParameterSet( "N" ) )
       {
