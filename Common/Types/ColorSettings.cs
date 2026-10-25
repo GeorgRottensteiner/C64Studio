@@ -43,7 +43,12 @@ namespace RetroDevStudio.Types
       set
       {
         _palettes = value;
-        if ( ActivePalette >= _palettes.Count )
+        if ( _palettes.Count == 0 )
+        {
+          ActivePalette = 0;
+        }
+        else if ( ( ActivePalette < 0 )
+        ||        ( ActivePalette >= _palettes.Count ) )
         {
           ActivePalette = _palettes.Count - 1;
         }
@@ -64,6 +69,18 @@ namespace RetroDevStudio.Types
       }
       set
       {
+        if ( Palettes.Count == 0 )
+        {
+          return;
+        }
+        if ( ActivePalette < 0 )
+        {
+          ActivePalette = 0;
+        }
+        else if ( ActivePalette >= Palettes.Count )
+        {
+          ActivePalette = Palettes.Count - 1;
+        }
         Palettes[ActivePalette] = value;
       }
     }
