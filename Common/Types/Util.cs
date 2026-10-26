@@ -572,23 +572,37 @@ namespace RetroDevStudio
             WrapCharCount = 20;
           }
 
-          // size of line number + DATA token
-          numBytesInLine = StartLine.ToString().Length + 1;
+          // size of line number + DATA token (plus 1 for the implicit space between line number and data statement)
+          numBytesInLine = StartLine.ToString().Length + 4 + 1;
 
-          string nextValue = Data.ByteAt( dataPos ).ToString( formatString );
-
-          while ( ( numBytesInLine + nextValue.Length <= WrapCharCount )
-          &&      ( dataPos < Data.Length ) )
+          while ( dataPos < Data.Length )
           {
+            string  nextValue = Data.ByteAt( dataPos ).ToString( formatString );
+            int     numCharsToAdd = nextValue.Length;
+            if ( !firstByte )
+            {
+              ++numCharsToAdd;
+            }
+            if ( numBytesInLine + numCharsToAdd > WrapCharCount )
+            {
+              break;
+            }
+
             if ( !firstByte )
             {
               sb.Append( ',' );
-              ++numBytesInLine;
             }
             firstByte = false;
             sb.Append( nextValue );
             ++dataPos;
-            numBytesInLine += nextValue.Length;
+            numBytesInLine += numCharsToAdd;
+          }
+
+          if ( firstByte )
+          {
+            // no byte fits into this line, stop instead of retrying with an unchanged dataPos forever
+            sb.Length = startLength;
+            break;
           }
         }
         else
