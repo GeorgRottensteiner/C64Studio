@@ -198,12 +198,16 @@ namespace RetroDevStudio.Dialogs.Preferences
         string ext = ".s64";
         string handlerName = "retrodevstudio_solution";
         string desc = "RetroDevStudio Solution";
+        string iconPath = GR.Path.Append( Application.StartupPath, "Icons\\retrodevstudio.ico" );
 
         Registry.SetValue( "HKEY_CURRENT_USER\\Software\\Classes\\" + ext, "", handlerName );
         Registry.SetValue( "HKEY_CURRENT_USER\\Software\\Classes\\" + ext + "\\OpenWithProgids", handlerName, new byte[0] );
         Registry.SetValue( "HKEY_CURRENT_USER\\Software\\Classes\\" + handlerName, "", desc );
 
-        Registry.SetValue( "HKEY_CURRENT_USER\\Software\\Classes\\" + handlerName + "\\DefaultIcon", "", "\"" + Application.StartupPath + "Icons\\retrodevstudio.ico\"" );
+        if ( System.IO.File.Exists( iconPath ) )
+        {
+          Registry.SetValue( "HKEY_CURRENT_USER\\Software\\Classes\\" + handlerName + "\\DefaultIcon", "", "\"" + iconPath + "\",0" );
+        }
 
         Registry.SetValue( "HKEY_CURRENT_USER\\Software\\Classes\\" + handlerName + "\\shell", "", "" );
         Registry.SetValue( "HKEY_CURRENT_USER\\Software\\Classes\\" + handlerName + "\\shell\\open", "", "" );
@@ -226,7 +230,7 @@ namespace RetroDevStudio.Dialogs.Preferences
         key.Close();
 
         key = classesKey.CreateSubKey( "retrodevstudio_solution" + "\\DefaultIcon" );
-        key.SetValue( "", "\"" + Application.StartupPath + "Icons\\retrodevstudio.ico\"" );
+        key.SetValue( "", "\"" + iconPath + "\",0" );
         key.Close();
 
         classesKey.Close();

@@ -575,11 +575,15 @@ namespace RetroDevStudio
           // size of line number + DATA token
           numBytesInLine = StartLine.ToString().Length + 1;
 
-          string nextValue = Data.ByteAt( dataPos ).ToString( formatString );
-
-          while ( ( numBytesInLine + nextValue.Length <= WrapCharCount )
-          &&      ( dataPos < Data.Length ) )
+          while ( dataPos < Data.Length )
           {
+            string nextValue = Data.ByteAt( dataPos ).ToString( formatString );
+            if ( ( !firstByte )
+            &&   ( numBytesInLine + nextValue.Length > WrapCharCount ) )
+            {
+              // keep at least one value per line, an empty DATA line would not advance dataPos
+              break;
+            }
             if ( !firstByte )
             {
               sb.Append( ',' );
