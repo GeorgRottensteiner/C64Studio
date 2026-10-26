@@ -560,6 +560,7 @@ namespace RetroDevStudio
         bool    firstByte = true;
         int     numBytesInLine = 0;
         string  formatString = "X2";
+        string   nextValue = "";
         if ( padCount > 0 )
         {
           formatString = $"X{padCount}";
@@ -574,10 +575,9 @@ namespace RetroDevStudio
 
           // size of line number + DATA token
           numBytesInLine = StartLine.ToString().Length + 1;
-
           while ( dataPos < Data.Length )
           {
-            string nextValue = Data.ByteAt( dataPos ).ToString( formatString );
+            nextValue = Data.ByteAt( dataPos ).ToString( formatString );
             if ( ( !firstByte )
             &&   ( numBytesInLine + nextValue.Length > WrapCharCount ) )
             {
@@ -603,7 +603,7 @@ namespace RetroDevStudio
           if ( firstByte )
           {
             // no byte fits into this line, need to put at least one
-            sb.Append( nextValue );
+            sb.Append(nextValue);
             ++dataPos;
           }
         }
