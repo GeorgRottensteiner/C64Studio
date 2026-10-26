@@ -589,6 +589,18 @@ namespace RetroDevStudio
             sb.Append( nextValue );
             ++dataPos;
             numBytesInLine += nextValue.Length;
+
+            if ( dataPos >= Data.Length )
+            {
+              break;
+            }
+            nextValue = Data.ByteAt( dataPos ).ToString( formatString );
+          }
+          if ( firstByte )
+          {
+            // no byte fits into this line, need to put at least one
+            sb.Append( nextValue );
+            ++dataPos;
           }
         }
         else

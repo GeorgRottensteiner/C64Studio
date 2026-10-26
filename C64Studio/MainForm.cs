@@ -1997,8 +1997,8 @@ namespace RetroDevStudio
     bool CloseAllProjects()
     {
       if ( ( StudioCore.Navigating.Solution == null )
-      || ( ( !System.IO.Directory.Exists( GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) ) )
-      && ( StudioCore.Navigating.Solution.Filename.Length > 0 ) ) )
+      ||   ( ( !System.IO.Directory.Exists( GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) ) )
+      &&     ( StudioCore.Navigating.Solution.Filename.Length > 0 ) ) )
       {
         // we have no solution, or the solution was deleted externally
         return true;
@@ -6516,7 +6516,14 @@ namespace RetroDevStudio
         }
         StudioCore.Navigating.Solution.Filename = saveDlg.FileName;
       }
-      GR.IO.File.WriteAllBytes( StudioCore.Navigating.Solution.Filename, StudioCore.Navigating.Solution.ToBuffer() );
+
+      var solutionData = StudioCore.Navigating.Solution.ToBuffer();
+      var existingFile = GR.IO.File.ReadAllBytes( StudioCore.Navigating.Solution.Filename );
+      // only write if there are changes, to avoid useless repo updates
+      if ( solutionData != existingFile )
+      {
+        GR.IO.File.WriteAllBytes( StudioCore.Navigating.Solution.Filename, solutionData );
+      }
       StudioCore.Navigating.Solution.Modified = false;
       StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, StudioCore.Navigating.Solution.Filename, this );
 

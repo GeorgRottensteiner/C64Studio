@@ -1,4 +1,4 @@
-﻿using RetroDevStudio;
+using RetroDevStudio;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -296,7 +296,12 @@ namespace RetroDevStudio
       GR.Memory.ByteBuffer projectData = Save();
       try
       {
-        System.IO.File.WriteAllBytes( Filename, projectData.Data() );
+        var existingFile = GR.IO.File.ReadAllBytes( Filename );
+        // only write if there are changes, to avoid useless repo updates
+        if ( projectData != existingFile )
+        {
+          System.IO.File.WriteAllBytes( Filename, projectData.Data() );
+        }
       }
       catch ( System.IO.IOException )
       {

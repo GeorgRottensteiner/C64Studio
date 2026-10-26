@@ -5,4 +5,7 @@
 !basic
           lda MAIN_COLOR
           sta $d020
-          rts
+
+HURZ
+          jmp *
+
