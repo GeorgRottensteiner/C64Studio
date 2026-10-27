@@ -53,7 +53,14 @@ namespace RetroDevStudio.Controls
         Info.Charset.Characters[i].Tile.Image.DrawTo( targetImg, ( i % 16 ) * 8, ( i / 16 ) * 8 );
       }
       System.Drawing.Bitmap bmpTarget = targetImg.GetAsBitmap();
-      bmpTarget.Save( saveDlg.FileName, System.Drawing.Imaging.ImageFormat.Png );
+      try
+      {
+        bmpTarget.Save( saveDlg.FileName, System.Drawing.Imaging.ImageFormat.Png );
+      }
+      finally
+      {
+        bmpTarget.Dispose();
+      }
       return true;
     }
 
