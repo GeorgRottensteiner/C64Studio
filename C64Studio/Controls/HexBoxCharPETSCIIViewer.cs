@@ -30,7 +30,7 @@ namespace Be.Windows.Forms
         PaletteManager.ApplyPalette( charImage, PaletteC64 );
         int chars = Box.BytesPerLine;
 
-        for ( int i = 0; i < intern_endByte - _startByte; ++i )
+        for ( int i = 0; i <= intern_endByte - _startByte; ++i )
         {
           byte character = Box.ByteProvider.ReadByte( _startByte + i );
           int   displayColor = 0;
