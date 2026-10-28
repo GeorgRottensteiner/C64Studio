@@ -87,7 +87,7 @@ namespace RetroDevStudio.Controls
             importInfo.Charset.Characters[i].Tile.CustomColor = 1;
             break;
           case 9:
-            ConstantData.UpperCaseCharsetCommanderX16.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
+            ConstantData.LowerCaseCharsetCommanderX16.CopyTo( importInfo.Charset.Characters[i].Tile.Data, sourceIndex * numBytesOfChar, numBytesOfChar );
             importInfo.Charset.Characters[i].Tile.CustomColor = 1;
             break;
           case 10:
