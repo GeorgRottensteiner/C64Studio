@@ -462,15 +462,16 @@ namespace RetroDevStudio.Documents
       int charIndex = 0;
       foreach ( var i in importIndices )
       {
-        if ( charIndex >= numChars )
+        if ( charIndex >= charsToImport )
         {
           break;
         }
         for ( int j = 0; j < numBytesPerChar; ++j )
         {
-          m_Charset.Characters[importIndices[i]].Tile.Data.SetU8At( j, CharData.ByteAt( i * numBytesPerChar + j ) );
+          m_Charset.Characters[i].Tile.Data.SetU8At( j, CharData.ByteAt( charIndex * numBytesPerChar + j ) );
         }
-        m_Charset.Characters[importIndices[i]].Tile.CustomColor = 1;
+        m_Charset.Characters[i].Tile.CustomColor = 1;
+        ++charIndex;
       }
       characterEditor.CharsetUpdated( m_Charset );
       SetModified();
