@@ -218,7 +218,9 @@ namespace RetroDevStudio
     {
       UpdateAddButton();
 
-      if ( listBuildChainProjects.SelectedIndices.Count == 0 )
+      // Items.Clear() raises this handler again with no selection - that is no user choice, so keep the stored value
+      if ( ( listBuildChainProjects.SelectedIndices.Count == 0 )
+      ||   ( comboBuildChainConfig.SelectedIndex == -1 ) )
       {
         return;
       }
@@ -268,7 +270,9 @@ namespace RetroDevStudio
     {
       UpdateAddButton();
 
-      if ( listBuildChainProjects.SelectedIndices.Count == 0 )
+      // Items.Clear() raises this handler again with no selection - that is no user choice, so keep the stored value
+      if ( ( listBuildChainProjects.SelectedIndices.Count == 0 )
+      ||   ( comboBuildChainFile.SelectedIndex == -1 ) )
       {
         return;
       }
