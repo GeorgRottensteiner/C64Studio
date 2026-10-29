@@ -3080,7 +3080,7 @@ namespace RetroDevStudio.Documents
       }
 
       //Debug.Log( "OnCharsetScreenModeChanged c" );
-      pictureEditor.ClientSize = new Size( clientSize.Width, clientSize.Height );
+      pictureEditor.ClientSize = new Size( DPIHandler.AdjustPixelSize( clientSize.Width ), DPIHandler.AdjustPixelSize( clientSize.Height ) );
       pictureEditor.DisplayPage.Create( displaySize.Width, displaySize.Height, GR.Drawing.PixelFormat.Format32bppRgb );
 
       int     rightEnd = pictureEditor.Bounds.Right;

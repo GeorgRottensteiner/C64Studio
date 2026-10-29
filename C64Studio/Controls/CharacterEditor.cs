@@ -519,6 +519,7 @@ namespace RetroDevStudio.Controls
           }
 
           var targetTile = m_Project.Characters[pastePos].Tile;
+          var prevMode = targetTile.Mode;
 
           if ( ( ( entry.Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
           ||     ( entry.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS ) )
@@ -549,6 +550,10 @@ namespace RetroDevStudio.Controls
           targetTile.CustomColor = entry.Tile.CustomColor;
 
           RebuildAffectedChar( pastePos );
+          if ( prevMode != targetTile.Mode )
+          {
+            ChangeColorPalette();
+          }
 
           if ( pastePos == m_CurrentChar )
           {
@@ -784,6 +789,23 @@ namespace RetroDevStudio.Controls
         panelCharacters.Items[CharIndex].MemoryImage = m_Project.Characters[CharIndex].Tile.Image;
         panelCharacters.InvalidateItemRect( CharIndex );
       }
+      if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+      ||   ( m_Project.Mode == TextCharMode.VIC20 ) )
+      {
+        m_Project.Characters[CharIndex].Tile.Mode = ( m_Project.Characters[CharIndex].Tile.CustomColor >= 8 ) ?
+           GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS : GraphicTileMode.COMMODORE_HIRES;
+      }
+      else if ( m_Project.Mode == TextCharMode.VIC20_8X16 )
+      {
+        m_Project.Characters[CharIndex].Tile.Mode = ( m_Project.Characters[CharIndex].Tile.CustomColor >= 8 ) ?
+           GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16 : GraphicTileMode.COMMODORE_HIRES;
+      }
+      else if ( m_Project.Mode == TextCharMode.COMMODORE_TED_MULTICOLOR )
+      {
+        m_Project.Characters[CharIndex].Tile.Mode = ( ( m_Project.Characters[CharIndex].Tile.CustomColor % 16 ) >= 8 ) ?
+           GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16 : GraphicTileMode.COMMODORE_HIRES;
+      }
+
       bool playgroundChanged = false;
       for ( int i = 0; i < 16; ++i )
       {
@@ -3638,7 +3660,7 @@ namespace RetroDevStudio.Controls
     {
       foreach ( var control in m_XOffsetOfControlsToTheRightOfPalette )
       {
-        control.Key.Left = panelColorPalette.Right + control.Value;
+        control.Key.Left = panelColorPalette.Right + DPIHandler.AdjustPixelSize( control.Value );
       }
     }
 
