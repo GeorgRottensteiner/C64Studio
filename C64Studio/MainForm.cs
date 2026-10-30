@@ -479,6 +479,14 @@ namespace RetroDevStudio
 
       InitializeComponent();
 
+      // SelectionChangeCommitted instead of SelectedIndexChanged: the latter also fires
+      // while the combo is filled programmatically (AddNewProject/SetActiveProject),
+      // which would overwrite the configuration loaded from the project file.
+      if ( mainToolConfig.ComboBox != null )
+      {
+        mainToolConfig.ComboBox.SelectionChangeCommitted += mainToolConfig_SelectedIndexChanged;
+      }
+
       DPIHandler.ResizeControlsForDPI( this );
 
       panelMain.Theme = new VS2005Theme();
@@ -7004,10 +7012,19 @@ namespace RetroDevStudio
 
     private void mainToolConfig_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( ( m_CurrentProject != null )
-      && ( m_CurrentProject.Settings.CurrentConfig != m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() ) ) )
+      if ( ( m_CurrentProject == null )
+      || ( mainToolConfig.SelectedItem == null ) )
       {
-        m_CurrentProject.Settings.CurrentConfig = m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
+        return;
+      }
+
+      var newConfig = m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
+      // Configuration() returns null for a name the active project does not know,
+      // assigning it would leave CurrentConfig null (NRE in TaskCompile).
+      if ( ( newConfig != null )
+      && ( m_CurrentProject.Settings.CurrentConfig != newConfig ) )
+      {
+        m_CurrentProject.Settings.CurrentConfig = newConfig;
 
         ProjectConfigChanged();
       }
