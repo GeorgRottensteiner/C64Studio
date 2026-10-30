@@ -55,6 +55,8 @@ namespace RetroDevStudio.Undo
 
     public override void Apply()
     {
+      Project.Charset.ExportNumCharacters = CharsetData.Count;
+
       foreach ( var singleChar in CharsetData )
       {
         singleChar.Tile.Data.CopyTo( Project.Charset.Characters[singleChar.Index].Tile.Data );
