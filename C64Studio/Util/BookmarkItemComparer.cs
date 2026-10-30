@@ -46,14 +46,15 @@ namespace RetroDevStudio
     {
       var item1 = (DecentForms.ListControlItem)x;
       var item2 = (DecentForms.ListControlItem)y;
-      int returnVal = -1;
+      int returnVal = 0;
 
-      // cols are type, line, file
+      // cols are type, line, file, comment
       // sort by cols now
       if ( ( col == 0 )
-      ||   ( col == 2 ) )
+      ||   ( col == 2 )
+      ||   ( col == 3 ) )
       {
-        // Type/File
+        // Type/File/Comment
         returnVal = string.Compare( item1.SubItems[col].Text, item2.SubItems[col].Text );
       }
       else if ( col == 1 )
