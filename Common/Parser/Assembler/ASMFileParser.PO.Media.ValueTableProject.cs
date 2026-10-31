@@ -73,7 +73,7 @@ namespace RetroDevStudio.Parser
       }
       if ( numBytes== -1 )
       {
-        numBytes = (int)dataToInclude.Length;
+        numBytes = (int)dataToInclude.Length - startIndex;
       }
       if ( ( numBytes <= 0 )
       || ( ( startIndex + numBytes ) > dataToInclude.Length ) )
@@ -81,7 +81,7 @@ namespace RetroDevStudio.Parser
         AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid byte count " + numBytes );
         return false;
       }
-      dataToInclude = dataToInclude.SubBuffer( 0, numBytes );
+      dataToInclude = dataToInclude.SubBuffer( startIndex, numBytes );
       return true;
     }
 
