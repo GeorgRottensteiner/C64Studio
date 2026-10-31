@@ -75,7 +75,8 @@ namespace RetroDevStudio.Dialogs.Preferences
           {
             Core.Settings.BASICSourceFontFamily = xmlFont.Attribute( "Family" );
             Core.Settings.BASICSourceFontSize   = GR.Convert.ToF32( xmlFont.Attribute( "Size" ) );
-            Core.Settings.BASICSourceFontStyle  = (FontStyle)GR.Convert.ToI32( xmlFont.Attribute( "FontStyle" ) );
+            // attribute name must match the one written in ExportSettings (and the assembler editor)
+            Core.Settings.BASICSourceFontStyle  = (FontStyle)GR.Convert.ToI32( xmlFont.Attribute( "Style" ) );
             Core.Settings.BASICUseNonC64Font    = !IsSettingTrue( xmlFont.Attribute( "UseC64Font" ) );
           }
         }
@@ -95,7 +96,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
       xmlFont.AddAttribute( "Type", "BASIC" );
       xmlFont.AddAttribute( "Family", Core.Settings.BASICSourceFontFamily );
-      xmlFont.AddAttribute( "Size", Core.Settings.BASICSourceFontSize.ToString() );
+      xmlFont.AddAttribute( "Size", Util.DoubleToString( Core.Settings.BASICSourceFontSize ) );
       xmlFont.AddAttribute( "Style", ( (int)Core.Settings.BASICSourceFontStyle ).ToString() );
       xmlFont.AddAttribute( "UseC64Font", Core.Settings.BASICUseNonC64Font ? "no" : "yes" );
 
