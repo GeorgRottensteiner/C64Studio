@@ -76,6 +76,7 @@ namespace RetroDevStudio.Formats
       }
       Data.Clear();
       JumpedAtAddresses.Clear();
+      DataTableAddresses.Clear();
       NamedLabels.Clear();
       Description = "";
 
