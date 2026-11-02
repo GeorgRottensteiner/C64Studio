@@ -1,4 +1,4 @@
-﻿using FastColoredTextBoxNS;
+using FastColoredTextBoxNS;
 using GR.Collections;
 using GR.Image;
 using GR.IO;
@@ -1420,7 +1420,7 @@ namespace RetroDevStudio.Documents
         {
           foreach ( string file in a )
           {
-            Core.MainForm.OpenFile( file );
+            Core.MainForm.OpenFile( file, out var _ );
           }
         }
         else if ( e.Data.GetDataPresent( DataFormats.Text ) )

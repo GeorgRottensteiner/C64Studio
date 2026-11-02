@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Documents;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -178,8 +178,7 @@ namespace RetroDevStudio
       if ( Document.FullPath.Length > 0 )
       {
         // file is not part of project
-        BaseDocument newDoc = Core.MainForm.OpenFile( Document.FullPath );
-        if ( newDoc != null )
+        if ( Core.MainForm.OpenFile( Document.FullPath, out var newDoc ) )
         {
           bool setFromMainDoc = false;
           if ( ( !setFromMainDoc )
@@ -256,7 +255,7 @@ namespace RetroDevStudio
             UpdatedValue = renamedSolutionFullPath
           } );
 
-          Core.MainForm.OpenFile( renamedSolutionFullPath );
+          Core.MainForm.OpenFile( renamedSolutionFullPath, out var _ );
         }
       }
       else

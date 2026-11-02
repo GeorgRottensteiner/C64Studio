@@ -64,7 +64,7 @@ namespace RetroDevStudio.Documents
         }
         m_WatchEntries.Add( Watch );
       }
-      else if ( !Watch.DisplayMemory )
+      else
       {
         if ( ShowLastValues )
         {
@@ -86,11 +86,6 @@ namespace RetroDevStudio.Documents
         {
           item.SubItems.Add( "(unread)" );
         }
-        m_WatchEntries.Add( Watch );
-      }
-      else
-      {
-        item.SubItems.Add( "(unread)" );
         m_WatchEntries.Add( Watch );
       }
       item.Tag = Watch;
@@ -143,6 +138,10 @@ namespace RetroDevStudio.Documents
           {
             watchEntry.PreviousValues = watchEntry.CurrentValue;
           }
+          if ( !watchEntry.DisplayMemory )
+          {
+            Data = new GR.Memory.ByteBuffer( watchEntry.Address.ToString( "x04" ) );
+          }
           watchEntry.CurrentValue = Data;
 
           if ( watchEntry.SizeInBytes != watchEntry.CurrentValue.Length )
@@ -165,7 +164,8 @@ namespace RetroDevStudio.Documents
 
     private string FormatWatchValue( WatchEntry Entry, ByteBuffer Data )
     {
-      if ( Entry.CurrentValue.Length == 0 )
+      if ( ( Entry.CurrentValue.Length == 0 )
+      &&   ( Entry.DisplayMemory ) )
       {
         return "(unread)";
       }
@@ -352,11 +352,12 @@ namespace RetroDevStudio.Documents
         WatchEntry entry = (WatchEntry)item.Tag;
 
         entry.DisplayMemory = watchReadFromMemoryToolStripMenuItem.Checked;
+        entry.CurrentValue.Clear();
         UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
       }
       if ( watchReadFromMemoryToolStripMenuItem.Checked )
       {
-        Core.Debugging.Debugger.RefreshRegistersAndWatches();
+        Core.Debugging.Debugger?.RefreshRegistersAndWatches();
       }
     }
 
@@ -392,27 +393,30 @@ namespace RetroDevStudio.Documents
       moveDownToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] + 1 < listWatch.Items.Count );
       moveUpToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] > 0 );
 
-      if ( displayBoundsToolStripMenuItem.Visible )
-      {
-        bytes1ToolStripMenuItem.Checked = ( entry.SizeInBytes == 1 );
-        bytes2ToolStripMenuItem.Checked = ( entry.SizeInBytes == 2 );
-        bytes4ToolStripMenuItem.Checked = ( entry.SizeInBytes == 4 );
-        bytes8ToolStripMenuItem.Checked = ( entry.SizeInBytes == 8 );
-        bytes16ToolStripMenuItem.Checked = ( entry.SizeInBytes == 16 );
-        bytes32ToolStripMenuItem.Checked = ( entry.SizeInBytes == 32 );
-      }
+      hexToolStripMenuItem.Checked = ( entry.Type == WatchEntry.DisplayType.HEX );
+      decimalToolStripMenuItem.Checked = ( entry.Type == WatchEntry.DisplayType.DEZ );
+      binaryToolStripMenuItem.Checked = ( entry.Type == WatchEntry.DisplayType.BINARY );
+      petSCIIToolStripMenuItem.Checked = ( entry.Type == WatchEntry.DisplayType.PETSCII );
+
+      bytes1ToolStripMenuItem.Checked = ( entry.SizeInBytes == 1 );
+      bytes2ToolStripMenuItem.Checked = ( entry.SizeInBytes == 2 );
+      bytes4ToolStripMenuItem.Checked = ( entry.SizeInBytes == 4 );
+      bytes8ToolStripMenuItem.Checked = ( entry.SizeInBytes == 8 );
+      bytes16ToolStripMenuItem.Checked = ( entry.SizeInBytes == 16 );
+      bytes32ToolStripMenuItem.Checked = ( entry.SizeInBytes == 32 );
     }
 
 
 
-    public void UpdateValues()
+    public void UpdateValues( Types.ASM.FileInfo fileInfo )
     {
       if ( InvokeRequired )
       {
-        Invoke( new MainForm.ParameterLessCallback( UpdateValues ) );
+        Invoke( new MainForm.ASMFileInfoCallback( UpdateValues ), new object[]{ fileInfo } );
         return;
       }
 
+      ReseatWatches( fileInfo );
       foreach ( var watchEntry in m_WatchEntries )
       {
         DecentForms.ListControlItem itemToModify = null;
@@ -515,6 +519,7 @@ namespace RetroDevStudio.Documents
           {
             watchEntry.Address = addressOfEntry;
             hadChanges = true;
+            watchEntry.CurrentValue.Clear();
           }
         }
       }
@@ -524,7 +529,7 @@ namespace RetroDevStudio.Documents
       }
       if ( hadChanges )
       {
-        Core.TaskManager.AddTask( new Tasks.TaskUpdateWatches() );
+        Core.TaskManager.AddTask( new Tasks.TaskUpdateWatches( ASMFileInfo ) );
       }
     }
 

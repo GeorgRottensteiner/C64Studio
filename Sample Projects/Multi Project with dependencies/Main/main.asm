@@ -1,14 +1,6 @@
-* = $0801
+* = $8000
 
-!basic
-
-          lda #$0
-          sta 53280
-          sta 53281
-          rts
-
-
+;writes character in A to screen
 !lzone DrawChar
-          lda #$1
           sta $0400
           rts

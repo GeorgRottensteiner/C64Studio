@@ -2737,7 +2737,7 @@ namespace RetroDevStudio.Documents
       if ( tokenInfo != null )
       {
         WatchEntry entry = new WatchEntry();
-        entry.Name        = wordBelow;
+        entry.Name        = tokenInfo.Name;
         entry.SizeInBytes = LengthInBytes;
         entry.Type        = WatchEntry.DisplayType.HEX;
         entry.Address     = (int)tokenInfo.AddressOrValue;
@@ -2948,7 +2948,7 @@ namespace RetroDevStudio.Documents
       }
       if ( DocumentInfo.Project == null )
       {
-        Core.MainForm.OpenFile( fullPath );
+        Core.MainForm.OpenFile( fullPath, out var _ );
         return;
       }
       ProjectElement    element = DocumentInfo.Project.GetElementByFilename( fullPath );
@@ -2959,8 +2959,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        var newDoc = Core.MainForm.OpenFile( fullPath );
-        if ( newDoc != null )
+        if ( Core.MainForm.OpenFile( fullPath, out var newDoc ) )
         {
           Core.Compiling.PreparseDocument( newDoc );
         }
@@ -3548,7 +3547,7 @@ namespace RetroDevStudio.Documents
         {
           foreach ( string file in a )
           {
-            Core.MainForm.OpenFile( file );
+            Core.MainForm.OpenFile( file, out var _ );
           }
         }
         else if ( e.Data.GetDataPresent( DataFormats.Text ) )

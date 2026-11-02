@@ -822,7 +822,7 @@ namespace RetroDevStudio
 
       if ( args.Length > 0 )
       {
-        OpenFile( args[0] );
+        OpenFile( args[0], out var _ );
       }
       else if ( HandleRestart() )
       {
@@ -1270,7 +1270,7 @@ namespace RetroDevStudio
 
       // restore previous active doc if it exists
       if ( ( previousActiveDoc != null )
-      && ( previousActiveDoc.BaseDoc != null ) )
+      &&   ( previousActiveDoc.BaseDoc != null ) )
       {
         previousActiveDoc.BaseDoc.Show();
       }
@@ -1315,7 +1315,7 @@ namespace RetroDevStudio
         }
         else if ( request.OpenLastSolution != null )
         {
-          OpenFile( request.OpenLastSolution );
+          OpenFile( request.OpenLastSolution, out var _ );
         }
         else if ( request.CloseSplashScreen != null )
         {
@@ -2062,8 +2062,7 @@ namespace RetroDevStudio
       else
       {
         string  fileToOpen = sender.ToString();
-        var newDoc = OpenFile( fileToOpen );
-        if ( newDoc == null )
+        if ( !OpenFile( fileToOpen, out var newDoc ) )
         {
           StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUFiles, sender.ToString(), this );
           StudioCore.MessageBox( $"File {fileToOpen} could not be opened.\r\n\r\nEither the format is not supported or the file is corrupted.", "Could not open file" );
@@ -3835,7 +3834,7 @@ namespace RetroDevStudio
       {
         return;
       }
-      OpenFile( openDlg.FileName );
+      OpenFile( openDlg.FileName, out var _ );
     }
 
 
@@ -5113,7 +5112,7 @@ namespace RetroDevStudio
 
             foreach ( var fileName in openDlg.FileNames )
             {
-              OpenFile( fileName );
+              OpenFile( fileName, out var _ );
             }
           }
           return true;
@@ -5563,7 +5562,7 @@ namespace RetroDevStudio
               {
                 if ( StudioCore.Navigating.FindDocumentByFilename( newFilename ) == null )
                 {
-                  OpenFile( newFilename );
+                  OpenFile( newFilename, out var _ );
                 }
               }
               return true;
@@ -5587,7 +5586,7 @@ namespace RetroDevStudio
             {
               return true;
             }
-            OpenFile( newFilename2 );
+            OpenFile( newFilename2, out var _ );
           }
           return true;
         case RetroDevStudio.Types.Function.COMPILE:
@@ -6407,8 +6406,7 @@ namespace RetroDevStudio
       {
         foreach ( string file in fileList )
         {
-          var doc = OpenFile( file );
-          if ( doc == null )
+          if ( !OpenFile( file, out var doc ) )
           {
             StudioCore.MessageBox( $"File {file} could not be opened.\r\n\r\nEither the format is not supported or the file is corrupted.", "Could not open file" );
           }
@@ -6540,38 +6538,38 @@ namespace RetroDevStudio
 
 
 
-    public BaseDocument OpenFile( string Filename )
+    public bool OpenFile( string Filename, out BaseDocument openedDocument )
     {
-      BaseDocument document = null;
+      openedDocument = null;
 
       string extension = GR.Path.GetExtension( Filename ).ToUpper();
       if ( extension == ".C64" )
       {
-        OpenProject( Filename );
-        return null;
+        return OpenProject( Filename ) != null;
       }
       else if ( extension == ".S64" )
       {
-        OpenSolution( Filename );
-        return null;
+        return OpenSolution( Filename );
       }
 
       Project  project;
       if ( ( StudioCore.Navigating.Solution != null )
-      && ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
+      &&   ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
-        return project.ShowDocument( project.GetElementByFilename( Filename ) );
+        openedDocument = project.ShowDocument( project.GetElementByFilename( Filename ) );
+        return openedDocument != null;
       }
       // file already opened?
       var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
       if ( ( docInfo != null )
-      && ( docInfo.BaseDoc != null ) )
+      &&   ( docInfo.BaseDoc != null ) )
       {
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         docInfo.BaseDoc.Show();
-        return docInfo.BaseDoc;
+        openedDocument = docInfo.BaseDoc;
+        return openedDocument != null;
       }
 
       bool    openDirectFile = true;
@@ -6579,144 +6577,144 @@ namespace RetroDevStudio
       var anyMedia = Lookup.MediaFormatFromExtension( extension );
       if ( anyMedia != Formats.MediaFormatType.UNKNOWN )
       {
-        document = new FileManager( StudioCore, Filename );
-        document.ShowHint = DockState.Float;
+        openedDocument = new FileManager( StudioCore, Filename );
+        openedDocument.ShowHint = DockState.Float;
         openDirectFile = false;
       }
       else if ( extension == ".DISASSEMBLY" )
       {
-        document = new Disassembler( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new Disassembler( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".SPRITEPROJECT" )
-      || ( extension == ".SPR" ) )
+      ||        ( extension == ".SPR" ) )
       {
-        document = new SpriteEditor( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new SpriteEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else if ( extension == ".VALUETABLEPROJECT" )
       {
-        document = new ValueTableEditor( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new ValueTableEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".CHARSETPROJECT" )
-      || ( extension == ".CHR" ) )
+      ||        ( extension == ".CHR" ) )
       {
-        document = new CharsetEditor( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new CharsetEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else if ( extension == ".CHARSCREEN" )
       {
-        document = new CharsetScreenEditor( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new CharsetScreenEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".GRAPHICSCREEN" )
-      || ( extension == ".IFF" )
-      || ( extension == ".KOA" )
-      || ( extension == ".KLA" ) )
+      ||        ( extension == ".IFF" )
+      ||        ( extension == ".KOA" )
+      ||        ( extension == ".KLA" ) )
       {
-        document = new GraphicScreenEditor( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new GraphicScreenEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".BAS" )
-      || ( extension == ".B" ) )
+      ||        ( extension == ".B" ) )
       {
-        document = new SourceBasicEx( StudioCore );
-        document.ShowHint = DockState.Document;
-        document.DocumentEvent += new BaseDocument.DocumentEventHandler( StudioCore.MainForm.Document_DocumentEvent );
+        openedDocument = new SourceBasicEx( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
+        openedDocument.DocumentEvent += new BaseDocument.DocumentEventHandler( StudioCore.MainForm.Document_DocumentEvent );
       }
       else if ( extension == ".MAPPROJECT" )
       {
-        document = new MapEditor( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new MapEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else if ( extension == ".CTM" )
       {
         // a charpad file
         openDirectFile = false;
-        document = new MapEditor( StudioCore );
-        document.ShowHint = DockState.Document;
-        if ( !( (MapEditor)document ).OpenCharpadFile( Filename ) )
+        openedDocument = new MapEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
+        if ( !( (MapEditor)openedDocument ).OpenCharpadFile( Filename ) )
         {
-          return null;
+          return false;
         }
       }
       else if ( extension == ".SPD" )
       {
         // a SpritePad file
         openDirectFile = false;
-        document = new SpriteEditor( StudioCore );
-        document.ShowHint = DockState.Document;
-        ( (SpriteEditor)document ).ImportSprites( Filename, true, true, 0 );
+        openedDocument = new SpriteEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
+        ( (SpriteEditor)openedDocument ).ImportSprites( Filename, true, true, 0 );
       }
       else if ( extension == ".SFXPROJECT" )
       {
-        document = new SFXEditor( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new SFXEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else if ( extension == ".PATHPROJECT" )
       {
-        document = new PathEditor( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new PathEditor( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".TXT" )
-      || ( extension == ".CFG" )
-      || ( extension == ".BAT" )
-      || ( extension == ".PS1" )
-      || ( extension == ".HTML" )
-      || ( extension == ".HTM" ) )
+      ||        ( extension == ".CFG" )
+      ||        ( extension == ".BAT" )
+      ||        ( extension == ".PS1" )
+      ||        ( extension == ".HTML" )
+      ||        ( extension == ".HTM" ) )
       {
-        document = new TextFile( StudioCore );
-        document.ShowHint = DockState.Document;
+        openedDocument = new TextFile( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
       }
       else
       {
-        document = new SourceASMEx( StudioCore );
-        document.ShowHint = DockState.Document;
-        document.DocumentEvent += new BaseDocument.DocumentEventHandler( StudioCore.MainForm.Document_DocumentEvent );
+        openedDocument = new SourceASMEx( StudioCore );
+        openedDocument.ShowHint = DockState.Document;
+        openedDocument.DocumentEvent += new BaseDocument.DocumentEventHandler( StudioCore.MainForm.Document_DocumentEvent );
       }
 
-      document.Core = StudioCore;
+      openedDocument.Core = StudioCore;
       if ( openDirectFile )
       {
         if ( extension == ".IFF" )
         {
-          var editor = (GraphicScreenEditor)document;
+          var editor = (GraphicScreenEditor)openedDocument;
 
           editor.ImportIFFPicture( GR.IO.File.ReadAllBytes( Filename ) );
         }
         else if ( ( extension == ".KLA" )
         || ( extension == ".KOA" ) )
         {
-          var editor = (GraphicScreenEditor)document;
+          var editor = (GraphicScreenEditor)openedDocument;
 
           editor.ImportKoalaPicture( GR.IO.File.ReadAllBytes( Filename ) );
         }
         else
         {
-          document.SetDocumentFilename( Filename );
-          document.Text = GR.Path.GetFileName( Filename );
+          openedDocument.SetDocumentFilename( Filename );
+          openedDocument.Text = GR.Path.GetFileName( Filename );
           // call this here so the proper tab settings are applied
-          document.RefreshDisplayOptions();
-          if ( !document.LoadDocument() )
+          openedDocument.RefreshDisplayOptions();
+          if ( !openedDocument.LoadDocument() )
           {
-            document.ToolTipText = "";
-            return null;
+            openedDocument.ToolTipText = "";
+            return false;
           }
-          document.ToolTipText = document.DocumentInfo.FullPath;
+          openedDocument.ToolTipText = openedDocument.DocumentInfo.FullPath;
         }
       }
-      document.RefreshDisplayOptions();
-      document.Show( panelMain );
-      document.Icon = IconFromType( document.DocumentInfo );
-      document.DocumentInfo.UndoManager.MainForm = this;
-      ApplicationEvent += document.OnApplicationEvent;
+      openedDocument.RefreshDisplayOptions();
+      openedDocument.Show( panelMain );
+      openedDocument.Icon = IconFromType( openedDocument.DocumentInfo );
+      openedDocument.DocumentInfo.UndoManager.MainForm = this;
+      ApplicationEvent += openedDocument.OnApplicationEvent;
 
       StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
 
-      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, document.DocumentInfo ) );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, openedDocument.DocumentInfo ) );
 
-      return document;
+      return true;
     }
 
 
@@ -7212,7 +7210,7 @@ namespace RetroDevStudio
       {
         return;
       }
-      OpenFile( openDlg.FileName );
+      OpenFile( openDlg.FileName, out var _ );
     }
 
 
@@ -8379,7 +8377,7 @@ namespace RetroDevStudio
                 }
                 if ( project == null )
                 {
-                  doc = OpenFile( docPath );
+                  OpenFile( docPath, out var _ );
                 }
                 else
                 {

@@ -2229,7 +2229,10 @@ namespace RetroDevStudio.Documents
     {
       m_Project.Tiles.Insert( TileIndex, Tile );
       Tile.Index = TileIndex;
-      comboTiles.Items.Insert( TileIndex, new GR.Generic.Tupel<string, Formats.MapProject.Tile>( Tile.Name, Tile ) );
+      if ( comboMaps.SelectedIndex != -1 )
+      {
+        comboTiles.Items.Insert( TileIndex, new GR.Generic.Tupel<string, Formats.MapProject.Tile>( Tile.Name, Tile ) );
+      }
 
       ListViewItem item = new ListViewItem();
 
@@ -2664,8 +2667,11 @@ namespace RetroDevStudio.Documents
         m_CurrentEditedTile.Name = editTileName.Text;
 
         listTileInfo.SelectedItems[0].SubItems[1].Text = m_CurrentEditedTile.Name;
-        GR.Generic.Tupel<string, Formats.MapProject.Tile>      comboItem = (GR.Generic.Tupel<string, Formats.MapProject.Tile>)comboTiles.Items[listTileInfo.SelectedIndices[0]];
-        comboItem.first = m_CurrentEditedTile.Name;
+        if ( comboTiles.Items.Count > 0 )
+        {
+          GR.Generic.Tupel<string, Formats.MapProject.Tile>      comboItem = (GR.Generic.Tupel<string, Formats.MapProject.Tile>)comboTiles.Items[listTileInfo.SelectedIndices[0]];
+          comboItem.first = m_CurrentEditedTile.Name;
+        }
         SetModified();
       }
 
@@ -2813,18 +2819,21 @@ namespace RetroDevStudio.Documents
       listTileInfo.Items[Index2].Tag = tile1;
 
       // swap in tile combo
-      GR.Generic.Tupel<string, Formats.MapProject.Tile>    tupel1 = (GR.Generic.Tupel<string, Formats.MapProject.Tile>)comboTiles.Items[Index1];
-      GR.Generic.Tupel<string, Formats.MapProject.Tile>    tupel2 = (GR.Generic.Tupel<string, Formats.MapProject.Tile>)comboTiles.Items[Index2];
+      if ( comboTiles.Items.Count > 0 )
+      {
+        GR.Generic.Tupel<string, Formats.MapProject.Tile>    tupel1 = (GR.Generic.Tupel<string, Formats.MapProject.Tile>)comboTiles.Items[Index1];
+        GR.Generic.Tupel<string, Formats.MapProject.Tile>    tupel2 = (GR.Generic.Tupel<string, Formats.MapProject.Tile>)comboTiles.Items[Index2];
 
-      string    temp = tupel1.first;
-      tupel1.first = tupel2.first;
-      tupel2.first = temp;
+        string    temp = tupel1.first;
+        tupel1.first = tupel2.first;
+        tupel2.first = temp;
 
-      tupel1.second = tile2;
-      tupel2.second = tile1;
-         
-      comboTiles.Items[Index1] = tupel1;
-      comboTiles.Items[Index2] = tupel2;
+        tupel1.second = tile2;
+        tupel2.second = tile1;
+
+        comboTiles.Items[Index1] = tupel1;
+        comboTiles.Items[Index2] = tupel2;
+      }
 
       foreach ( var map in m_Project.Maps )
       {

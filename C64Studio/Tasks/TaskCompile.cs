@@ -915,6 +915,7 @@ namespace RetroDevStudio.Tasks
               Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
 
+            Core.TaskManager.AddTask( new Tasks.TaskUpdateWatches( asmFileInfo ) );
             if ( Core.Settings.ShowCompilerMessagesAfterBuild )
             {
               Core.ShowDocument( Core.MainForm.m_CompileResult, false );
@@ -977,6 +978,7 @@ namespace RetroDevStudio.Tasks
               Core.Navigating.UpdateFromMessages( asmFileInfo, Doc.Project );
               Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
+            Core.TaskManager.AddTask( new Tasks.TaskUpdateWatches( asmFileInfo ) );
             if ( Core.Settings.ShowCompilerMessagesAfterBuild )
             {
               Core.ShowDocument( Core.MainForm.m_CompileResult, false );
@@ -1005,7 +1007,7 @@ namespace RetroDevStudio.Tasks
             }
           }
         }
-
+        Core.TaskManager.AddTask( new Tasks.TaskUpdateWatches( asmFileInfo ) );
         if ( string.IsNullOrEmpty( BuildInfo.TargetFile ) )
         {
           BuildInfo.TargetFile = Core.DetermineTargetFilename( Doc, parser );

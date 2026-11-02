@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.CustomRenderer;
+using RetroDevStudio.CustomRenderer;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -1689,7 +1689,7 @@ namespace RetroDevStudio.Documents
       {
         docBasePath = DocumentInfo.Project.Settings.BasePath;
       }
-      Core.MainForm.OpenFile( GR.Path.Append( docBasePath, m_FilenameToOpen ) );
+      Core.MainForm.OpenFile( GR.Path.Append( docBasePath, m_FilenameToOpen ), out var _ );
     }
 
 
@@ -2892,7 +2892,7 @@ namespace RetroDevStudio.Documents
         {
           foreach ( string file in a )
           {
-            Core.MainForm.OpenFile( file );
+            Core.MainForm.OpenFile( file, out var _ );
           }
         }
         else if ( e.Data.GetDataPresent( DataFormats.Text ) )

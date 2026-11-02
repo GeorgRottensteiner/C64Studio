@@ -1,6 +1,14 @@
-* = $4000
-        jsr DrawChar
-        rts
+* = $0801
+
+!basic
+
+          lda #$0
+          sta 53280
+          sta 53281
+
+          lda #$32
+          jsr DrawChar
+          rts
 
 LEVEL_START
 
@@ -20,4 +28,7 @@ LEVEL2_DATAE
         !byte 55,66
 
 LEVEL2_DATAF
-        !byte 55,66
+          !byte 55, 66
+
+* = $8000
+!bin "../Main/main.prg",,2
