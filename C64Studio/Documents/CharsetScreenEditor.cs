@@ -4009,10 +4009,9 @@ namespace RetroDevStudio.Documents
       }
       var screen = new CharsetScreen()
       {
-        Width   = width,
-        Height  = height,
         Name          = editScreenName.Text,
       };
+      // SetScreenSize does nothing if Width/Height already match, so they must not be preset here
       screen.SetScreenSize( width, height );
 
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenAdd( this, m_CharsetScreen, m_CurrentScreenIndex + 1 ) );
@@ -4143,12 +4142,12 @@ namespace RetroDevStudio.Documents
     {
       var screen = new CharsetScreen()
       {
-        Width   = CurrentScreen.Width,
-        Height  = CurrentScreen.Height,
         Name          = CurrentScreen.Name + " Copy"
       };
+      // SetScreenSize does nothing if Width/Height already match, so they must not be preset here
       screen.SetScreenSize( CurrentScreen.Width, CurrentScreen.Height );
-      for ( int i = 0; i < CurrentScreen.Chars.Count; ++i )
+      int     copyChars = Math.Min( CurrentScreen.Chars.Count, screen.Chars.Count );
+      for ( int i = 0; i < copyChars; ++i )
       {
         screen.Chars[i] = CurrentScreen.Chars[i];
       }
