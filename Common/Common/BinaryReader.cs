@@ -56,8 +56,13 @@ namespace GR
 
 
 
-      private bool EnsureReadBuffer( int NumBytes )
+      private bool EnsureReadBuffer( long NumBytes )
       {
+        // negative counts can never be satisfied by the stream
+        if ( NumBytes < 0 )
+        {
+          return false;
+        }
         if ( m_Cache.Length - m_CacheBytesUsed >= NumBytes )
         {
           // data still in cache
@@ -312,7 +317,7 @@ namespace GR
           return "";
         }
         var  Length = ReadUInt32();
-        if ( !EnsureReadBuffer( (int)Length ) )
+        if ( !EnsureReadBuffer( Length ) )
         {
           return "";
         }
