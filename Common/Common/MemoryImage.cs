@@ -1,4 +1,4 @@
-﻿using GR.Memory;
+using GR.Memory;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -481,9 +481,9 @@ namespace GR.Image
 
       // clip to target
       if ( ( X >= TargetImage.Width )
-      || ( Y >= TargetImage.Height )
-      || ( X + copyWidth < 0 )
-      || ( Y + copyHeight < 0 ) )
+      ||   ( Y >= TargetImage.Height )
+      ||   ( X + copyWidth < 0 )
+      ||   ( Y + copyHeight < 0 ) )
       {
         return;
       }

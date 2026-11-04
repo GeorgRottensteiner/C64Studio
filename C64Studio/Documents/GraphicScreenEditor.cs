@@ -1,4 +1,4 @@
-﻿using FastColoredTextBoxNS;
+using FastColoredTextBoxNS;
 using GR.Image;
 using GR.Memory;
 using RetroDevStudio.Controls;
@@ -3217,8 +3217,6 @@ namespace RetroDevStudio.Documents
       // draw outside area
       int     fillWidth = 0;
       int     fillHeight = 0;
-
-      //if ( m_GraphicScreenProject.Image.Width < pictureEditor.DisplayPage.Width )
 
       if ( m_GraphicScreenProject.ScreenWidth - m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor < pictureEditor.DisplayPage.Width )
       {
