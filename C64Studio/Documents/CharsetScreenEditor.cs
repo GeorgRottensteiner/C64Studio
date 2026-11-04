@@ -960,9 +960,12 @@ namespace RetroDevStudio.Documents
     private void HandleMouseOnEditor( int X, int Y, MouseButtons Buttons )
     {
       // Convert from display coordinates to character coordinates
-      // Account for zoom factor: higher zoom means smaller character coordinate range for same display area
-      int     charX = ( m_CurrentScreenWidthInChars * X ) / (pictureEditor.ClientRectangle.Width / m_ZoomFactor) + m_CharsetScreen.ScreenOffsetX;
-      int     charY = ( m_CurrentScreenHeightInChars * Y ) / (pictureEditor.ClientRectangle.Height / m_ZoomFactor) + m_CharsetScreen.ScreenOffsetY;
+      // When zoomed, the viewport shows fewer characters, so we need to account for that
+      int     viewportWidthInChars = m_CurrentScreenWidthInChars / m_ZoomFactor;
+      int     viewportHeightInChars = m_CurrentScreenHeightInChars / m_ZoomFactor;
+
+      int     charX = ( X * viewportWidthInChars ) / pictureEditor.ClientRectangle.Width + m_CharsetScreen.ScreenOffsetX;
+      int     charY = ( Y * viewportHeightInChars ) / pictureEditor.ClientRectangle.Height + m_CharsetScreen.ScreenOffsetY;
 
       m_MousePos.X = charX - m_CharsetScreen.ScreenOffsetX;
       m_MousePos.Y = charY - m_CharsetScreen.ScreenOffsetY;
