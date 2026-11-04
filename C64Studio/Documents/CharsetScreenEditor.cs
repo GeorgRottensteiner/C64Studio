@@ -350,11 +350,14 @@ namespace RetroDevStudio.Documents
 
     private void pictureEditor_PostPaint( FastImage TargetBuffer )
     {
-      // visible chars
+      // visible chars (in character coordinates, accounting for zoom)
+      int     viewportWidthInChars = m_CurrentScreenWidthInChars / m_ZoomFactor;
+      int     viewportHeightInChars = m_CurrentScreenHeightInChars / m_ZoomFactor;
+
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;
-      int     x2 = x1 + CurrentScreen.Width - 1;
-      int     y2 = y1 + CurrentScreen.Height - 1;
+      int     x2 = x1 + viewportWidthInChars - 1;
+      int     y2 = y1 + viewportHeightInChars - 1;
 
       if ( x1 < 0 )
       {
@@ -364,9 +367,9 @@ namespace RetroDevStudio.Documents
       {
         x2 = CurrentScreen.Width - 1;
       }
-      if ( x2 - x1 > m_CurrentScreenWidthInChars )
+      if ( x2 - x1 > viewportWidthInChars )
       {
-        x2 = x1 + m_CurrentScreenWidthInChars - 1;
+        x2 = x1 + viewportWidthInChars - 1;
       }
       if ( y1 < 0 )
       {
@@ -376,9 +379,9 @@ namespace RetroDevStudio.Documents
       {
         y2 = CurrentScreen.Height - 1;
       }
-      if ( y2 - y1 > m_CurrentScreenHeightInChars )
+      if ( y2 - y1 > viewportHeightInChars )
       {
-        y2 = y1 + m_CurrentScreenHeightInChars - 1;
+        y2 = y1 + viewportHeightInChars - 1;
       }
 
       if ( _ShowGrid )
@@ -425,30 +428,30 @@ namespace RetroDevStudio.Documents
       int     fillWidth = 0;
       int     fillHeight = 0;
 
-      if ( CurrentScreen.Width - m_CharsetScreen.ScreenOffsetX < m_CurrentScreenWidthInChars )
+      if ( CurrentScreen.Width - m_CharsetScreen.ScreenOffsetX < viewportWidthInChars )
       {
-        fillWidth = m_CurrentScreenWidthInChars - ( CurrentScreen.Width - m_CharsetScreen.ScreenOffsetX );
+        fillWidth = viewportWidthInChars - ( CurrentScreen.Width - m_CharsetScreen.ScreenOffsetX );
       }
-      if ( CurrentScreen.Height - m_CharsetScreen.ScreenOffsetY < m_CurrentScreenHeightInChars )
+      if ( CurrentScreen.Height - m_CharsetScreen.ScreenOffsetY < viewportHeightInChars )
       {
-        fillHeight = m_CurrentScreenHeightInChars - ( CurrentScreen.Height - m_CharsetScreen.ScreenOffsetY );
+        fillHeight = viewportHeightInChars - ( CurrentScreen.Height - m_CharsetScreen.ScreenOffsetY );
       }
       if ( ( fillWidth > 0 )
       &&   ( fillHeight > 0 ) )
       {
         // bottom right
-        TargetBuffer.Box( ( m_CurrentScreenWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
-                          ( m_CurrentScreenHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
-                          pictureEditor.ClientRectangle.Width - ( m_CurrentScreenWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
-                          pictureEditor.ClientRectangle.Height - ( m_CurrentScreenHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
+        TargetBuffer.Box( ( viewportWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
+                          ( viewportHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
+                          pictureEditor.ClientRectangle.Width - ( viewportWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
+                          pictureEditor.ClientRectangle.Height - ( viewportHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
                           selColor );
       }
       if ( fillWidth > 0 )
       {
         // right
-        TargetBuffer.Box( ( m_CurrentScreenWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
+        TargetBuffer.Box( ( viewportWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
                           0,
-                          pictureEditor.ClientRectangle.Width - ( m_CurrentScreenWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
+                          pictureEditor.ClientRectangle.Width - ( viewportWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
                           pictureEditor.ClientRectangle.Height,
                           selColor );
       }
@@ -456,9 +459,9 @@ namespace RetroDevStudio.Documents
       {
         // bottom
         TargetBuffer.Box( 0,
-                          ( m_CurrentScreenHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
+                          ( viewportHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
                           pictureEditor.ClientRectangle.Width,
-                          pictureEditor.ClientRectangle.Height - ( m_CurrentScreenHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
+                          pictureEditor.ClientRectangle.Height - ( viewportHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
                           selColor );
       }
 
