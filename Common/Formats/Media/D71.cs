@@ -320,7 +320,8 @@ namespace RetroDevStudio.Formats
       Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
       int     trackIndex = Track;
 
-      if ( Track >= 35 )
+      // Seite B beginnt bei Track 36 (CreateBAM: Listenindex 35 == Track 36)
+      if ( Track >= 36 )
       {
         bam = Tracks[TRACK_BAM_2 - 1].Sectors[SECTOR_BAM];
         trackIndex -= 35;
@@ -363,7 +364,8 @@ namespace RetroDevStudio.Formats
       Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
       int     trackIndex = Track;
 
-      if ( Track >= 35 )
+      // Seite B beginnt bei Track 36 (CreateBAM: Listenindex 35 == Track 36)
+      if ( Track >= 36 )
       {
         bam = Tracks[TRACK_BAM_2 - 1].Sectors[SECTOR_BAM];
         trackIndex -= 35;
