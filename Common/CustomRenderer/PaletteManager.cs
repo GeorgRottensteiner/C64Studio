@@ -21,6 +21,8 @@ namespace RetroDevStudio
           return ConstantData.DefaultPaletteC128();
         case PaletteType.NES:
           return ConstantData.DefaultPaletteNES();
+        case PaletteType.COMMODORE_TED:
+          return ConstantData.DefaultPaletteTED();
       }
       return ConstantData.DefaultPaletteC64();
     }
