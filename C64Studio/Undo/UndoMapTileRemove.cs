@@ -63,6 +63,14 @@ namespace RetroDevStudio.Undo
     public override void Apply()
     {
       _MapEditor.AddTile( _TileIndex, _RemovedTile );
+
+      // Zellverweise auf das geloeschte Tile wiederherstellen - AddTile laesst Zellen, die auf das
+      // geloeschte Tile zeigten, auf 0 stehen
+      foreach ( var internalUndo in _InternalUndos )
+      {
+        internalUndo.Apply();
+      }
+      _InternalUndos.Clear();
     }
   }
 }
