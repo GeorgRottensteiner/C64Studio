@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
@@ -103,6 +103,7 @@ namespace FastColoredTextBoxNS
     public class TextStyle : Style
     {
         public Brush ForeBrush { get; set; }
+        public Brush ControlCharacterForeBrush { get; set; }
         public Brush BackgroundBrush { get; set; }
         public FontStyle FontStyle { get; set; }
         //public readonly Font Font;
@@ -113,6 +114,7 @@ namespace FastColoredTextBoxNS
             this.ForeBrush = foreBrush;
             this.BackgroundBrush = backgroundBrush;
             this.FontStyle = fontStyle;
+            ControlCharacterForeBrush = new SolidBrush( Color.FromArgb( 0xa0, 0xa0, 0xa0 ) );
             stringFormat = new StringFormat(StringFormatFlags.MeasureTrailingSpaces);
         }
 
@@ -154,7 +156,18 @@ namespace FastColoredTextBoxNS
                     for (int i = range.Start.iChar; i < range.End.iChar; i++)
                     {
                       //draw char
-                      gr.DrawString( line[i].c.ToString(), f, ForeBrush, x, y, stringFormat );
+                      if ( ( line[i].c != '\t' )
+                      ||   ( !range.tb.EnableTabCharacter )
+                      ||   ( ( range.tb.TabLength != 0 )
+                      &&     ( ( i % range.tb.TabLength ) != 0 ) ) )
+                      {
+                        gr.DrawString( line[i].c.ToString(), f, ForeBrush, x, y, stringFormat );
+                      }
+                      else
+                      {
+                        // tab replacement character is shown
+                        gr.DrawString( range.tb.DisplayTabCharacter.ToString(), f, ControlCharacterForeBrush, x, y, stringFormat );
+                      }
                       x += dx;
                     }
                 }

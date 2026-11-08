@@ -1,4 +1,4 @@
-﻿using GR.Strings;
+using GR.Strings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,19 +44,20 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public override void ApplySettingsToControls()
     {
-      checkConvertTabsToSpaces.Checked  = Core.Settings.FormatSettings.TabConvertToSpaces;
-      editTabSize.Text                  = Core.Settings.FormatSettings.TabSize.ToString();
-      checkStripTrailingSpaces.Checked  = Core.Settings.FormatSettings.StripTrailingSpaces;
-      editCaretWidth.Text               = Core.Settings.CaretWidth.ToString();  
-      labelFontPreview.Font             = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
-      checkASMFontNoAntiAliasing.Checked  = Core.Settings.SourceFontNoAntiAliasing;
+      checkConvertTabsToSpaces.Checked = Core.Settings.FormatSettings.TabConvertToSpaces;
+      editTabSize.Text = Core.Settings.FormatSettings.TabSize.ToString();
+      checkStripTrailingSpaces.Checked = Core.Settings.FormatSettings.StripTrailingSpaces;
+      checkShowTabs.Checked = Core.Settings.ShowTabs;
+      editCaretWidth.Text = Core.Settings.CaretWidth.ToString();
+      labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+      checkASMFontNoAntiAliasing.Checked = Core.Settings.SourceFontNoAntiAliasing;
 
-      checkASMShowLineNumbers.Checked   = !Core.Settings.ASMHideLineNumbers;
-      checkASMShowCycles.Checked        = Core.Settings.ASMShowCycles;
-      checkASMShowSizes.Checked         = Core.Settings.ASMShowBytes;
-      checkASMShowMiniMap.Checked       = Core.Settings.ASMShowMiniView;
-      checkASMShowAutoComplete.Checked  = Core.Settings.ASMShowAutoComplete;
-      checkASMShowAddress.Checked       = Core.Settings.ASMShowAddress;
+      checkASMShowLineNumbers.Checked = !Core.Settings.ASMHideLineNumbers;
+      checkASMShowCycles.Checked = Core.Settings.ASMShowCycles;
+      checkASMShowSizes.Checked = Core.Settings.ASMShowBytes;
+      checkASMShowMiniMap.Checked = Core.Settings.ASMShowMiniView;
+      checkASMShowAutoComplete.Checked = Core.Settings.ASMShowAutoComplete;
+      checkASMShowAddress.Checked = Core.Settings.ASMShowAddress;
       editMaxLineLengthIndicatorColumn.Text = Core.Settings.ASMShowMaxLineLengthIndicatorLength.ToString();
       checkEditorShowMaxLineLengthIndicator.Checked = ( Core.Settings.ASMShowMaxLineLengthIndicatorLength != 0 );
 
@@ -84,6 +85,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlTabs.AddAttribute( "TabSize", Core.Settings.FormatSettings.TabSize.ToString() );
       xmlTabs.AddAttribute( "ConvertTabsToSpaces", Core.Settings.FormatSettings.TabConvertToSpaces ? "yes" : "no" );
       xmlTabs.AddAttribute( "StripTrailingSpaces", Core.Settings.FormatSettings.StripTrailingSpaces ? "yes" : "no" );
+      xmlTabs.AddAttribute( "ShowTabs", Core.Settings.ShowTabs ? "yes" : "no" );
 
       xmlASMEditor.AddAttribute( "ShowLineNumbers", !Core.Settings.ASMHideLineNumbers ? "yes" : "no" );
       xmlASMEditor.AddAttribute( "ShowByteSize", Core.Settings.ASMShowBytes ? "yes" : "no" );
@@ -112,20 +114,21 @@ namespace RetroDevStudio.Dialogs.Preferences
       var xmlTabs = SettingsRoot.FindByType( "Generic.Tabs" );
       if ( xmlTabs != null )
       {
-        Core.Settings.FormatSettings.TabConvertToSpaces  = IsSettingTrue( xmlTabs.Attribute( "ConvertTabsToSpaces" ) );
-        Core.Settings.FormatSettings.TabSize             = GR.Convert.ToI32( xmlTabs.Attribute( "TabSize" ) );
+        Core.Settings.FormatSettings.TabConvertToSpaces = IsSettingTrue( xmlTabs.Attribute( "ConvertTabsToSpaces" ) );
+        Core.Settings.FormatSettings.TabSize = GR.Convert.ToI32( xmlTabs.Attribute( "TabSize" ) );
         Core.Settings.FormatSettings.StripTrailingSpaces = IsSettingTrue( xmlTabs.Attribute( "StripTrailingSpaces" ) );
+        Core.Settings.ShowTabs = IsSettingTrue( xmlTabs.Attribute( "ShowTabs" ) );
       }
 
       var xmlASMEditor = SettingsRoot.FindByType( "Generic.AssemblerEditor" );
       if ( xmlASMEditor != null )
       {
-        Core.Settings.ASMHideLineNumbers  = !IsSettingTrue( xmlASMEditor.Attribute( "ShowLineNumbers" ) );
-        Core.Settings.ASMShowAddress      = IsSettingTrue( xmlASMEditor.Attribute( "ShowAddress" ) );
+        Core.Settings.ASMHideLineNumbers = !IsSettingTrue( xmlASMEditor.Attribute( "ShowLineNumbers" ) );
+        Core.Settings.ASMShowAddress = IsSettingTrue( xmlASMEditor.Attribute( "ShowAddress" ) );
         Core.Settings.ASMShowAutoComplete = IsSettingTrue( xmlASMEditor.Attribute( "ShowAutoComplete" ) );
-        Core.Settings.ASMShowCycles       = IsSettingTrue( xmlASMEditor.Attribute( "ShowCycles" ) );
-        Core.Settings.ASMShowMiniView     = IsSettingTrue( xmlASMEditor.Attribute( "ShowMiniView" ) );
-        Core.Settings.ASMShowBytes        = IsSettingTrue( xmlASMEditor.Attribute( "ShowByteSize" ) );
+        Core.Settings.ASMShowCycles = IsSettingTrue( xmlASMEditor.Attribute( "ShowCycles" ) );
+        Core.Settings.ASMShowMiniView = IsSettingTrue( xmlASMEditor.Attribute( "ShowMiniView" ) );
+        Core.Settings.ASMShowBytes = IsSettingTrue( xmlASMEditor.Attribute( "ShowByteSize" ) );
         Core.Settings.ASMShowMaxLineLengthIndicatorLength = GR.Convert.ToI32( xmlASMEditor.Attribute( "ShowMaxLineLengthIndicatorLength" ) );
 
         string  encodingName = xmlASMEditor.Attribute( "Encoding" );
@@ -158,10 +161,10 @@ namespace RetroDevStudio.Dialogs.Preferences
         {
           if ( xmlFont.Attribute( "Type" ) == "ASM" )
           {
-            Core.Settings.SourceFontFamily          = xmlFont.Attribute( "Family" );
-            Core.Settings.SourceFontSize            = (float)Util.StringToDouble( xmlFont.Attribute( "Size" ) );
-            Core.Settings.SourceFontStyle           = (FontStyle)GR.Convert.ToI32( xmlFont.Attribute( "Style" ) );
-            Core.Settings.SourceFontNoAntiAliasing  = IsSettingTrue( xmlFont.Attribute( "NoAntiAliasing" ) );
+            Core.Settings.SourceFontFamily = xmlFont.Attribute( "Family" );
+            Core.Settings.SourceFontSize = (float)Util.StringToDouble( xmlFont.Attribute( "Size" ) );
+            Core.Settings.SourceFontStyle = (FontStyle)GR.Convert.ToI32( xmlFont.Attribute( "Style" ) );
+            Core.Settings.SourceFontNoAntiAliasing = IsSettingTrue( xmlFont.Attribute( "NoAntiAliasing" ) );
           }
         }
       }
@@ -217,10 +220,10 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         if ( fontDialog.ShowDialog() == DialogResult.OK )
         {
-          Core.Settings.SourceFontFamily          = fontDialog.Font.FontFamily.Name;
-          Core.Settings.SourceFontSize            = fontDialog.Font.SizeInPoints;
-          Core.Settings.SourceFontStyle           = fontDialog.Font.Style;
-          labelFontPreview.Font                   = fontDialog.Font;
+          Core.Settings.SourceFontFamily = fontDialog.Font.FontFamily.Name;
+          Core.Settings.SourceFontSize = fontDialog.Font.SizeInPoints;
+          Core.Settings.SourceFontStyle = fontDialog.Font.Style;
+          labelFontPreview.Font = fontDialog.Font;
 
           RefreshDisplayOnDocuments();
         }
@@ -336,7 +339,7 @@ namespace RetroDevStudio.Dialogs.Preferences
     {
       int   maxColIndicator = GR.Convert.ToI32( editMaxLineLengthIndicatorColumn.Text );
       if ( ( maxColIndicator <= 0 )
-      ||   ( maxColIndicator >= 200 ) )
+      || ( maxColIndicator >= 200 ) )
       {
         maxColIndicator = 0;
       }
@@ -354,7 +357,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       int     caretWidth = GR.Convert.ToI32( editCaretWidth.Text );
 
       if ( ( caretWidth >= 1 )
-      &&   ( caretWidth <= 200 ) )
+      && ( caretWidth <= 200 ) )
       {
         Core.Settings.CaretWidth = caretWidth;
         RefreshDisplayOnDocuments();
@@ -369,6 +372,17 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         Core.Settings.SourceFontNoAntiAliasing = checkASMFontNoAntiAliasing.Checked;
         labelFontPreview.DisplayAntiAliased = !Core.Settings.SourceFontNoAntiAliasing;
+        RefreshDisplayOnDocuments();
+      }
+    }
+
+
+
+    private void checkShowTabs_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( Core.Settings.ShowTabs != checkShowTabs.Checked )
+      {
+        Core.Settings.ShowTabs = checkShowTabs.Checked;
         RefreshDisplayOnDocuments();
       }
     }

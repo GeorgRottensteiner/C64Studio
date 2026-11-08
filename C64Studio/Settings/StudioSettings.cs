@@ -160,6 +160,7 @@ namespace RetroDevStudio
     public int                                  AutoSaveSettingsDelayMilliSeconds = 300000;
 
     public int                                  CaretWidth          = 1;
+    public bool                                 ShowTabs            = false;
     public bool                                 AllowTabs           = true;
     public bool                                 ASMHideLineNumbers  = false;
     public bool                                 ASMShowBytes        = true;
@@ -687,6 +688,7 @@ namespace RetroDevStudio
       chunkTabs.AppendI32( BASICShowMaxLineLengthIndicatorLength );
       chunkTabs.AppendI32( ASMShowMaxLineLengthIndicatorLength );
       chunkTabs.AppendI32( CaretWidth );
+      chunkTabs.AppendU8( (byte)( ShowTabs ? 1 : 0 ) );
       SettingsData.Append( chunkTabs.ToBuffer() );
 
       GR.IO.FileChunk chunkFont = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_FONT );
@@ -1203,6 +1205,7 @@ namespace RetroDevStudio
               {
                 CaretWidth = 1;
               }
+              ShowTabs = ( binIn.ReadUInt8() != 0 );
             }
             break;
           case FileChunkConstants.SETTINGS_FONT:

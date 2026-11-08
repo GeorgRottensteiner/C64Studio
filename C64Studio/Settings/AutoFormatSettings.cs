@@ -1,4 +1,4 @@
-﻿using GR.Collections;
+using GR.Collections;
 using GR.IO;
 using GR.Memory;
 using RetroDevStudio.Parser;

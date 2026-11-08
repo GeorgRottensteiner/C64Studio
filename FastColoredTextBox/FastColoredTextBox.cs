@@ -1,4 +1,4 @@
-﻿//
+//
 //  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 //  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
@@ -75,6 +75,8 @@ namespace FastColoredTextBoxNS
     private bool caretVisible;
     private bool _DisplayAntiAliased = true;
     private int _CaretWidth;
+    private bool _EnableTabCharacter = false;
+    private char _DisplayTabCharacter = '»';
     private Color changedLineColor;
     private int charHeight;
     private Color currentLineColor;
@@ -546,6 +548,50 @@ namespace FastColoredTextBoxNS
       get;
       set;
     }
+
+    /// <summary>
+    /// If enabled tabs are shown with the tab replacement character
+    /// </summary>
+    [DefaultValue( false )]
+    [Description( "If enabled tabs are shown with the tab replacement character." )]
+    public bool EnableTabCharacter
+    {
+      get
+      {
+        return _EnableTabCharacter;
+      }
+      set
+      {
+        if ( _EnableTabCharacter != value )
+        {
+          _EnableTabCharacter = value;
+          Invalidate();
+        }
+      }
+    }
+
+    /// <summary>
+    /// If EnableTabCharacter is used, displays DisplayTabCharacter visibly
+    /// </summary>
+    [DefaultValue( '»' )]
+    [Description( "If EnableTabCharacter is used, displays DisplayTabCharacter visibly" )]
+    public char DisplayTabCharacter
+    {
+      get
+      {
+        return _DisplayTabCharacter;
+      }
+      set
+      {
+        _DisplayTabCharacter = value;
+        if ( EnableTabCharacter )
+        {
+          Invalidate();
+        }
+      }
+    }
+
+
 
     /// <summary>
     /// Indicates if tabs are converted to spaces
@@ -6110,7 +6156,9 @@ namespace FastColoredTextBoxNS
       //create dictionary of bookmarks
       var bookmarksByLineIndex = new Dictionary<int, Bookmark>();
       foreach ( Bookmark item in bookmarks )
+      {
         bookmarksByLineIndex[item.LineIndex] = item;
+      }
       //
       int startLine = YtoLineIndex( VerticalScroll.Value );
       int iLine;

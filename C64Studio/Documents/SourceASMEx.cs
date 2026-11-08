@@ -3216,6 +3216,7 @@ namespace RetroDevStudio.Documents
       editSource.ShowLineNumbers      = !Core.Settings.ASMHideLineNumbers;
       editSource.PreferredLineWidth   = Core.Settings.ASMShowMaxLineLengthIndicatorLength;
       editSource.CaretWidth           = Core.Settings.CaretWidth;
+      editSource.EnableTabCharacter   = Core.Settings.ShowTabs;
 
       if ( Core.Settings.ASMShowMiniView )
       {
