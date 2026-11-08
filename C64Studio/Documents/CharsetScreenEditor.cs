@@ -221,6 +221,10 @@ namespace RetroDevStudio.Documents
         }
       }
       RecalcTileUsages();
+
+      pictureEditor.KeyUp += PictureEditor_KeyUp;
+      pictureEditor.LostFocus += PictureEditor_LostFocus;
+      pictureEditor.MouseWheel += PictureEditor_MouseWheel;
     }
 
 
@@ -975,6 +979,86 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void HandleViewDragging( int x, int y )
+    {
+      if ( !m_DragView )
+      {
+        m_DragView = true;
+        m_DragPoint = pictureEditor.PointToClient( MousePosition );
+        pictureEditor.Cursor = Core.MainForm.CursorGrab;
+      }
+      else
+      {
+        int   deltaX = x - m_DragPoint.X;
+        int   deltaY = y - m_DragPoint.Y;
+        int   requiredDelta = m_CharacterWidthPixel * m_ZoomFactor;
+
+        if ( ( deltaX != 0 )
+        ||   ( deltaY != 0 ) )
+        {
+          int   actDX = 0;
+          int   actDY = 0;
+          while ( deltaX >= requiredDelta )
+          {
+            deltaX -= requiredDelta;
+            --actDX;
+          }
+          while ( deltaX <= -requiredDelta )
+          {
+            deltaX += requiredDelta;
+            ++actDX;
+          }
+          while ( deltaY >= requiredDelta )
+          {
+            deltaY -= requiredDelta;
+            --actDY;
+          }
+          while ( deltaY <= -requiredDelta )
+          {
+            deltaY += requiredDelta;
+            ++actDY;
+          }
+
+          if ( ( actDX != 0 )
+          ||   ( actDY != 0 ) )
+          {
+            int tempDX = actDX;
+            int tempDY = actDY;
+
+            while ( ( actDX < 0 )
+            &&      ( screenHScroll.Value > 0 ) )
+            {
+              --screenHScroll.Value;
+              ++actDX;
+            }
+            while ( ( actDX > 0 )
+            &&      ( screenHScroll.Value < screenHScroll.Maximum ) )
+            {
+              ++screenHScroll.Value;
+              --actDX;
+            }
+            while ( ( actDY < 0 )
+            &&      ( screenVScroll.Value > 0 ) )
+            {
+              --screenVScroll.Value;
+              ++actDY;
+            }
+            while ( ( actDY > 0 )
+            &&      ( screenVScroll.Value < screenVScroll.Maximum ) )
+            {
+              ++screenVScroll.Value;
+              --actDY;
+            }
+            m_DragPoint.Offset( -tempDX * requiredDelta, -tempDY * requiredDelta );
+            screenHScroll_Scroll( screenHScroll );
+            screenVScroll_Scroll( screenVScroll );
+          }
+        }
+      }
+    }
+
+
+
     private void HandleMouseOnEditor( int X, int Y, MouseButtons Buttons )
     {
       // Convert from display coordinates to character coordinates
@@ -999,6 +1083,29 @@ namespace RetroDevStudio.Documents
           m_FloatingSelectionPos = m_MousePos;
           Redraw();
           pictureEditor.Invalidate();
+        }
+      }
+
+      if ( ( Buttons & MouseButtons.Middle ) != 0 )
+      {
+        if ( !m_DragViewModeActiveByPressedMiddleButton )
+        {
+          m_DragViewModeActiveByPressedMiddleButton = true;
+          m_DragView = true;
+          m_DragPoint = pictureEditor.PointToClient( MousePosition );
+          pictureEditor.Cursor = Core.MainForm.CursorGrab;
+        }
+        HandleViewDragging( X, Y );
+        return;
+      }
+      else
+      {
+        if ( m_DragViewModeActiveByPressedMiddleButton )
+        {
+          m_DragViewModeActiveByPressedMiddleButton = false;
+          m_DragView = false;
+          pictureEditor.Cursor = Cursors.Default;
+          return;
         }
       }
 
@@ -1132,6 +1239,12 @@ namespace RetroDevStudio.Documents
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
+        if ( m_DragViewModeActiveBySpace )
+        {
+          HandleViewDragging( X, Y );
+          return;
+        }
+
         if ( m_FloatingSelection != null )
         {
           if ( m_MouseButtonReleased )
@@ -1146,7 +1259,7 @@ namespace RetroDevStudio.Documents
         {
           case ToolMode.TEXT:
             if ( ( m_SelectedChar.X != charX )
-            ||   ( m_SelectedChar.Y != charY ) )
+            || ( m_SelectedChar.Y != charY ) )
             {
               m_SelectedChar.X = charX;
               m_SelectedChar.Y = charY;
@@ -1155,7 +1268,7 @@ namespace RetroDevStudio.Documents
               pictureEditor.Invalidate();
 
               if ( ( m_AutoCenterText )
-              &&   ( m_SelectedChar.Y != m_TextEntryStartedInLine ) )
+              && ( m_SelectedChar.Y != m_TextEntryStartedInLine ) )
               {
                 // clicked on different line
                 m_TextEntryStartedInLine = m_SelectedChar.Y;
@@ -1166,7 +1279,7 @@ namespace RetroDevStudio.Documents
             break;
           case ToolMode.SINGLE_CHAR:
             if ( ( m_ReverseChars )
-            ||   ( CurrentScreen.Chars[charX + charY * CurrentScreen.Width] != CombineChar( m_CurrentChar, m_CurrentChar, m_CurrentPaletteMapping ) ) )
+            || ( CurrentScreen.Chars[charX + charY * CurrentScreen.Width] != CombineChar( m_CurrentChar, m_CurrentChar, m_CurrentPaletteMapping ) ) )
             {
               if ( m_ReverseChars )
               {
@@ -1218,7 +1331,7 @@ namespace RetroDevStudio.Documents
             m_DragEndPos.Y = charY;
 
             if ( ( charX == m_CharsetScreen.ScreenOffsetX + m_CurrentScreenWidthInChars - 1 )
-            &&   ( screenHScroll.Value < screenHScroll.Maximum ) )
+            && ( screenHScroll.Value < screenHScroll.Maximum ) )
             {
               // autoscroll right
               ++screenHScroll.Value;
@@ -1227,7 +1340,7 @@ namespace RetroDevStudio.Documents
               m_DragEndPos.X = charX;
             }
             if ( ( charX == m_CharsetScreen.ScreenOffsetX )
-            &&   ( screenHScroll.Value > screenHScroll.Minimum ) )
+            && ( screenHScroll.Value > screenHScroll.Minimum ) )
             {
               // autoscroll left
               --screenHScroll.Value;
@@ -1236,7 +1349,7 @@ namespace RetroDevStudio.Documents
               m_DragEndPos.X = charX;
             }
             if ( ( charY == m_CharsetScreen.ScreenOffsetY + m_CurrentScreenHeightInChars - 1 )
-            &&   ( screenVScroll.Value < screenVScroll.Maximum ) )
+            && ( screenVScroll.Value < screenVScroll.Maximum ) )
             {
               // autoscroll down
               ++screenVScroll.Value;
@@ -1245,7 +1358,7 @@ namespace RetroDevStudio.Documents
               m_DragEndPos.Y = charY;
             }
             if ( ( charY == m_CharsetScreen.ScreenOffsetY )
-            &&   ( screenVScroll.Value > screenVScroll.Minimum ) )
+            && ( screenVScroll.Value > screenVScroll.Minimum ) )
             {
               // autoscroll up
               --screenVScroll.Value;
@@ -1305,6 +1418,19 @@ namespace RetroDevStudio.Documents
             break;
         }
       }
+      else if ( !m_MouseButtonReleased )
+      {
+      }
+      else
+      {
+        if ( ( m_DragViewModeActiveBySpace )
+        &&   ( m_DragView ) )
+        {
+          m_DragView = false;
+          pictureEditor.Cursor = Core.MainForm.CursorHand;
+        }
+      }
+
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
         m_CurrentChar           = CurrentScreen.CharacterAt( charX, charY );
@@ -2670,17 +2796,17 @@ namespace RetroDevStudio.Documents
 
             c64Key = physKey.Keys[Types.KeyModifier.NORMAL];
             if ( ( shiftPushed )
-            &&   ( physKey.Keys.ContainsKey( KeyModifier.SHIFT ) ) )
+            && ( physKey.Keys.ContainsKey( KeyModifier.SHIFT ) ) )
             {
               c64Key = physKey.Keys[KeyModifier.SHIFT];
             }
             if ( ( controlPushed )
-            &&   ( physKey.Keys.ContainsKey( KeyModifier.CONTROL ) ) )
+            && ( physKey.Keys.ContainsKey( KeyModifier.CONTROL ) ) )
             {
               c64Key = physKey.Keys[KeyModifier.CONTROL];
             }
             if ( ( commodorePushed )
-            &&   ( physKey.Keys.ContainsKey( KeyModifier.COMMODORE ) ) )
+            && ( physKey.Keys.ContainsKey( KeyModifier.COMMODORE ) ) )
             {
               c64Key = physKey.Keys[KeyModifier.COMMODORE];
             }
@@ -2827,6 +2953,54 @@ namespace RetroDevStudio.Documents
             Modified = true;
           }
         }
+      }
+      else
+      {
+        if ( e.KeyData == Keys.Space )
+        {
+          if ( !m_DragViewModeActiveBySpace )
+          {
+            m_DragViewModeActiveBySpace = true;
+            pictureEditor.Cursor = Core.MainForm.CursorHand;
+          }
+        }
+      }
+    }
+
+
+
+    private void PictureEditor_KeyUp( object sender, KeyEventArgs e )
+    {
+      if ( ( e.KeyData == Keys.Space )
+      &&   ( m_DragViewModeActiveBySpace ) )
+      {
+        m_DragViewModeActiveBySpace = false;
+        pictureEditor.Cursor = Cursors.Default;
+      }
+    }
+
+
+
+    private void PictureEditor_LostFocus( object sender, EventArgs e )
+    {
+      if ( m_DragViewModeActiveBySpace )
+      {
+        m_DragViewModeActiveBySpace = false;
+        pictureEditor.Cursor = Cursors.Default;
+      }
+    }
+
+
+
+    private void PictureEditor_MouseWheel( object sender, MouseEventArgs e )
+    {
+      if ( e.Delta > 0 )
+      {
+        ZoomIn();
+      }
+      else
+      {
+        ZoomOut();
       }
     }
 
