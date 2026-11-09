@@ -153,20 +153,27 @@ namespace FastColoredTextBoxNS
                 else
                 {
                     //classic mode 
+                    bool lastCharWasTab = false;
                     for (int i = range.Start.iChar; i < range.End.iChar; i++)
                     {
+                      if ( line[i].c == '\t' )
+                      {
+              int xxx = 2;
+                      }
                       //draw char
                       if ( ( line[i].c != '\t' )
                       ||   ( !range.tb.EnableTabCharacter )
-                      ||   ( ( range.tb.TabLength != 0 )
-                      &&     ( ( i % range.tb.TabLength ) != 0 ) ) )
+                      ||   ( ( ( i % range.tb.TabLength ) != 0 ) 
+                      &&       ( lastCharWasTab ) ) )
                       {
                         gr.DrawString( line[i].c.ToString(), f, ForeBrush, x, y, stringFormat );
+                        lastCharWasTab = line[i].c == '\t';
                       }
                       else
                       {
                         // tab replacement character is shown
                         gr.DrawString( range.tb.DisplayTabCharacter.ToString(), f, ControlCharacterForeBrush, x, y, stringFormat );
+                        lastCharWasTab = true;
                       }
                       x += dx;
                     }

@@ -7,11 +7,15 @@ White = 1
           !scr "hu:;<",0
 
 
- .Difficulty
+.Difficulty
   !byte 1
 
 
 
+label	  ;label, tab, space * 2
+label		;label, tab, tab
+label 	;label, space, tab
+label   ;label, 3 * space
 c = 1
 b = 2
 a = 3
