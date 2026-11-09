@@ -451,38 +451,41 @@ namespace RetroDevStudio.Documents
       if ( ( m_CurrentScreenWidthInChars - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidthPixel * m_ZoomFactor * 2 < pictureEditor.ClientSize.Width )
       {
         fillWidth = pictureEditor.ClientSize.Width - ( m_CurrentScreenWidthInChars - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidthPixel * m_ZoomFactor * 2;
+
+        fillWidth = pictureEditor.ClientSize.Width - DPIHandler.AdjustPixelSize( ( m_CurrentScreenWidthInChars - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidthPixel * m_ZoomFactor * 2 );
       }
       if ( ( m_CurrentScreenHeightInChars - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeightPixel * m_ZoomFactor * 2 < pictureEditor.ClientSize.Height )
       {
         fillHeight = pictureEditor.ClientSize.Height - ( m_CurrentScreenHeightInChars - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeightPixel * m_ZoomFactor * 2;
+
+        fillHeight = pictureEditor.ClientSize.Height - DPIHandler.AdjustPixelSize( ( m_CurrentScreenHeightInChars - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeightPixel * m_ZoomFactor * 2 );
       }
+
       if ( ( fillWidth > 0 )
       &&   ( fillHeight > 0 ) )
       {
         // bottom right
-        TargetBuffer.Box( ( viewportWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
-                          ( viewportHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
-                          pictureEditor.ClientRectangle.Width - ( viewportWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
-                          pictureEditor.ClientRectangle.Height - ( viewportHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
+        TargetBuffer.Box( TargetBuffer.Width - fillWidth,
+                          TargetBuffer.Height - fillHeight,
+                          fillWidth,
+                          fillHeight,
                           selColor );
       }
       if ( fillWidth > 0 )
       {
         // right
-        TargetBuffer.Box( ( viewportWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
+        TargetBuffer.Box( TargetBuffer.Width - fillWidth,
                           0,
-                          pictureEditor.ClientRectangle.Width - ( viewportWidthInChars - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CurrentScreenWidthInChars ),
-                          pictureEditor.ClientRectangle.Height,
+                          fillWidth,
+                          TargetBuffer.Height,
                           selColor );
       }
       if ( fillHeight > 0 )
       {
         // bottom
         TargetBuffer.Box( 0,
-                          pictureEditor.ClientRectangle.Height - fillHeight,
-                          //( viewportHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
-                          pictureEditor.ClientRectangle.Width,
-                          //pictureEditor.ClientRectangle.Height - ( viewportHeightInChars - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CurrentScreenHeightInChars ),
+                          TargetBuffer.Height - fillHeight,
+                          TargetBuffer.Width,
                           fillHeight,
                           selColor );
       }
@@ -1069,10 +1072,8 @@ namespace RetroDevStudio.Documents
       int charWidthPixel = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( CurrentScreen.Mode ), 0 ) );
       int charHeightPixel = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( CurrentScreen.Mode ), 0 ) );
 
-      int     charX = ( X * viewportWidthInChars ) / pictureEditor.ClientRectangle.Width + m_CharsetScreen.ScreenOffsetX;
-      int     charY = ( Y * viewportHeightInChars ) / pictureEditor.ClientRectangle.Height + m_CharsetScreen.ScreenOffsetY;
-      charX = m_CharsetScreen.ScreenOffsetX + ( X / ( 2 * charWidthPixel * m_ZoomFactor ) );
-      charY = m_CharsetScreen.ScreenOffsetY + ( Y / ( 2 * charHeightPixel * m_ZoomFactor ) );
+      int     charX = m_CharsetScreen.ScreenOffsetX + X / DPIHandler.AdjustPixelSize( ( 2 * charWidthPixel * m_ZoomFactor ) );
+      int     charY = m_CharsetScreen.ScreenOffsetY + Y / DPIHandler.AdjustPixelSize( ( 2 * charHeightPixel * m_ZoomFactor ) );
 
       m_MousePos.X = charX - m_CharsetScreen.ScreenOffsetX;
       m_MousePos.Y = charY - m_CharsetScreen.ScreenOffsetY;
