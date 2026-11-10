@@ -13,8 +13,8 @@ if exist C64Ass-Linux.tar.gz del C64Ass-Linux.tar.gz
 rem pack C64Ass for Linux
 tar -czf C64Ass-Linux.tar.gz C64Ass-Linux
 
-rem set executable bits
-%TARMODIFIER% C64Ass-Linux.tar.gz C64Ass-Linux/C64Ass
+rem set executable bits - disabled because it breaks the archive!
+rem %TARMODIFIER% C64Ass-Linux.tar.gz C64Ass-Linux/C64Ass
 
 rem complete archive
 cd "C64StudioRelease\net3.5\AnyCPU"
