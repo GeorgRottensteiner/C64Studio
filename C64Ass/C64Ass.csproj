@@ -25,7 +25,8 @@
     <ApplicationIcon>c64.ico</ApplicationIcon>
     <PostBuildEvent>
       if not exist "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\C64Ass" md "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\C64Ass"
-      copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\C64Ass\C64Ass.exe"
+      if exist "$(TargetDir)C64Ass.exe" copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\C64Ass\C64Ass.exe"
+      if exist "$(TargetDir)C64Ass" copy "$(TargetDir)C64Ass" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\C64Ass\C64Ass"
       if exist "$(TargetDir)*.dll" copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\C64Ass"
       if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\C64Ass"
     </PostBuildEvent>
