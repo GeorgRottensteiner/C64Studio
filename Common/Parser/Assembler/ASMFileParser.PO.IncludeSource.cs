@@ -76,7 +76,7 @@ namespace RetroDevStudio.Parser
       &&        ( parms[0].Last().Content == ">" ) )
       {
         // library include
-        subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
+        subFilename = TokensToExpression( parms[0], 1, parms[0].Count - 2 );
         resolving = PathResolving.FROM_LIBRARIES_PATH;
         if ( ( parms.Count == 2 )
         &&   ( ( parms[1].Count != 1 )
